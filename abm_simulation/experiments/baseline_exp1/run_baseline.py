@@ -86,6 +86,13 @@ def run_baseline():
     print("\n" + "="*70)
     viz = quick_visualize(sim, output_dir="experiments/baseline_exp1/results")
     
+    # 生成综合图
+    print("\n" + "="*70)
+    print("生成基线实验综合图...")
+    print("="*70)
+    from experiments.baseline_exp1.create_baseline_summary import create_baseline_summary
+    create_baseline_summary(sim, summary, output_dir="results/all_figures")
+    
     print("\n" + "="*70)
     print("基线实验完成!")
     print("="*70)

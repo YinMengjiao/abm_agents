@@ -17,17 +17,21 @@ def setup_chinese_font():
     
     if system == 'Windows':
         # Windows 使用黑体
-        plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS']
+        font_list = ['SimHei', 'Microsoft YaHei', 'Microsoft JhengHei', 'Arial Unicode MS']
     elif system == 'Darwin':
-        # Mac 使用 Arial Unicode MS
-        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei']
+        # Mac 使用 Arial Unicode MS 或 PingFang
+        font_list = ['Arial Unicode MS', 'PingFang TC', 'Heiti TC', 'SimHei']
     else:
         # Linux 尝试使用文泉驿
-        plt.rcParams['font.sans-serif'] = ['WenQuanYi Micro Hei', 'SimHei', 'Arial Unicode MS']
+        font_list = ['WenQuanYi Micro Hei', 'WenQuanYi Zen Hei', 'SimHei', 'Arial Unicode MS']
+    
+    # 设置字体优先级列表
+    plt.rcParams['font.sans-serif'] = font_list
     
     # 解决负号显示问题
     plt.rcParams['axes.unicode_minus'] = False
     
+    print(f"已设置中文字体：{font_list}")
     return True
 
 # 自动应用中文字体

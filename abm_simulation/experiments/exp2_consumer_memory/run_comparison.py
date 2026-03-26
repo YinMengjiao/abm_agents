@@ -123,17 +123,17 @@ def compare_results(baseline, experiment2):
     base_l3 = baseline['final_level_distribution'].get(3, 0)
     exp2_l3 = experiment2['final_level_distribution'].get(3, 0)
     if exp2_l3 > base_l3:
-        findings.append(f"• 记忆机制使L3半委托型增加{exp2_l3-base_l3}人，表明消费者更倾向于谨慎评估")
+        findings.append(f"[1] 记忆机制使 L3 半委托型增加{exp2_l3-base_l3}人，表明消费者更倾向于谨慎评估")
     
     if experiment2['error_rate'] < baseline['error_rate']:
         reduction = (baseline['error_rate'] - experiment2['error_rate']) / baseline['error_rate'] * 100
-        findings.append(f"• 错误率降低{reduction:.1f}%，记忆学习有效避免了重复错误")
+        findings.append(f"[2] 错误率降低{reduction:.1f}%，记忆学习有效避免了重复错误")
     
     if experiment2['satisfaction']['mean'] > baseline['satisfaction']['mean']:
-        findings.append(f"• 满意度提升，经验驱动的决策更符合个体偏好")
+        findings.append("[3] 满意度提升，经验驱动的决策更符合个体偏好")
     
     if not findings:
-        findings.append("• 两个模型表现相近，记忆机制在当前参数下影响有限")
+        findings.append("[4] 两个模型表现相近，记忆机制在当前参数下影响有限")
     
     for finding in findings:
         print(finding)
@@ -161,6 +161,17 @@ def main():
     create_comparison_visualization(
         baseline_sim, memory_sim,
         baseline_results, experiment2_results
+    )
+    
+    # 生成综合图
+    print("\n" + "="*70)
+    print("生成实验 2 综合图...")
+    print("="*70)
+    from experiments.exp2_consumer_memory.create_summary_plot import create_experiment2_summary
+    create_experiment2_summary(
+        baseline_sim, memory_sim,
+        baseline_results, experiment2_results,
+        output_dir="results/all_figures"
     )
     
     print("\n" + "="*70)

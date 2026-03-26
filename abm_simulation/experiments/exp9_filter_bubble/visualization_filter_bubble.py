@@ -1,10 +1,17 @@
 """
-实验9可视化: 过滤气泡
+实验 9 可视化：过滤气泡
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import sys
+
+# 添加项目根目录并导入中文字体配置
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, project_root)
+from visualization.chinese_font import setup_chinese_font
+setup_chinese_font()
 
 
 def visualize_filter_bubble_results(analyzer, results, output_dir: str):
@@ -37,8 +44,8 @@ def visualize_filter_bubble_results(analyzer, results, output_dir: str):
     ax6 = plt.subplot(2, 3, 6)
     _plot_individual_diversity(ax6, results)
     
-    plt.suptitle('实验9: 过滤气泡与选择多样性分析', fontsize=16, fontweight='bold')
-    plt.tight_layout()
+    plt.suptitle('实验 9: 过滤气泡与选择多样性分析', fontsize=16, fontweight='bold', y=0.98)
+    plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
     plt.savefig(f'{output_dir}/filter_bubble_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()
     

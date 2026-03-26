@@ -1,10 +1,17 @@
 """
-实验4可视化: 信息干预
+实验 4 可视化：信息干预
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import sys
+
+# 添加项目根目录并导入中文字体配置
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, project_root)
+from visualization.chinese_font import setup_chinese_font
+setup_chinese_font()
 
 
 def visualize_intervention_results(sim, output_dir: str):
@@ -38,12 +45,12 @@ def visualize_intervention_results(sim, output_dir: str):
     _plot_before_after_comparison(ax6, sim)
     
     policy_type = getattr(sim, 'policy_type', 'unknown')
-    plt.suptitle(f'实验4: 信息干预效果 ({policy_type})', fontsize=16, fontweight='bold')
-    plt.tight_layout()
+    plt.suptitle(f'实验 4: 信息干预效果 ({policy_type})', fontsize=16, fontweight='bold', y=0.98)
+    plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
     plt.savefig(f'{output_dir}/intervention_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()
     
-    print(f"  ✓ 干预分析图已保存: {output_dir}/intervention_analysis.png")
+    print(f"  [OK] 干预分析图已保存：{output_dir}/intervention_analysis.png")
 
 
 def _plot_intervention_timeline(ax, sim):

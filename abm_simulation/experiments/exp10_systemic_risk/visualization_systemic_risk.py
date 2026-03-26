@@ -1,10 +1,17 @@
 """
-实验10可视化: 系统性风险
+实验 10 可视化：系统性风险
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import sys
+
+# 添加项目根目录并导入中文字体配置
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, project_root)
+from visualization.chinese_font import setup_chinese_font
+setup_chinese_font()
 
 
 def visualize_systemic_risk_results(main_result, stress_results, risk_model, output_dir: str):
@@ -37,8 +44,8 @@ def visualize_systemic_risk_results(main_result, stress_results, risk_model, out
     ax6 = plt.subplot(2, 3, 6)
     _plot_resilience_assessment(ax6, main_result, risk_model)
     
-    plt.suptitle('实验10: 系统性风险与级联失效分析', fontsize=16, fontweight='bold')
-    plt.tight_layout()
+    plt.suptitle('实验 10: 系统性风险与级联失效分析', fontsize=16, fontweight='bold', y=0.98)
+    plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
     plt.savefig(f'{output_dir}/systemic_risk_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()
     
@@ -192,7 +199,10 @@ def _plot_resilience_assessment(ax, result, risk_model):
     bars = ax.bar(categories, values, color=colors, alpha=0.7)
     ax.set_ylabel('得分')
     ax.set_title('系统韧性评估')
-    ax.set_ylim(0, 1)
+    
+    # 先调整 y 轴上限，为标签留出空间
+    max_val = max(values)
+    ax.set_ylim(0, max_val * 1.2)  # 预留 20% 的空间给标签
     
     # 添加数值标签
     for bar, val in zip(bars, values):

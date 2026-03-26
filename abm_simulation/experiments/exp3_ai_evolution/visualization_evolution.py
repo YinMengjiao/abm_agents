@@ -1,10 +1,17 @@
 """
-实验3可视化: AI进化机制
+实验 3 可视化：AI 进化机制
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import sys
+
+# 添加项目根目录并导入中文字体配置
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, project_root)
+from visualization.chinese_font import setup_chinese_font
+setup_chinese_font()
 
 
 def visualize_evolution_results(sim, output_dir: str = "experiments/exp3_ai_evolution/results"):
@@ -44,12 +51,12 @@ def visualize_evolution_results(sim, output_dir: str = "experiments/exp3_ai_evol
     ax6 = plt.subplot(2, 3, 6)
     _plot_trust_recovery(ax6, sim)
     
-    plt.suptitle('实验3: AI代理进化机制', fontsize=16, fontweight='bold')
-    plt.tight_layout()
+    plt.suptitle('实验 3: AI 代理进化机制', fontsize=16, fontweight='bold', y=0.98)
+    plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
     plt.savefig(f'{output_dir}/evolution_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()
     
-    print(f"  ✓ 进化分析图已保存：{output_dir}/evolution_analysis.png")
+    print(f"  [OK] 进化分析图已保存：{output_dir}/evolution_analysis.png")
 
 
 def _plot_ai_evolution_trajectory(ax, sim):
