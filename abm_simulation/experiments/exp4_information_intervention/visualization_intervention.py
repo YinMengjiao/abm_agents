@@ -18,31 +18,24 @@ def visualize_intervention_results(sim, output_dir: str):
     """可视化干预实验结果"""
     os.makedirs(output_dir, exist_ok=True)
     
-    fig = plt.figure(figsize=(16, 10))
+    # 创建简化版综合可视化（只展示有数据的子图）
+    fig = plt.figure(figsize=(16, 7))
     
-    # 1. 干预时间线
-    ax1 = plt.subplot(2, 3, 1)
+    # 1. 干预时间线（左上）- 有数据
+    ax1 = plt.subplot(2, 2, 1)
     _plot_intervention_timeline(ax1, sim)
     
-    # 2. 依赖等级演化
-    ax2 = plt.subplot(2, 3, 2)
+    # 2. 依赖等级演化（右上）- 有数据
+    ax2 = plt.subplot(2, 2, 2)
     _plot_level_evolution_with_interventions(ax2, sim)
     
-    # 3. 干预影响强度
-    ax3 = plt.subplot(2, 3, 3)
-    _plot_intervention_impact(ax3, sim)
+    # 3. 干预类型分布（左下）- 有数据
+    ax3 = plt.subplot(2, 2, 3)
+    _plot_policy_effectiveness(ax3, sim)
     
-    # 4. 受影响消费者数量
-    ax4 = plt.subplot(2, 3, 4)
-    _plot_affected_consumers(ax4, sim)
-    
-    # 5. 政策效果对比
-    ax5 = plt.subplot(2, 3, 5)
-    _plot_policy_effectiveness(ax5, sim)
-    
-    # 6. 干预前后对比
-    ax6 = plt.subplot(2, 3, 6)
-    _plot_before_after_comparison(ax6, sim)
+    # 4. 干预前后对比（右下）- 有数据
+    ax4 = plt.subplot(2, 2, 4)
+    _plot_before_after_comparison(ax4, sim)
     
     policy_type = getattr(sim, 'policy_type', 'unknown')
     plt.suptitle(f'实验 4: 信息干预效果 ({policy_type})', fontsize=16, fontweight='bold', y=0.98)
