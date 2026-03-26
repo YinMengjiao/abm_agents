@@ -265,6 +265,13 @@ AI 使用率 & 0.838 & 0.045 \\
 
 这表明 WS 网络成功构建了小世界特性，有利于社会影响的快速传播。
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{../results/all_figures/baseline_summary.png}
+    \caption{基线实验综合图：展示了 Ising-D-I-B 模型的完整行为。包含依赖等级分布演化、Ising 动力学（磁化强度和耦合强度）、系统性能指标（满意度和 AI 使用率）以及最终状态汇总}.
+    \label{fig:baseline_summary}
+\end{figure}
+
 \subsection{本节小结}
 
 基线实验成功验证了 Ising-D-I-B 耦合模型的有效性：
@@ -400,6 +407,13 @@ AI 使用率 & 0.842 & 0.443 & $-47.4\%$ $\star$ \\
 
 连续错误数维持在较低水平（平均 0.12），说明记忆有效支持了错误规避。
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{../results/all_figures/exp2_summary.png}
+    \caption{实验 2 综合图：记忆机制与基线模型对比。包含依赖等级分布对比及差异、关键指标演化（满意度、AI 使用率、错误率）、记忆动态（信任度、连续错误、记忆容量）以及综合分析（雷达图、磁化强度、最终指标对比）}.
+    \label{fig:experiment2_summary}
+\end{figure}
+
 \subsection{本节小结}
 
 实验 2 揭示了记忆机制的双重效应：
@@ -532,6 +546,13 @@ AI 进化对消费者的影响：
 \end{itemize}
 
 这表明 AI 进化和消费者适应是相互促进的过程。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{../results/all_figures/exp3_ai_evolution_evolution_analysis.png}
+    \caption{实验 3 综合图：AI 代理进化动力学。左侧为依赖等级分布演化曲线，展示 L1-L5 五个等级消费者数量随仿真步数的变化；右侧为 AI 能力进化热力图，展示三个 AI 代理在准确度、理解深度、执行可靠性和个性化四个维度的能力评分}.
+    \label{fig:exp3_evolution}
+\end{figure}
 
 \subsection{本节小结}
 
@@ -672,6 +693,13 @@ AI 进化对消费者的影响：
 
 这为 AI 治理政策制定提供了实证依据。
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{../results/all_figures/exp4_information_intervention_intervention_analysis.png}
+    \caption{实验 4 综合图：信息干预策略对比。包含三种干预策略（自主性鼓励、风险提示、平衡干预）的效果以及干预时机效应分析}.
+    \label{fig:exp4_intervention}
+\end{figure}
+
 \section{实验 5：语境敏感性与过滤气泡}
 
 \subsection{研究问题}
@@ -766,8 +794,8 @@ AI 进化对消费者的影响：
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{../results/all_figures/exp8_context_sensitivity_context_analysis.png}
-    \caption{语境敏感性分析：不同语境强度下的群体极化和信息多样性变化}
+    \includegraphics[width=0.95\textwidth]{../results/all_figures/exp8_context_sensitivity_context_analysis.png}
+    \caption{实验 5 综合图：语境敏感性分析。包含不同语境强度下的群体极化和信息多样性、过滤气泡形成过程以及回音室效应分析}.
     \label{fig:context}
 \end{figure}
 
@@ -900,8 +928,8 @@ AI 进化对消费者的影响：
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{../results/all_figures/exp10_systemic_risk_systemic_risk_analysis.png}
-    \caption{系统性风险分析：不同故障场景下的信任动态和级联效应}
+    \includegraphics[width=0.95\textwidth]{../results/all_figures/exp10_systemic_risk_systemic_risk_analysis.png}
+    \caption{实验 6 综合图：系统性风险分析。包含风险传播网络、信任动态演化、级联效应分布、韧性评估、相变分析以及场景综合对比}.
     \label{fig:systemic_risk}
 \end{figure}
 

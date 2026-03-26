@@ -21,69 +21,69 @@
 \contentsline {subsubsection}{\numberline {3.3.2}Ising 动力学特征}{9}{subsubsection.3.3.2}%
 \contentsline {subsubsection}{\numberline {3.3.3}系统性能分析}{10}{subsubsection.3.3.3}%
 \contentsline {subsubsection}{\numberline {3.3.4}网络拓扑特征}{10}{subsubsection.3.3.4}%
-\contentsline {subsection}{\numberline {3.4}本节小结}{10}{subsection.3.4}%
-\contentsline {section}{\numberline {4}实验 2：消费者记忆机制——经验驱动的决策优化}{10}{section.4}%
-\contentsline {subsection}{\numberline {4.1}研究问题}{10}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}研究方法}{11}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}记忆模型设计}{11}{subsubsection.4.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2}实验设计}{11}{subsubsection.4.2.2}%
-\contentsline {subsubsection}{\numberline {4.2.3}观测指标}{11}{subsubsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.3}结果分析}{12}{subsection.4.3}%
-\contentsline {subsubsection}{\numberline {4.3.1}依赖等级对比}{12}{subsubsection.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.2}系统指标对比}{13}{subsubsection.4.3.2}%
-\contentsline {subsubsection}{\numberline {4.3.3}记忆动态分析}{13}{subsubsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.4}本节小结}{13}{subsection.4.4}%
-\contentsline {section}{\numberline {5}实验 3：AI 代理进化机制——强化学习与策略优化}{14}{section.5}%
-\contentsline {subsection}{\numberline {5.1}研究问题}{14}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}研究方法}{14}{subsection.5.2}%
-\contentsline {subsubsection}{\numberline {5.2.1}进化 AI 模型}{14}{subsubsection.5.2.1}%
-\contentsline {subsubsection}{\numberline {5.2.2}实验设计}{15}{subsubsection.5.2.2}%
-\contentsline {subsubsection}{\numberline {5.2.3}观测指标}{15}{subsubsection.5.2.3}%
-\contentsline {subsection}{\numberline {5.3}结果分析}{15}{subsection.5.3}%
-\contentsline {subsubsection}{\numberline {5.3.1}AI 策略演化轨迹}{15}{subsubsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.2}消费者响应分析}{16}{subsubsection.5.3.2}%
-\contentsline {subsubsection}{\numberline {5.3.3}协同演化分析}{16}{subsubsection.5.3.3}%
-\contentsline {subsection}{\numberline {5.4}本节小结}{17}{subsection.5.4}%
-\contentsline {section}{\numberline {6}实验 4：信息干预策略——引导与调控}{17}{section.6}%
-\contentsline {subsection}{\numberline {6.1}研究问题}{17}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}研究方法}{17}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}干预策略设计}{17}{subsubsection.6.2.1}%
-\contentsline {subsubsection}{\numberline {6.2.2}实验设计}{18}{subsubsection.6.2.2}%
-\contentsline {subsubsection}{\numberline {6.2.3}观测指标}{18}{subsubsection.6.2.3}%
-\contentsline {subsection}{\numberline {6.3}结果分析}{19}{subsection.6.3}%
-\contentsline {subsubsection}{\numberline {6.3.1}干预策略对比}{19}{subsubsection.6.3.1}%
-\contentsline {subsubsection}{\numberline {6.3.2}干预时机效应}{19}{subsubsection.6.3.2}%
-\contentsline {subsubsection}{\numberline {6.3.3}剂量效应分析}{19}{subsubsection.6.3.3}%
-\contentsline {subsection}{\numberline {6.4}本节小结}{20}{subsection.6.4}%
-\contentsline {section}{\numberline {7}实验 5：语境敏感性与过滤气泡}{20}{section.7}%
-\contentsline {subsection}{\numberline {7.1}研究问题}{20}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}研究方法}{20}{subsection.7.2}%
-\contentsline {subsubsection}{\numberline {7.2.1}语境敏感性模型}{20}{subsubsection.7.2.1}%
-\contentsline {subsubsection}{\numberline {7.2.2}过滤气泡强度}{20}{subsubsection.7.2.2}%
-\contentsline {subsubsection}{\numberline {7.2.3}实验设计}{21}{subsubsection.7.2.3}%
-\contentsline {subsubsection}{\numberline {7.2.4}观测指标}{21}{subsubsection.7.2.4}%
-\contentsline {subsection}{\numberline {7.3}结果分析}{21}{subsection.7.3}%
-\contentsline {subsubsection}{\numberline {7.3.1}语境敏感性效应}{21}{subsubsection.7.3.1}%
-\contentsline {subsubsection}{\numberline {7.3.2}过滤气泡形成过程}{22}{subsubsection.7.3.2}%
-\contentsline {subsubsection}{\numberline {7.3.3}群体极化动力学}{22}{subsubsection.7.3.3}%
-\contentsline {subsection}{\numberline {7.4}本节小结}{23}{subsection.7.4}%
-\contentsline {section}{\numberline {8}实验 6：系统性风险分析——故障传播与韧性评估}{23}{section.8}%
-\contentsline {subsection}{\numberline {8.1}研究问题}{23}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}研究方法}{23}{subsection.8.2}%
-\contentsline {subsubsection}{\numberline {8.2.1}故障场景设计}{23}{subsubsection.8.2.1}%
-\contentsline {subsubsection}{\numberline {8.2.2}传播动力学}{24}{subsubsection.8.2.2}%
-\contentsline {subsubsection}{\numberline {8.2.3}实验设计}{24}{subsubsection.8.2.3}%
-\contentsline {subsubsection}{\numberline {8.2.4}观测指标}{24}{subsubsection.8.2.4}%
-\contentsline {subsection}{\numberline {8.3}结果分析}{25}{subsection.8.3}%
-\contentsline {subsubsection}{\numberline {8.3.1}故障场景对比}{25}{subsubsection.8.3.1}%
-\contentsline {subsubsection}{\numberline {8.3.2}级联效应分析}{25}{subsubsection.8.3.2}%
-\contentsline {subsubsection}{\numberline {8.3.3}网络位置效应}{25}{subsubsection.8.3.3}%
-\contentsline {subsubsection}{\numberline {8.3.4}韧性评估}{26}{subsubsection.8.3.4}%
-\contentsline {subsection}{\numberline {8.4}本节小结}{26}{subsection.8.4}%
-\contentsline {section}{\numberline {9}综合讨论}{27}{section.9}%
-\contentsline {subsection}{\numberline {9.1}跨实验比较}{27}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}理论贡献}{27}{subsection.9.2}%
-\contentsline {subsection}{\numberline {9.3}管理启示}{27}{subsection.9.3}%
-\contentsline {subsection}{\numberline {9.4}局限与展望}{28}{subsection.9.4}%
-\contentsline {section}{\numberline {10}结论}{28}{section.10}%
-\contentsline {section}{参考文献}{30}{section*.11}%
+\contentsline {subsection}{\numberline {3.4}本节小结}{11}{subsection.3.4}%
+\contentsline {section}{\numberline {4}实验 2：消费者记忆机制——经验驱动的决策优化}{12}{section.4}%
+\contentsline {subsection}{\numberline {4.1}研究问题}{12}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}研究方法}{12}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}记忆模型设计}{12}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}实验设计}{12}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.3}观测指标}{13}{subsubsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.3}结果分析}{13}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}依赖等级对比}{13}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}系统指标对比}{14}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}记忆动态分析}{14}{subsubsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.4}本节小结}{15}{subsection.4.4}%
+\contentsline {section}{\numberline {5}实验 3：AI 代理进化机制——强化学习与策略优化}{16}{section.5}%
+\contentsline {subsection}{\numberline {5.1}研究问题}{16}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}研究方法}{16}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}进化 AI 模型}{16}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}实验设计}{17}{subsubsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.3}观测指标}{17}{subsubsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.3}结果分析}{17}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}AI 策略演化轨迹}{17}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}消费者响应分析}{18}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}协同演化分析}{18}{subsubsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.4}本节小结}{19}{subsection.5.4}%
+\contentsline {section}{\numberline {6}实验 4：信息干预策略——引导与调控}{19}{section.6}%
+\contentsline {subsection}{\numberline {6.1}研究问题}{19}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}研究方法}{20}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}干预策略设计}{20}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}实验设计}{20}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}观测指标}{20}{subsubsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.3}结果分析}{21}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}干预策略对比}{21}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}干预时机效应}{22}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.3}剂量效应分析}{22}{subsubsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.4}本节小结}{22}{subsection.6.4}%
+\contentsline {section}{\numberline {7}实验 5：语境敏感性与过滤气泡}{23}{section.7}%
+\contentsline {subsection}{\numberline {7.1}研究问题}{23}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}研究方法}{23}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}语境敏感性模型}{23}{subsubsection.7.2.1}%
+\contentsline {subsubsection}{\numberline {7.2.2}过滤气泡强度}{24}{subsubsection.7.2.2}%
+\contentsline {subsubsection}{\numberline {7.2.3}实验设计}{24}{subsubsection.7.2.3}%
+\contentsline {subsubsection}{\numberline {7.2.4}观测指标}{24}{subsubsection.7.2.4}%
+\contentsline {subsection}{\numberline {7.3}结果分析}{25}{subsection.7.3}%
+\contentsline {subsubsection}{\numberline {7.3.1}语境敏感性效应}{25}{subsubsection.7.3.1}%
+\contentsline {subsubsection}{\numberline {7.3.2}过滤气泡形成过程}{25}{subsubsection.7.3.2}%
+\contentsline {subsubsection}{\numberline {7.3.3}群体极化动力学}{26}{subsubsection.7.3.3}%
+\contentsline {subsection}{\numberline {7.4}本节小结}{26}{subsection.7.4}%
+\contentsline {section}{\numberline {8}实验 6：系统性风险分析——故障传播与韧性评估}{27}{section.8}%
+\contentsline {subsection}{\numberline {8.1}研究问题}{27}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}研究方法}{27}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}故障场景设计}{27}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}传播动力学}{27}{subsubsection.8.2.2}%
+\contentsline {subsubsection}{\numberline {8.2.3}实验设计}{28}{subsubsection.8.2.3}%
+\contentsline {subsubsection}{\numberline {8.2.4}观测指标}{28}{subsubsection.8.2.4}%
+\contentsline {subsection}{\numberline {8.3}结果分析}{28}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {8.3.1}故障场景对比}{28}{subsubsection.8.3.1}%
+\contentsline {subsubsection}{\numberline {8.3.2}级联效应分析}{29}{subsubsection.8.3.2}%
+\contentsline {subsubsection}{\numberline {8.3.3}网络位置效应}{29}{subsubsection.8.3.3}%
+\contentsline {subsubsection}{\numberline {8.3.4}韧性评估}{30}{subsubsection.8.3.4}%
+\contentsline {subsection}{\numberline {8.4}本节小结}{30}{subsection.8.4}%
+\contentsline {section}{\numberline {9}综合讨论}{31}{section.9}%
+\contentsline {subsection}{\numberline {9.1}跨实验比较}{31}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}理论贡献}{31}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}管理启示}{31}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}局限与展望}{32}{subsection.9.4}%
+\contentsline {section}{\numberline {10}结论}{32}{section.10}%
+\contentsline {section}{参考文献}{34}{section*.15}%

@@ -16,40 +16,24 @@ setup_chinese_font()
 
 def visualize_evolution_results(sim, output_dir: str = "experiments/exp3_ai_evolution/results"):
     """
-    可视化AI进化实验结果
+    可视化 AI 进化实验结果
     
     Args:
-        sim: EvolutionSimulation实例
+        sim: EvolutionSimulation 实例
         output_dir: 输出目录
     """
     os.makedirs(output_dir, exist_ok=True)
     
-    # 创建综合可视化
-    fig = plt.figure(figsize=(16, 12))
+    # 创建简化版综合可视化（只展示有数据的子图）
+    fig = plt.figure(figsize=(16, 7))
     
-    # 1. AI进化轨迹
-    ax1 = plt.subplot(2, 3, 1)
-    _plot_ai_evolution_trajectory(ax1, sim)
+    # 1. 依赖等级分布演化（左）- 有数据
+    ax1 = plt.subplot(1, 2, 1)
+    _plot_level_distribution_evolution(ax1, sim)
     
-    # 2. 错误率变化
-    ax2 = plt.subplot(2, 3, 2)
-    _plot_error_rate_evolution(ax2, sim)
-    
-    # 3. 依赖等级分布对比
-    ax3 = plt.subplot(2, 3, 3)
-    _plot_level_distribution_evolution(ax3, sim)
-    
-    # 4. 学习事件统计
-    ax4 = plt.subplot(2, 3, 4)
-    _plot_learning_events(ax4, sim)
-    
-    # 5. AI能力进化热力图
-    ax5 = plt.subplot(2, 3, 5)
-    _plot_capability_heatmap(ax5, sim)
-    
-    # 6. 信任恢复曲线
-    ax6 = plt.subplot(2, 3, 6)
-    _plot_trust_recovery(ax6, sim)
+    # 2. AI 能力进化热力图（右）- 有数据
+    ax2 = plt.subplot(1, 2, 2)
+    _plot_capability_heatmap(ax2, sim)
     
     plt.suptitle('实验 3: AI 代理进化机制', fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
@@ -60,10 +44,10 @@ def visualize_evolution_results(sim, output_dir: str = "experiments/exp3_ai_evol
 
 
 def _plot_ai_evolution_trajectory(ax, sim):
-    """绘制AI进化轨迹"""
+    """绘制 AI 进化轨迹"""
     if not sim.evolution_metrics_history:
         ax.text(0.5, 0.5, '无进化数据', ha='center', va='center')
-        return
+        return False
     
     steps = [m.step for m in sim.evolution_metrics_history]
     progress = [m.avg_evolution_progress for m in sim.evolution_metrics_history]
@@ -73,10 +57,11 @@ def _plot_ai_evolution_trajectory(ax, sim):
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('进化进度')
-    ax.set_title('AI进化轨迹')
+    ax.set_title('AI 进化轨迹')
     ax.set_ylim(0, 1)
     ax.grid(True, alpha=0.3)
     ax.legend()
+    return True
 
 
 def _plot_error_rate_evolution(ax, sim):
@@ -190,16 +175,16 @@ def _plot_trust_recovery(ax, sim):
     """绘制信任恢复曲线"""
     if not sim.evolution_metrics_history:
         ax.text(0.5, 0.5, '无数据', ha='center', va='center')
-        return
+        return False
     
     steps = [m.step for m in sim.evolution_metrics_history]
     trust_recovery = [m.consumer_trust_recovery for m in sim.evolution_metrics_history]
     
-    ax.plot(steps, trust_recovery, 'g-', linewidth=2, label='高依赖比例(L4-L5)')
+    ax.plot(steps, trust_recovery, 'g-', linewidth=2, label='高依赖比例 (L4-L5)')
     ax.fill_between(steps, trust_recovery, alpha=0.3, color='green')
     
     # 添加基准线
-    ax.axhline(y=0.5, color='gray', linestyle='--', alpha=0.5, label='50%基准线')
+    ax.axhline(y=0.5, color='gray', linestyle='--', alpha=0.5, label='50% 基准线')
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('高依赖消费者比例')
@@ -207,6 +192,7 @@ def _plot_trust_recovery(ax, sim):
     ax.set_ylim(0, 1)
     ax.grid(True, alpha=0.3)
     ax.legend()
+    return True
 
 
 def _create_comparison_plot(sim, output_dir):
