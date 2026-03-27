@@ -1,0 +1,61 @@
+flowchart TB
+    subgraph Macro["宏观层：集体涌现现象"]
+        M1[L1完全自主型] 
+        M2[L2信息辅助型]
+        M3[L3半委托型]
+        M4[L4高度依赖型]
+        M5[L5完全代理型]
+        PT[相变临界点-Jc约0.167]
+    end
+
+    subgraph Meso["中观层：社会网络影响"]
+        SN[Ising社会网络层]
+        SN1[小世界网络]
+        SN2[无标度网络]
+        SN3[随机网络]
+    end
+
+    subgraph Micro["微观层：个体决策机制"]
+        subgraph DIB["D-I-B决策框架"]
+            D[Desire-欲望激发]
+            I[Intention-意图形成]
+            B[Behavior-行为执行]
+        end
+        
+        subgraph AILayer["AI代理层"]
+            AI1[协同过滤]
+            AI2[内容推荐]
+            AI3[个性化策略]
+        end
+    end
+
+    subgraph Theory["理论基础"]
+        T1[TAM模型-Davis1989]
+        T2[自动化信任-LeeSee2004]
+        T3[算法厌恶欣赏-Dietvorst2015Logg2019]
+        T4[任务适配理论-Castelo2019]
+        T5[感知经济-Huang2019]
+    end
+
+    AILayer --> D
+    D --> I
+    I --> B
+    B --> SN
+    SN --> PT
+    PT --> M4
+    SN --> SN1
+    SN --> SN2
+    SN --> SN3
+    
+    T1 --> DIB
+    T2 --> AILayer
+    T3 --> DIB
+    T4 --> AILayer
+    T5 --> DIB
+
+    style Macro fill:#FFEBEE
+    style Meso fill:#E3F2FD
+    style Micro fill:#E8F5E9
+    style Theory fill:#FFF8E1
+    style M4 fill:#FFCDD2
+    style PT fill:#FFCDD2

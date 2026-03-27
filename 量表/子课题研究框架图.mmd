@@ -1,0 +1,61 @@
+flowchart TB
+    subgraph Main["总课题：AI驱动的消费决策代理依赖演化"]
+        direction TB
+        
+        subgraph Sub1["子课题1：Ising-D-I-B耦合模型构建"]
+            S11[Ising层汉密尔顿量]
+            S12[D-I-B决策框架]
+            S13[AI代理推荐算法]
+            S14[三层耦合方程]
+            S15[相变临界条件推导]
+            S11 --> S12 --> S13 --> S14 --> S15
+        end
+        
+        subgraph Sub2["子课题2：ACDDS量表开发与实证"]
+            S21[量表设计-6维度26题项]
+            S22[小样本预测试-n200]
+            S23[信效度检验]
+            S24[正式调查-n2000]
+            S25[L1-L5分布数据]
+            S21 --> S22 --> S23 --> S24 --> S25
+        end
+        
+        subgraph Sub3["子课题3：多情境仿真实验"]
+            S31[基线实验]
+            S32[记忆实验]
+            S33[AI进化实验]
+            S34[网络结构实验]
+            S35[代际动态实验]
+            S31 --> S32 --> S33 --> S34 --> S35
+        end
+        
+        subgraph Sub4["子课题4：干预策略设计"]
+            S41[信息干预]
+            S42[过滤气泡治理]
+            S43[系统性风险防控]
+            S44[AI竞争实验]
+            S45[情境敏感性实验]
+            S41 --> S42 --> S43 --> S44 --> S45
+        end
+        
+        subgraph Sub5["子课题5：AI治理政策框架"]
+            S51[平台算法透明度]
+            S52[用户控制权保障]
+            S53[多样性保障机制]
+            S54[数字素养教育方案]
+            S55[政策建议报告]
+            S51 --> S52 --> S53 --> S54 --> S55
+        end
+    end
+
+    Sub1 --> Sub2
+    Sub2 --> Sub3
+    Sub3 --> Sub4
+    Sub4 --> Sub5
+
+    style Main fill:#F5F5F5
+    style Sub1 fill:#E3F2FD
+    style Sub2 fill:#E8F5E9
+    style Sub3 fill:#FFF3E0
+    style Sub4 fill:#F3E5F5
+    style Sub5 fill:#FFEBEE
