@@ -242,8 +242,9 @@ def run_custom_experiment(exp_key):
             from experiments.exp3_ai_evolution.run_evolution import run_experiment3
             sim, summary = run_experiment3()
         elif exp_key == '4':
-            from experiments.exp4_information_intervention.run_intervention import run_intervention
-            sim, summary = run_intervention()
+            from experiments.exp4_information_intervention.run_intervention import run_experiment4
+            results = run_experiment4()
+            return
         elif exp_key == '5':
             from experiments.exp5_network_structure.run_network import run_network
             sim, summary = run_network()
@@ -262,9 +263,9 @@ def run_custom_experiment(exp_key):
         elif exp_key == '10':
             from experiments.exp10_systemic_risk.run_systemic_risk import run_systemic_risk
             sim, summary = run_systemic_risk()
-        
+            
         print("\n" + "="*70)
-        print(" 实验完成!")
+        print("✅ 实验完成!")
         print("="*70)
         
     except ImportError as e:
