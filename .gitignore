@@ -44,8 +44,8 @@ matplotlibrc
 Thumbs.db
 
 # 模拟数据 (不要上传)
-模拟数据/
-**/模拟数据/**
+data_servey/
+**/data_servey/**
 
 # 大型数据文件
 *.csv

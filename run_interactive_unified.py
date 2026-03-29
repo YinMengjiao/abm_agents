@@ -246,23 +246,24 @@ def run_custom_experiment(exp_key):
             results = run_experiment4()
             return
         elif exp_key == '5':
-            from experiments.exp5_network_structure.run_network import run_network
-            sim, summary = run_network()
+            from experiments.exp5_network_structure.run_network import run_experiment5
+            run_experiment5()
+            return
         elif exp_key == '6':
-            from experiments.exp6_generational_dynamics.run_generational import run_generational
-            sim, summary = run_generational()
+            from experiments.exp6_generational_dynamics.run_generational import run_experiment6
+            runner, results = run_experiment6()
         elif exp_key == '7':
-            from experiments.exp7_ai_competition.run_competition import run_competition
-            sim, summary = run_competition()
+            from experiments.exp7_ai_competition.run_competition import run_experiment7
+            sim, summary = run_experiment7()
         elif exp_key == '8':
-            from experiments.exp8_context_sensitivity.run_context import run_context
-            sim, summary = run_context()
+            from experiments.exp8_context_sensitivity.run_context import run_experiment8
+            runner, results = run_experiment8()
         elif exp_key == '9':
-            from experiments.exp9_filter_bubble.run_filter_bubble import run_filter_bubble
-            sim, summary = run_filter_bubble()
+            from experiments.exp9_filter_bubble.run_filter_bubble import run_experiment9
+            analyzer, results = run_experiment9()
         elif exp_key == '10':
-            from experiments.exp10_systemic_risk.run_systemic_risk import run_systemic_risk
-            sim, summary = run_systemic_risk()
+            from experiments.exp10_systemic_risk.run_systemic_risk import run_experiment10
+            risk_model, main_result, stress_results = run_experiment10()
             
         print("\n" + "="*70)
         print("✅ 实验完成!")
