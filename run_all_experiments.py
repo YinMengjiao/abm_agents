@@ -43,7 +43,7 @@ CONFIG = {
     
     # ========== 初始依赖等级分布 (L1-L5) ==========
     # 注意：所有比例之和必须等于 1.0
-    'level_distribution': {
+    'level_distribution': { #问卷结果
         1: 0.04,  # L1: 自主型 (10%)
         2: 0.26,  # L2: 信息辅助 (25%)
         3: 0.46,  # L3: 半委托 (30%)
@@ -198,21 +198,7 @@ def clear_old_results():
     
     import shutil
     
-    # 实验目录列表
-    experiments_dirs = [
-        Path.cwd() / "experiments" / "baseline_exp1" / "results",
-        Path.cwd() / "experiments" / "experiment2_memory" / "results",
-        Path.cwd() / "experiments" / "exp3_ai_evolution" / "results",
-        Path.cwd() / "experiments" / "exp4_information_intervention" / "results",
-        Path.cwd() / "experiments" / "exp5_network_structure" / "results",
-        Path.cwd() / "experiments" / "exp6_generational_dynamics" / "results",
-        Path.cwd() / "experiments" / "exp7_ai_competition" / "results",
-        Path.cwd() / "experiments" / "exp8_context_sensitivity" / "results",
-        Path.cwd() / "experiments" / "exp9_filter_bubble" / "results",
-        Path.cwd() / "experiments" / "exp10_systemic_risk" / "results",
-    ]
-    
-    # 统一输出目录
+    # 统一输出目录 (主要存储位置)
     unified_output_dir = Path.cwd() / "results" / "all_experiments_figures"
     
     # results 根目录
@@ -223,19 +209,7 @@ def clear_old_results():
     
     deleted_count = 0
     
-    # 删除各实验的 results 目录
-    for exp_results_dir in experiments_dirs:
-        if exp_results_dir.exists():
-            try:
-                # 删除目录下的所有 PNG 文件
-                for png_file in exp_results_dir.glob("*.png"):
-                    png_file.unlink()
-                    deleted_count += 1
-                print(f"  ✓ 清空：{exp_results_dir.relative_to(Path.cwd())}")
-            except Exception as e:
-                print(f"  ⚠ 清空失败 {exp_results_dir}: {e}")
-    
-    # 删除统一输出目录的所有 PNG 文件
+    # 清空统一输出目录的所有 PNG 文件
     if unified_output_dir.exists():
         try:
             for png_file in unified_output_dir.glob("*.png"):
@@ -273,65 +247,26 @@ def clear_old_results():
 
 
 def collect_all_figures():
-    """收集所有生成的图片到统一目录"""
+    """收集所有生成的图片到统一目录 (已在运行时直接保存)"""
     print("\n" + "="*70)
-    print("📂 收集所有可视化图片")
+    print("📂 检查可视化图片")
     print("="*70)
     
-    # 运行收集脚本
-    try:
-        from abm_simulation.experiments.collect_all_png_final import project_root
-        from pathlib import Path
-        import shutil
-        
-        output_dir = Path.cwd() / "results" / "all_experiments_figures"
-        output_dir.mkdir(parents=True, exist_ok=True)
-        
-        # 实验目录列表
-        experiments_dirs = [
-            Path.cwd() / "experiments" / "baseline_exp1",
-            Path.cwd() / "experiments" / "experiment2_memory",
-            Path.cwd() / "experiments" / "exp3_ai_evolution",
-            Path.cwd() / "experiments" / "exp4_information_intervention",
-            Path.cwd() / "experiments" / "exp5_network_structure",
-            Path.cwd() / "experiments" / "exp6_generational_dynamics",
-            Path.cwd() / "experiments" / "exp7_ai_competition",
-            Path.cwd() / "experiments" / "exp8_context_sensitivity",
-            Path.cwd() / "experiments" / "exp9_filter_bubble",
-            Path.cwd() / "experiments" / "exp10_systemic_risk",
-        ]
-        
-        total_count = 0
-        
-        for exp_dir in experiments_dirs:
-            exp_folder = exp_dir.name
-            exp_results_dir = exp_dir / "results"
-            
-            if not exp_results_dir.exists():
-                continue
-            
-            # 递归查找所有 PNG 文件
-            png_files = list(exp_results_dir.rglob("*.png"))
-            
-            for png_file in png_files:
-                relative_path = png_file.relative_to(exp_results_dir)
-                
-                # 构建文件名
-                if str(relative_path.parent) == '.':
-                    new_filename = f"{exp_folder}_{png_file.name}"
-                else:
-                    subdir_name = relative_path.parent.name
-                    new_filename = f"{exp_folder}_{subdir_name}_{png_file.name}"
-                
-                dest_path = output_dir / new_filename
-                shutil.copy2(png_file, dest_path)
-                print(f"  ✓ {new_filename}")
-                total_count += 1
-        
-        print(f"\n✅ 已收集 {total_count} 张图片到：{output_dir}")
-        
-    except Exception as e:
-        print(f"\n❌ 收集图片失败：{e}")
+    output_dir = Path.cwd() / "results" / "all_experiments_figures"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # 统计图片数量
+    png_files = list(output_dir.glob("*.png"))
+    
+    if png_files:
+        print(f"\n✅ 已生成 {len(png_files)} 张图片:")
+        for file in sorted(png_files):
+            size_kb = file.stat().st_size / 1024
+            print(f"   ✓ {file.name} ({size_kb:.1f} KB)")
+    else:
+        print(f"\n⚠️ 未找到图片文件")
+    
+    print(f"\n📂 图片目录：{output_dir}")
 
 
 def generate_report(config, success_exps, failed_exps):
