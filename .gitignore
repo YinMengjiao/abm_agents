@@ -1,4 +1,4 @@
-# Python
+﻿# Python
 __pycache__/
 *.py[cod]
 *.class
@@ -20,7 +20,7 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual environments
+# Virtual Environment
 venv/
 env/
 ENV/
@@ -36,31 +36,28 @@ ENV/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# matplotlib
+# Matplotlib
 matplotlibrc
-
-# Results and generated plots
-results/*/
-*.png
-*.jpg
-*.jpeg
-*.gif
-
-# LaTeX
-latex_report/*.aux
-latex_report/*.log
-latex_report/*.out
-latex_report/*.toc
-latex_report/*.tmp
-latex_report/*.synctex*
-latex_report/*.fls
-latex_report/*.fdb_latexmk
-latex_report/main.pdf
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Temporary files
+# 模拟数据 (不要上传)
+模拟数据/
+**/模拟数据/**
+
+# 大型数据文件
+*.csv
+*.xlsx
+*.xls
+!requirements.txt
+
+# 生成的报告
+*.pdf
+*.log
+*.out
+
+# 临时文件
 *.tmp
-*.temp
+temp/
