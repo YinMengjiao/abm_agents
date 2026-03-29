@@ -19,16 +19,16 @@ def run_all_experiments():
     print("="*70)
     
     experiments = [
-        ('baseline_exp1', 'run_baseline', 'run_experiment1', 'Baseline Experiment'),
-        ('exp2_consumer_memory', 'consumer_with_memory', 'run_experiment2', 'Consumer Memory'),
-        ('exp3_ai_evolution', 'ai_evolution', 'run_experiment3', 'AI Evolution'),
-        ('exp4_information_intervention', 'intervention', 'run_experiment4', 'Information Intervention'),
-        ('exp5_network_structure', 'run_network', 'run_experiment5', 'Network Structure'),
-        ('exp6_generational_dynamics', 'run_generational', 'run_experiment6', 'Generational Dynamics'),
-        ('exp7_ai_competition', 'run_competition', 'run_experiment7', 'AI Competition'),
-        ('exp8_context_sensitivity', 'run_context', 'run_experiment8', 'Context Sensitivity'),
-        ('exp9_filter_bubble', 'run_bubble', 'run_experiment9', 'Filter Bubble'),
-        ('exp10_systemic_risk', 'run_systemic_risk', 'run_experiment10', 'Systemic Risk'),
+        ('baseline_exp1', 'run_baseline', 'Baseline Experiment'),
+        ('exp2_consumer_memory', 'run_comparison', 'Consumer Memory'),
+        ('exp3_ai_evolution', 'run_evolution', 'AI Evolution'),
+        ('exp4_information_intervention', 'run_intervention', 'Information Intervention'),
+        ('exp5_network_structure', 'run_network', 'Network Structure'),
+        ('exp6_generational_dynamics', 'run_generational', 'Generational Dynamics'),
+        ('exp7_ai_competition', 'run_competition', 'AI Competition'),
+        ('exp8_context_sensitivity', 'run_context', 'Context Sensitivity'),
+        ('exp9_filter_bubble', 'run_bubble', 'Filter Bubble'),
+        ('exp10_systemic_risk', 'run_systemic_risk', 'Systemic Risk'),
     ]
     
     output_dir = Path(project_root) / "results" / "all_experiments_figures"
@@ -36,43 +36,36 @@ def run_all_experiments():
     
     print(f"\n输出目录：{output_dir}\n")
     
-    for exp_folder, module_name, func_name, exp_title in experiments:
+    for exp_folder, module_name, exp_title in experiments:
         try:
             print(f"\n{'='*70}")
             print(f"运行实验：{exp_title}")
             print(f"{'='*70}")
             
             # 动态导入并运行实验
+            module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
+            
+            # 获取运行函数
             if exp_folder == 'baseline_exp1':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
                 run_func = getattr(module, 'run_baseline')
             elif exp_folder == 'exp2_consumer_memory':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
-                run_func = getattr(module, 'run_comparison')
+                run_func = getattr(module, 'run_experiment2')
             elif exp_folder == 'exp3_ai_evolution':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
-                run_func = getattr(module, 'run_evolution')
+                run_func = getattr(module, 'run_experiment3')
             elif exp_folder == 'exp4_information_intervention':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
-                run_func = getattr(module, 'run_intervention')
+                run_func = getattr(module, 'run_experiment4')
             elif exp_folder == 'exp5_network_structure':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
-                run_func = getattr(module, 'run_network')
+                run_func = getattr(module, 'run_experiment5')
             elif exp_folder == 'exp6_generational_dynamics':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
-                run_func = getattr(module, 'run_generational')
+                run_func = getattr(module, 'run_experiment6')
             elif exp_folder == 'exp7_ai_competition':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
-                run_func = getattr(module, 'run_competition')
+                run_func = getattr(module, 'run_experiment7')
             elif exp_folder == 'exp8_context_sensitivity':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
-                run_func = getattr(module, 'run_context')
+                run_func = getattr(module, 'run_experiment8')
             elif exp_folder == 'exp9_filter_bubble':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
-                run_func = getattr(module, 'run_bubble')
+                run_func = getattr(module, 'run_experiment9')
             elif exp_folder == 'exp10_systemic_risk':
-                module = __import__(f'experiments.{exp_folder}.{module_name}', fromlist=[''])
-                run_func = getattr(module, 'run_systemic_risk')
+                run_func = getattr(module, 'run_experiment10')
             else:
                 raise ValueError(f"Unknown experiment folder: {exp_folder}")
             
