@@ -213,6 +213,21 @@ class InitializationComparisonExperiment:
         
         os.makedirs(output_dir, exist_ok=True)
         
+        # 转换numpy类型为Python原生类型
+        def convert_numpy_types(obj):
+            if isinstance(obj, dict):
+                return {str(k): convert_numpy_types(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_numpy_types(item) for item in obj]
+            elif isinstance(obj, (np.integer,)):
+                return int(obj)
+            elif isinstance(obj, (np.floating,)):
+                return float(obj)
+            elif isinstance(obj, np.ndarray):
+                return obj.tolist()
+            else:
+                return obj
+        
         # 保存JSON结果
         results = {
             'experiment': 'initialization_comparison',
@@ -224,8 +239,8 @@ class InitializationComparisonExperiment:
                 'survey_distribution': self.survey_dist,
                 'theoretical_distribution': self.theoretical_dist
             },
-            'results_survey': self.results_survey,
-            'results_theoretical': self.results_theoretical
+            'results_survey': convert_numpy_types(self.results_survey),
+            'results_theoretical': convert_numpy_types(self.results_theoretical)
         }
         
         json_path = os.path.join(output_dir, 'comparison_results.json')
