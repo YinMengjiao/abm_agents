@@ -21,7 +21,7 @@ def visualize_filter_bubble_results(analyzer, results, output_dir: str = None):
         output_dir = RESULTS["exp3_bubble"]
     os.makedirs(output_dir, exist_ok=True)
     
-    fig = plt.figure(figsize=(16, 10))
+    fig = plt.figure(figsize=(18, 12))
     
     # 1. 各依赖等级多样性对比
     ax1 = plt.subplot(2, 3, 1)
@@ -47,8 +47,8 @@ def visualize_filter_bubble_results(analyzer, results, output_dir: str = None):
     ax6 = plt.subplot(2, 3, 6)
     _plot_individual_diversity(ax6, results)
     
-    plt.suptitle('实验 3-a: 过滤气泡与选择多样性分析', fontsize=16, fontweight='bold', y=1.02)
-    plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
+    plt.suptitle('实验 3-a: 过滤气泡与选择多样性分析', fontsize=16, fontweight='bold', y=0.98)
+    plt.tight_layout(rect=[0, 0, 1, 0.95])  # 为 suptitle 留出空间
     plt.savefig(f'{output_dir}/filter_bubble_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()
     

@@ -21,7 +21,7 @@ def visualize_systemic_risk_results(main_result, stress_results, risk_model, out
         output_dir = RESULTS["exp3_risk"]
     os.makedirs(output_dir, exist_ok=True)
     
-    fig = plt.figure(figsize=(16, 10))
+    fig = plt.figure(figsize=(18, 12))
     
     # 1. 信任度演化轨迹
     ax1 = plt.subplot(2, 3, 1)
@@ -47,8 +47,8 @@ def visualize_systemic_risk_results(main_result, stress_results, risk_model, out
     ax6 = plt.subplot(2, 3, 6)
     _plot_resilience_assessment(ax6, main_result, risk_model)
     
-    plt.suptitle('实验 3-b: 系统性风险与级联失效分析', fontsize=16, fontweight='bold', y=1.02)
-    plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
+    plt.suptitle('实验 3-b: 系统性风险与级联失效分析', fontsize=16, fontweight='bold', y=0.98)
+    plt.tight_layout(rect=[0, 0, 1, 0.95])  # 为 suptitle 留出空间
     plt.savefig(f'{output_dir}/systemic_risk_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()
     
