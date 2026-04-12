@@ -6,7 +6,7 @@
 
 > **基于 Ising-D-I-B 三层耦合模型的 AI 消费决策多智能体仿真平台**
 
-本项目是一个计算社会科学研究工具，用于模拟和分析 AI 推荐系统对消费者决策行为的影响机制。系统整合了物理学相变理论、行为决策心理学和多智能体建模方法，提供 10 个完整的仿真实验模块。
+本项目是一个计算社会科学研究工具，用于模拟和分析 AI 推荐系统对消费者决策行为的影响机制。系统整合了物理学相变理论、行为决策心理学和多智能体建模方法，提供 4 个核心实验和 1 个对比验证实验。
 
 ---
 
@@ -73,6 +73,30 @@
 
 ## 📸 实验可视化展示
 
+### 实验 1：基线模型验证
+
+8 子图综合面板：Ising 动力学、依赖等级演化、相变验证、AI 使用率与错误率
+
+![Baseline Summary](abm_simulation/results/exp1_baseline/baseline_summary.png)
+
+> **说明**：
+> - (a) Ising 序参量演化 (b) 依赖等级时序演化 (c) 最终等级分布 (d) 相变临界值扫描
+> - (e) 满意度分布 (f) 等级转移热力图 (g) 满意度-使用率关系 (h) AI 使用率与错误率
+
+---
+
+### 对比实验：初始化验证
+
+调查数据 vs 理论假设的初始化对比，验证模型输入的真实性
+
+![Initialization Comparison](abm_simulation/results/exp_comparison_init/initialization_comparison.png)
+
+> **说明**：
+> - (a-b) 桑基图展示初始→最终等级流向 (c-d) 等级演化热力图
+> - (e) 最终分布对比柱状图 (f) 关键指标箱线图
+
+---
+
 ### 实验 2：AI 进化机制
 
 AI 代理从反馈中学习，错误率从 0.085 降至 0.013（下降 85%）
@@ -112,33 +136,33 @@ MAJOR 故障影响 162 人（32.4%），系统韧性得分 4.897，149 步内恢
 
 ## 🔬 实验模块
 
-系统包含 **10 个完整实验**，覆盖从基础验证到复杂场景的全方位研究：
+系统包含 **4 个核心实验 + 1 个对比实验**，覆盖从基础验证到政策干预的完整研究链条：
 
 ### 基础实验 (Exp 1-2)
 
 | 实验 | 名称 | 研究问题 | 关键指标 |
-|------|------|---------|---------|
+|------|------|---------|----------|
 | **Exp 1** | 基线模型 | Ising-D-I-B 模型是否有效？ | 相变临界值 Jc、L1-L5 分布 |
 | **Exp 2** | AI 进化机制 | AI 能否从反馈中学习？ | 错误率下降、进化进度 |
 
-### 机制实验 (Exp 3-4)
+### 后果实验 (Exp 3)
 
 | 实验 | 名称 | 研究问题 | 关键指标 |
-|------|------|---------|---------|
+|------|------|---------|----------|
 | **Exp 3-a** | 过滤气泡 | 推荐算法是否导致信息茧房？ | 选择多样性、香农熵 |
 | **Exp 3-b** | 系统性风险 | 技术故障如何级联传播？ | 影响范围、恢复时间 |
+
+### 干预实验 (Exp 4)
+
+| 实验 | 名称 | 研究问题 | 关键指标 |
+|------|------|---------|----------|
 | **Exp 4** | 信息干预 | 政策如何影响系统演化？ | 高依赖群体变化 |
 
-### 扩展实验 (Exp 5-10)
+### 对比实验
 
-| 实验 | 名称 | 研究问题 |
-|------|------|---------|
-| **Exp 5** | 网络结构 | 不同拓扑结构的影响 |
-| **Exp 6** | 代际动态 | 数字原生 vs 数字移民的差异 |
-| **Exp 7** | AI 竞争 | 多个 AI 代理的市场竞争 |
-| **Exp 8** | 情境敏感 | 工作/家庭/购物场景的差异 |
-| **Exp 9** | 过滤气泡 | 信息茧房效应深度分析 |
-| **Exp 10** | 系统性风险 | 技术故障的社会传染机制 |
+| 实验 | 名称 | 研究问题 | 关键指标 |
+|------|------|---------|----------|
+| **Comparison** | 初始化对比 | 调查数据 vs 理论假设的初始化差异 | 桑基流向、最终分布、关键指标箱线图 |
 
 ---
 
@@ -180,7 +204,10 @@ python run_interactive_unified.py
 
 ```bash
 # 实验 1：基线模型
-python abm_simulation/experiments/baseline_exp1/run_baseline.py
+python abm_simulation/experiments/exp1_baseline/run_baseline.py
+
+# 对比实验：初始化验证
+python abm_simulation/experiments/exp_comparison_init/run_comparison.py
 
 # 实验 2：AI 进化机制
 python abm_simulation/experiments/exp2_mechanism/run_evolution.py
@@ -218,22 +245,27 @@ abm_agents/
 │   ├── models/                  # 模型模块
 │   │   └── ising_network.py    # Ising 社交网络
 │   ├── experiments/             # 实验模块
-│   │   ├── baseline_exp1/      # 实验 1：基线模型
+│   │   ├── exp1_baseline/      # 实验 1：基线模型
 │   │   ├── exp2_mechanism/     # 实验 2：AI 进化机制
 │   │   ├── exp3_consequences/  # 实验 3：后果分析
 │   │   │   ├── filter_bubble/  #   3-a：过滤气泡
 │   │   │   └── systemic_risk/  #   3-b：系统性风险
 │   │   ├── exp4_intervention/  # 实验 4：信息干预
-│   │   └── ...                 # 实验 5-10
+│   │   ├── exp_comparison_init/# 对比实验：初始化验证
+│   │   └── _archived/          # 已归档的扩展实验
 │   ├── results/                 # 实验结果
 │   │   ├── exp1_baseline/      # 实验 1 结果
 │   │   ├── exp2_mechanism/     # 实验 2 结果
 │   │   ├── exp3_consequences/  # 实验 3 结果
 │   │   │   ├── filter_bubble/  #   过滤气泡图表
 │   │   │   └── systemic_risk/  #   系统性风险图表
-│   │   └── exp4_intervention/  # 实验 4 结果
+│   │   ├── exp4_intervention/  # 实验 4 结果
+│   │   └── exp_comparison_init/# 对比实验结果
 │   └── visualization/           # 可视化工具
 │       └── chinese_font.py     # 中文字体配置
+├── data_survey/                 # 调查数据
+│   ├── acdds_raw_data.csv      # ACDDS 原始数据
+│   └── acdds_results.csv       # ACDDS 结果数据
 ├── run_interactive_unified.py   # 交互式统一入口
 ├── run_all_experiments.py       # 批量运行脚本
 └── README.md
@@ -241,13 +273,13 @@ abm_agents/
 
 ### 可视化示例
 
-每个实验生成 1-4 张学术级 PNG 图表：
+每个实验生成 1 张学术级 PNG 综合图表：
 
-#### 实验 1：基线模型（4 张）
-- `final_distribution.png` - 最终依赖等级分布
-- `ising_dynamics.png` - Ising 动力学曲线
-- `level_distribution_evolution.png` - 等级演化热图
-- `performance_metrics.png` - 性能指标
+#### 实验 1：基线模型（1 张综合面板）
+- `baseline_summary.png` - 8 子图综合面板（Ising 动力学、依赖等级演化、相变验证、AI 使用率等）
+
+#### 对比实验：初始化验证（1 张）
+- `initialization_comparison.png` - 调查数据 vs 理论假设对比（桑基图、热力图、箱线图）
 
 #### 实验 2：AI 进化机制（1 张）
 - `evolution_analysis.png` - AI 错误率下降与进化进度
@@ -277,13 +309,13 @@ NUM_MERCHANTS = 20       # 商家数量
 NUM_AI_AGENTS = 3        # AI 代理数量
 STEPS = 300             # 仿真步数
 
-# 依赖等级初始分布 (L1-L5)
+# 依赖等级初始分布 (L1-L5)，基于 ACDDS 问卷调查数据
 LEVEL_DISTRIBUTION = {
-    'L1': 0.10,   # 自主型 (10%)
-    'L2': 0.25,   # 信息辅助型 (25%)
-    'L3': 0.30,   # 半委托型 (30%)
-    'L4': 0.25,   # 高度依赖型 (25%)
-    'L5': 0.10    # 完全代理型 (10%)
+    'L1': 0.04,   # 自主型 (4%)
+    'L2': 0.26,   # 信息辅助型 (26%)
+    'L3': 0.46,   # 半委托型 (46%)
+    'L4': 0.21,   # 高度依赖型 (21%)
+    'L5': 0.03    # 完全代理型 (3%)
 }
 
 # Ising 模型参数
@@ -337,14 +369,11 @@ NETWORK_TYPE = 'small_world'  # small_world / random / scale_free
 - ✅ **促进 AI 政策**最有效推动高依赖（94.2% 达 L4）
 - ✅ **均衡政策**满意度最高，但高依赖群体减少
 
-### 实验 5-10：扩展研究
+### 对比实验：初始化验证
 
-- **网络结构**：Small-world 最优，Scale-free 存在枢纽风险
-- **代际差异**：数字原生适应快，数字移民需要支持
-- **AI 竞争**：适度竞争提升服务质量
-- **情境敏感**：工作场景 AI 依赖度最高
-- **过滤气泡**：需平衡个性化与多样性
-- **系统风险**：需建立容错和恢复机制
+- ✅ **调查数据真实性**：基于 ACDDS 问卷的真实人群分布验证
+- ✅ **桑基流向分析**：直观展示初始→最终等级流向差异
+- ✅ **关键指标对比**：箱线图对比调查数据与理论假设的核心指标
 
 ---
 
@@ -355,7 +384,7 @@ NETWORK_TYPE = 'small_world'  # small_world / random / scale_free
 1. **Ising-D-I-B 耦合模型**：首次将物理学相变理论与行为决策模型整合
 2. **ACDDS 量表**：提出 AI 消费决策依赖等级评估标准（L1-L5）
 3. **相变临界值**：发现 Jc ≈ 0.167 的关键阈值，为政策干预提供科学依据
-4. **多维度验证**：10 个实验覆盖基础机制到复杂场景
+4. **多维度验证**：4 个核心实验 + 对比实验覆盖基础机制到政策干预
 
 ### 实践意义
 
@@ -402,7 +431,17 @@ NETWORK_TYPE = 'small_world'  # small_world / random / scale_free
 
 ## 📝 版本历史
 
-### v3.0 (2026-04-12) - 最新
+### v4.0 (2026-04-12) - 最新
+
+- ✅ 新增对比实验（exp_comparison_init）：调查数据 vs 理论假设初始化验证
+- ✅ 实验 1 基线模型生成 8 子图综合面板（baseline_summary.png）
+- ✅ 桑基图水流宽度按节点比例平滑插值
+- ✅ 修复箱线图图例不显示问题
+- ✅ 实验 1 图(h) AI 使用率与错误率 y 轴刻度分离
+- ✅ 所有图表支持英文模式（Times New Roman 字体）
+- ✅ 归档扩展实验（Exp 5-10）至 `_archived/`
+
+### v3.0 (2026-04-01)
 
 - ✅ 修复实验 3-a（过滤气泡）可视化路径配置错误
 - ✅ 修复实验 3-b（系统性风险）信任度计算逻辑
@@ -414,7 +453,7 @@ NETWORK_TYPE = 'small_world'  # small_world / random / scale_free
 
 ### v2.0 (2026-03-28)
 
-- ✅ 完成 10 个实验模块的统一化
+- ✅ 完成实验模块统一化
 - ✅ 实现动态 L1-L5 比例参数注入
 - ✅ 构建统一可视化平台
 - ✅ 标准化接口和函数命名
@@ -422,7 +461,7 @@ NETWORK_TYPE = 'small_world'  # small_world / random / scale_free
 ### v1.0 (2026-03-15)
 
 - 基础 Ising-D-I-B 模型实现
-- 前 5 个实验模块开发
+- 核心实验模块开发
 
 ---
 
