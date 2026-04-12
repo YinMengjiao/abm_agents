@@ -71,6 +71,45 @@
 
 ---
 
+## 📸 实验可视化展示
+
+### 实验 2：AI 进化机制
+
+AI 代理从反馈中学习，错误率从 0.085 降至 0.013（下降 85%）
+
+![AI Evolution](abm_simulation/results/exp2_mechanism/evolution_analysis.png)
+
+---
+
+### 实验 3-a：过滤气泡效应
+
+低依赖群体（L1）的选择多样性 0.922 > 高依赖群体（L5）0.774，证实信息茧房效应
+
+![Filter Bubble](abm_simulation/results/exp3_consequences/filter_bubble/filter_bubble_analysis.png)
+
+---
+
+### 实验 3-b：系统性风险与级联失效
+
+MAJOR 故障影响 162 人（32.4%），系统韧性得分 4.897，149 步内恢复
+
+![Systemic Risk](abm_simulation/results/exp3_consequences/systemic_risk/systemic_risk_analysis.png)
+
+---
+
+### 实验 4：信息干预政策对比
+
+三种政策（均衡/促进AI/保护消费者）的 9 子图对比分析
+
+![Intervention Policies](abm_simulation/results/exp4_intervention/intervention_all_policies.png)
+
+> **说明**：
+> - (a-c) 干预事件时间分布
+> - (d-f) L1-L5 依赖等级动态演化  
+> - (g-i) 高依赖群体受干预影响轨迹
+
+---
+
 ## 🔬 实验模块
 
 系统包含 **10 个完整实验**，覆盖从基础验证到复杂场景的全方位研究：
