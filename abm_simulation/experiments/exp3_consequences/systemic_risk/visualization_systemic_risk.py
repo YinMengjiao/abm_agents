@@ -48,8 +48,8 @@ def visualize_systemic_risk_results(main_result, stress_results, risk_model, out
     _plot_resilience_assessment(ax6, main_result, risk_model)
     
     plt.suptitle('实验 3-b: 系统性风险与级联失效分析', fontsize=16, fontweight='bold', y=0.98)
-    plt.tight_layout(rect=[0, 0, 1, 0.95])  # 为 suptitle 留出空间
-    plt.savefig(f'{output_dir}/systemic_risk_analysis.png', dpi=150, bbox_inches='tight')
+    plt.tight_layout(rect=[0, 0, 1, 0.95], pad=2.0, h_pad=3.0, w_pad=3.0)  # 增加子图间距
+    plt.savefig(f'{output_dir}/systemic_risk_analysis.png', dpi=150, bbox_inches='tight', facecolor='white')
     plt.close()
     
     print(f"  [OK] 系统性风险分析图已保存：{output_dir}/systemic_risk_analysis.png")

@@ -48,8 +48,8 @@ def visualize_filter_bubble_results(analyzer, results, output_dir: str = None):
     _plot_individual_diversity(ax6, results)
     
     plt.suptitle('实验 3-a: 过滤气泡与选择多样性分析', fontsize=16, fontweight='bold', y=0.98)
-    plt.tight_layout(rect=[0, 0, 1, 0.95])  # 为 suptitle 留出空间
-    plt.savefig(f'{output_dir}/filter_bubble_analysis.png', dpi=150, bbox_inches='tight')
+    plt.tight_layout(rect=[0, 0, 1, 0.95], pad=2.0, h_pad=3.0, w_pad=3.0)  # 增加子图间距
+    plt.savefig(f'{output_dir}/filter_bubble_analysis.png', dpi=150, bbox_inches='tight', facecolor='white')
     plt.close()
     
     print(f"  [OK] 过滤气泡分析图已保存：{output_dir}/filter_bubble_analysis.png")
