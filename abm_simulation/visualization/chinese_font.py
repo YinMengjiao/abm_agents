@@ -1,6 +1,5 @@
-"""
-中文字体配置模块
-为所有可视化提供统一的中文字体支持
+"""字体配置模块
+支持中英文字体切换
 """
 
 import matplotlib.pyplot as plt
@@ -34,5 +33,28 @@ def setup_chinese_font():
     print(f"已设置中文字体：{font_list}")
     return True
 
-# 自动应用中文字体
+def setup_english_font():
+    """
+    设置英文字体（Times New Roman）
+    用于英文可视化
+    """
+    # Times New Roman 作为主要字体
+    plt.rcParams['font.family'] = 'serif'
+    plt.rcParams['font.serif'] = ['Times New Roman', 'Georgia', 'Times']
+    
+    # 解决负号显示问题
+    plt.rcParams['axes.unicode_minus'] = False
+    
+    # 设置字体大小
+    plt.rcParams['font.size'] = 10
+    plt.rcParams['axes.titlesize'] = 12
+    plt.rcParams['axes.labelsize'] = 11
+    plt.rcParams['xtick.labelsize'] = 10
+    plt.rcParams['ytick.labelsize'] = 10
+    plt.rcParams['legend.fontsize'] = 10
+    
+    print("已设置英文字体：Times New Roman")
+    return True
+
+# 默认应用中文字体
 setup_chinese_font()

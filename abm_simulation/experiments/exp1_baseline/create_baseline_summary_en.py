@@ -1,5 +1,5 @@
 """
-基线实验综合可视化 - 将所有图表合并到一张图上
+基线实验综合可视化 - 将所有图表合并到一张图上（完整英文版）
 """
 
 import numpy as np
@@ -8,11 +8,9 @@ import sys
 import os
 
 # 添加项目根目录（abm_simulation/）到路径
-# __file__ = .../abm_simulation/experiments/exp1_baseline/create_baseline_summary.py
-# 需要三层 dirname 才能到达 abm_simulation/
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, project_root)
-from visualization.chinese_font import setup_chinese_font, setup_english_font
+from visualization.chinese_font import setup_chinese_font
 from config import RESULTS
 setup_chinese_font()
 
@@ -89,12 +87,6 @@ def create_baseline_summary(sim, results, output_dir: str = None, en: bool = Fal
     lang = 'en' if en else 'zh'
     text = TEXT_CONFIG[lang]
     
-    # 设置字体
-    if en:
-        setup_english_font()
-    else:
-        setup_chinese_font()
-    
     # 等级名称
     if en:
         level_names_short = ['L1\nAutonomous', 'L2\nInfo Assist', 'L3\nSemi-delegate', 'L4\nHigh Depend', 'L5\nFull Agency']
@@ -108,41 +100,32 @@ def create_baseline_summary(sim, results, output_dir: str = None, en: bool = Fal
     fig.suptitle(text['title'], fontsize=20, fontweight='bold', y=0.98)
     
     # ========== 第一行：依赖等级分布 ==========
-    # 子图 1: 初始等级分布
     ax1 = plt.subplot(3, 3, 1)
     _plot_initial_level_distribution(ax1, sim, level_names_short, text)
     
-    # 子图 2: 最终等级分布
     ax2 = plt.subplot(3, 3, 2)
     _plot_final_level_distribution(ax2, results, level_names_short, text)
     
-    # 子图 3: 等级演化
     ax3 = plt.subplot(3, 3, 3)
     _plot_level_evolution(ax3, sim, level_names_line, text)
     
     # ========== 第二行：Ising 动力学 ==========
-    # 子图 4: 磁化强度演化
     ax4 = plt.subplot(3, 3, 4)
     _plot_magnetization_evolution(ax4, sim, text)
     
-    # 子图 5: 耦合强度演化
     ax5 = plt.subplot(3, 3, 5)
     _plot_coupling_evolution(ax5, sim, text)
     
-    # 子图 6: Ising 相变分析
     ax6 = plt.subplot(3, 3, 6)
     _plot_phase_transition_analysis(ax6, sim, text)
     
     # ========== 第三行：系统性能 ==========
-    # 子图 7: 满意度演化
     ax7 = plt.subplot(3, 3, 7)
     _plot_satisfaction_evolution(ax7, sim, text)
     
-    # 子图 8: AI 使用率与错误率
     ax8 = plt.subplot(3, 3, 8)
     _plot_ai_usage_and_errors(ax8, sim, text)
     
-    # 子图 9: 网络拓扑特征（雷达图需要 polar 投影）
     ax9 = fig.add_subplot(3, 3, 9, projection='polar')
     _plot_network_topology(ax9, sim, text)
     
@@ -154,7 +137,7 @@ def create_baseline_summary(sim, results, output_dir: str = None, en: bool = Fal
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
     plt.close()
     
-    print(f"[OK] 基线实验综合图已保存：{output_path}")
+    print(f"[OK] Baseline summary saved: {output_path}")
     return output_path
 
 
@@ -198,16 +181,14 @@ def _plot_level_evolution(ax, sim, level_names, text):
     if hasattr(sim, 'metrics_history') and sim.metrics_history:
         steps = [m.step for m in sim.metrics_history[::10]]
         
-        # 提取各级别数量
         levels_data = {i: [] for i in range(1, 6)}
         for m in sim.metrics_history[::10]:
             for level in range(1, 6):
                 levels_data[level].append(m.level_distribution.get(level, 0))
         
         colors = ['#4C72B0', '#5B9BD5', '#55A868', '#DD8452', '#C44E52']
-        labels = level_names
             
-        for level, color, label in zip(range(1, 6), colors, labels):
+        for level, color, label in zip(range(1, 6), colors, level_names):
             ax.plot(steps, levels_data[level], label=label, color=color, linewidth=2, alpha=0.7)
         
         ax.set_xlabel(text['step'], fontsize=11)
@@ -230,10 +211,8 @@ def _plot_magnetization_evolution(ax, sim, text):
         ax.set_title(text['magnetization'], fontsize=12, fontweight='bold')
         ax.grid(True, alpha=0.3)
         
-        # 标注最终值
         final_mag = magnetization[-1]
-        final_label = text['final']
-        ax.text(0.95, 0.95, f'{final_label}: {final_mag:.3f}', transform=ax.transAxes,
+        ax.text(0.95, 0.95, f'{text["final"]}: {final_mag:.3f}', transform=ax.transAxes,
                fontsize=10, ha='right', va='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
 
@@ -249,10 +228,8 @@ def _plot_coupling_evolution(ax, sim, text):
         ax.set_title(text['coupling'], fontsize=12, fontweight='bold')
         ax.grid(True, alpha=0.3)
         
-        # 标注临界值
-        critical_coupling = 0.1667  # 理论临界值
-        critical_label = text['critical']
-        ax.axhline(y=critical_coupling, color='red', linestyle=':', linewidth=1.5, label=f'{critical_label}: {critical_coupling:.3f}')
+        critical_coupling = 0.1667
+        ax.axhline(y=critical_coupling, color='red', linestyle=':', linewidth=1.5, label=f'{text["critical"]}: {critical_coupling:.3f}')
         ax.legend(fontsize=9)
 
 
@@ -263,7 +240,6 @@ def _plot_phase_transition_analysis(ax, sim, text):
         coupling = [m.coupling_strength for m in sim.metrics_history[::10]]
         magnetization = [m.magnetization for m in sim.metrics_history[::10]]
         
-        # 创建双 y 轴
         ax1 = ax
         ax2 = ax.twinx()
         
@@ -275,7 +251,6 @@ def _plot_phase_transition_analysis(ax, sim, text):
         ax2.set_ylabel(text['magnetization_label'], fontsize=11, color='blue')
         ax1.set_title(text['phase_transition'], fontsize=12, fontweight='bold')
         
-        # 合并图例
         lines = line1 + line2
         labels = [l.get_label() for l in lines]
         ax1.legend(lines, labels, loc='upper left', fontsize=9)
@@ -296,10 +271,8 @@ def _plot_satisfaction_evolution(ax, sim, text):
         ax.set_title(text['satisfaction'], fontsize=12, fontweight='bold')
         ax.grid(True, alpha=0.3)
         
-        # 标注统计值
         mean_sat = np.mean(satisfaction)
-        mean_label = text['mean']
-        ax.text(0.05, 0.95, f'{mean_label}: {mean_sat:.3f}', transform=ax.transAxes,
+        ax.text(0.05, 0.95, f'{text["mean"]}: {mean_sat:.3f}', transform=ax.transAxes,
                fontsize=10, ha='left', va='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
 
@@ -310,7 +283,6 @@ def _plot_ai_usage_and_errors(ax, sim, text):
         ai_usage = [m.ai_usage_rate for m in sim.metrics_history[::10]]
         error_rate = [m.error_rate for m in sim.metrics_history[::10]]
         
-        # 创建双 y 轴
         ax1 = ax
         ax2 = ax.twinx()
         
@@ -322,7 +294,6 @@ def _plot_ai_usage_and_errors(ax, sim, text):
         ax2.set_ylabel(text['error_rate'], fontsize=11, color='purple')
         ax1.set_title(text['ai_usage'], fontsize=12, fontweight='bold')
         
-        # 合并图例
         lines = line1 + line2
         labels = [l.get_label() for l in lines]
         ax1.legend(lines, labels, loc='upper right', fontsize=9)
@@ -331,24 +302,19 @@ def _plot_ai_usage_and_errors(ax, sim, text):
 
 
 def _plot_network_topology(ax, sim, text):
-    """Network topology features - using different scale normalization"""
+    """Network topology features"""
     if hasattr(sim, 'network') and sim.network:
+        import networkx as nx
         graph = sim.network.graph
         
-        # 计算网络指标
         avg_degree = np.mean([d for n, d in graph.degree()])
         clustering_coef = nx.average_clustering(graph) if hasattr(nx, 'average_clustering') else 0
         avg_path_length = nx.average_shortest_path_length(graph) if nx.is_connected(graph) else float('inf')
         
-        # 分别归一化到 [0, 1] 区间
-        # 平均度数：典型值 5-20，归一化为 avg_degree / 20
         degree_normalized = min(avg_degree / 20.0, 1.0)
-        # 聚类系数：已经在 [0, 1] 区间
         clustering_normalized = clustering_coef
-        # 路径长度：典型值 3-8，归一化为 1 - (path_length - 3) / 5
         path_normalized = max(0, min(1.0 - (avg_path_length - 3.0) / 5.0, 1.0))
         
-        # 绘制雷达图
         categories = [text['avg_degree'], text['clustering_coef'], text['path_length']]
         values = [degree_normalized, clustering_normalized, path_normalized]
         
@@ -365,16 +331,7 @@ def _plot_network_topology(ax, sim, text):
         ax.set_title(text['network'], fontsize=12, fontweight='bold', pad=20)
         ax.grid(True, alpha=0.3)
         
-        # 添加数值标签（显示原始值）
         raw_values = [avg_degree, clustering_coef, avg_path_length]
         for angle, val_norm, val_raw in zip(angles[:-1], values[:-1], raw_values):
             ax.text(angle, val_norm + 0.08, f'{val_raw:.2f}', 
                    ha='center', fontsize=9, fontweight='bold', color='#2C3E50')
-
-
-# 需要导入 networkx
-try:
-    import networkx as nx
-except ImportError:
-    nx = None
-    print("警告：未安装 networkx，网络拓扑图可能无法显示")

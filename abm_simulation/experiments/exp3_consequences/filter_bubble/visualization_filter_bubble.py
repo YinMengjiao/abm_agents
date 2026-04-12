@@ -7,12 +7,11 @@ import numpy as np
 import os
 import sys
 
-# 添加项目根目录并导入中文字体配置
+# 添加项目根目录并导入字体配置
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, project_root)
-from visualization.chinese_font import setup_chinese_font
+from visualization.chinese_font import setup_chinese_font, setup_english_font
 from config import RESULTS
-setup_chinese_font()
 
 # 语言配置
 TEXT_CONFIG = {
@@ -39,9 +38,15 @@ def visualize_filter_bubble_results(analyzer, results, output_dir: str = None, e
         output_dir = RESULTS["exp3_bubble"]
     os.makedirs(output_dir, exist_ok=True)
     
+    # 设置字体
+    if en:
+        setup_english_font()
+    else:
+        setup_chinese_font()
+    
     fig = plt.figure(figsize=(16, 10))
     
-    # 1. 各依赖等级多样性对比
+    # 1. 各Dependency Level多样性对比
     ax1 = plt.subplot(2, 3, 1)
     _plot_diversity_by_level(ax1, results)
     
@@ -74,7 +79,7 @@ def visualize_filter_bubble_results(analyzer, results, output_dir: str = None, e
 
 
 def _plot_diversity_by_level(ax, results):
-    """绘制各依赖等级多样性对比"""
+    """绘制各Dependency Level多样性对比"""
     diversity_by_level = results['population_metrics']['diversity_by_level']
     
     levels = list(diversity_by_level.keys())
@@ -83,8 +88,8 @@ def _plot_diversity_by_level(ax, results):
     colors = plt.cm.RdYlGn(np.array(diversities))
     bars = ax.bar([f'L{l}' for l in levels], diversities, color=colors, alpha=0.8, width=0.5)
     
-    ax.set_ylabel('多样性得分')
-    ax.set_title('(a) 各依赖等级选择多样性')
+    ax.set_ylabel('Diversity Score')
+    ax.set_title('(a) Choice Diversity by Dependency Level')
     ax.set_ylim(0, 1)
     
     # 添加数值标签
@@ -102,11 +107,11 @@ def _plot_diversity_distribution(ax, results):
     if diversity_scores:
         ax.hist(diversity_scores, bins=20, alpha=0.75, color='#4C72B0', edgecolor='white', linewidth=0.8)
         ax.axvline(x=np.mean(diversity_scores), color='#C44E52', linestyle='--', 
-                  linewidth=2.5, label=f'均值: {np.mean(diversity_scores):.3f}')
+                  linewidth=2.5, label=f'Mean: {np.mean(diversity_scores):.3f}')
     
-    ax.set_xlabel('多样性得分')
-    ax.set_ylabel('消费者数量')
-    ax.set_title('(b) 多样性分布')
+    ax.set_xlabel('Diversity Score')
+    ax.set_ylabel('Consumer Count')
+    ax.set_title('(b) Diversity Distribution')
     ax.legend()
 
 
@@ -114,7 +119,7 @@ def _plot_exploration_rate(ax, results):
     """绘制探索率对比"""
     individual_metrics = results['individual_metrics']
     
-    # 按依赖等级分组
+    # 按Dependency Level分组
     exploration_by_level = {i: [] for i in range(1, 6)}
     
     for m in individual_metrics:
@@ -133,8 +138,8 @@ def _plot_exploration_rate(ax, results):
     colors = plt.cm.RdYlGn_r(np.array(avg_exploration))
     bars = ax.bar(levels, avg_exploration, color=colors, alpha=0.8, width=0.5)
     
-    ax.set_ylabel('平均探索率')
-    ax.set_title('(c) 各等级探索行为')
+    ax.set_ylabel('Average Exploration Rate')
+    ax.set_title('(c) Exploration Behavior by Level')
     ax.set_ylim(0, 1)
     
     # 添加趋势线
@@ -142,7 +147,7 @@ def _plot_exploration_rate(ax, results):
         z = np.polyfit(range(len(avg_exploration)), avg_exploration, 1)
         p = np.poly1d(z)
         ax.plot(range(len(avg_exploration)), p(range(len(avg_exploration))), 
-               'r--', alpha=0.5, label='趋势')
+               'r--', alpha=0.5, label='Trend')
         ax.legend()
 
 
@@ -152,7 +157,7 @@ def _plot_category_coverage(ax, analyzer, results):
     n_consumers_sample = min(50, len(analyzer.consumer_histories))
     n_categories = analyzer.n_categories
     
-    # 随机选择消费者样本
+    # 随机选择Consumer Sample
     sample_consumers = np.random.choice(
         list(analyzer.consumer_histories.keys()), 
         n_consumers_sample, 
@@ -172,10 +177,10 @@ def _plot_category_coverage(ax, analyzer, results):
                                where=row_sums!=0, out=np.zeros_like(coverage_matrix))
     
     im = ax.imshow(coverage_matrix, cmap='YlOrRd', aspect='auto')
-    ax.set_xlabel('产品类别')
-    ax.set_ylabel('消费者样本')
-    ax.set_title('(d) 类别选择热力图')
-    plt.colorbar(im, ax=ax, label='选择频率')
+    ax.set_xlabel('Product Category')
+    ax.set_ylabel('Consumer Sample')
+    ax.set_title('(d) Category Selection Heatmap')
+    plt.colorbar(im, ax=ax, label='Selection Frequency')
 
 
 def _plot_filter_bubble_strength(ax, results):
@@ -191,7 +196,7 @@ def _plot_filter_bubble_strength(ax, results):
     
     # 绘制箱线图
     data_to_plot = [low_dep_scores, high_dep_scores]
-    bp = ax.boxplot(data_to_plot, labels=['低依赖\n(L1-L2)', '高依赖\n(L4-L5)'], 
+    bp = ax.boxplot(data_to_plot, labels=['Low Dep.\n(L1-L2)', 'High Dep.\n(L4-L5)'], 
                     patch_artist=True, widths=0.5)
     
     # 设置颜色 - 顶刊柔和配色
@@ -213,8 +218,8 @@ def _plot_filter_bubble_strength(ax, results):
                 item.set_color('#7F8C8D')
                 item.set_linewidth(1.2)
     
-    ax.set_ylabel('多样性得分')
-    ax.set_title('(e) 过滤气泡效应', pad=12)  # 增加标题与图表的间距
+    ax.set_ylabel('Diversity Score')
+    ax.set_title('(e) Filter Bubble Effect', pad=12)  # 增加标题与图表的间距
     ax.set_ylim(0.4, 1.05)  # 根据实际数据调整Y轴范围
     ax.grid(True, alpha=0.3, axis='y')
     
@@ -243,13 +248,13 @@ def _plot_individual_diversity(ax, results):
             diversities.append(m['diversity_score'])
             coverages.append(m['category_coverage'])
     
-    # 使用颜色表示依赖等级
+    # 使用颜色表示Dependency Level
     scatter = ax.scatter(diversities, coverages, c=levels, cmap='RdYlGn_r', 
                         alpha=0.6, s=50, edgecolors='gray', linewidth=0.5)
     
-    ax.set_xlabel('多样性得分')
-    ax.set_ylabel('类别覆盖率')
-    ax.set_title('(f) 个体多样性特征')
+    ax.set_xlabel('Diversity Score')
+    ax.set_ylabel('Category Coverage')
+    ax.set_title('(f) Individual Diversity Profile')
     
     # 根据数据范围动态设置坐标轴，留出 10% 的边距
     if len(diversities) > 1:
@@ -266,7 +271,7 @@ def _plot_individual_diversity(ax, results):
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
     
-    plt.colorbar(scatter, ax=ax, label='依赖等级')
+    plt.colorbar(scatter, ax=ax, label='Dependency Level')
     
     # 添加趋势线
     if len(diversities) > 1:

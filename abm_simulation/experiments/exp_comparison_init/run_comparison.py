@@ -35,7 +35,9 @@ class InitializationComparisonExperiment:
         self.n_consumers = n_consumers
         
         # 加载两种分布
-        self.survey_dist = SimulationConfig.load_survey_distribution()
+        # 实验组：使用带人口统计信息的真实调查数据
+        self.survey_dist = SimulationConfig.load_survey_distribution(with_demographics=True)
+        # 对照组：使用理论对称分布
         self.theoretical_dist = {1: 0.10, 2: 0.25, 3: 0.30, 4: 0.25, 5: 0.10}
         
         # 存储结果

@@ -6,6 +6,11 @@
 import sys
 import os
 from pathlib import Path
+import io
+
+# 设置标准输出编码为UTF-8
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # 添加路径
 project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'abm_simulation')
@@ -113,6 +118,38 @@ def run_all_experiments_english():
         import traceback
         traceback.print_exc()
         failed_exps.append(4)
+    
+    # ========== 对比实验: 初始化方式对比 ==========
+    print("\n" + "="*70)
+    print("▶️  Comparison Experiment: Survey vs Theoretical Initialization")
+    print("="*70)
+    try:
+        from experiments.exp_comparison_init.run_comparison import InitializationComparisonExperiment
+        from experiments.exp_comparison_init.visualization_comparison import create_comparison_visualization
+        
+        # 运行对比实验
+        exp = InitializationComparisonExperiment(
+            n_runs=10,
+            n_steps=200,
+            n_consumers=500
+        )
+        exp.run_comparison()
+        output_dir = exp.save_results()
+        
+        # 加载结果并生成英文可视化
+        import json
+        json_path = os.path.join(output_dir, 'comparison_results.json')
+        with open(json_path, 'r', encoding='utf-8') as f:
+            comparison_results = json.load(f)
+        
+        create_comparison_visualization(comparison_results, en=True)
+        print("\n✅ Comparison Experiment completed!\n")
+        success_exps.append('comparison')
+    except Exception as e:
+        print(f"\n❌ Comparison Experiment failed: {e}\n")
+        import traceback
+        traceback.print_exc()
+        failed_exps.append('comparison')
     
     # ========== 总结 ==========
     print("\n" + "="*70)

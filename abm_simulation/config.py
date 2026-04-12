@@ -17,4 +17,5 @@ RESULTS = {
     "exp3_bubble": os.path.join(RESULTS_ROOT, "exp3_consequences", "filter_bubble"),
     "exp3_risk":   os.path.join(RESULTS_ROOT, "exp3_consequences", "systemic_risk"),
     "exp4":        os.path.join(RESULTS_ROOT, "exp4_intervention"),
+    "exp_comparison": os.path.join(RESULTS_ROOT, "exp_comparison_init"),
 }

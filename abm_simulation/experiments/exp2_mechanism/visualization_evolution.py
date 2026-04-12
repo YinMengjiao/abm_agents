@@ -7,29 +7,28 @@ import numpy as np
 import os
 import sys
 
-# 添加项目根目录并导入中文字体配置
+# 添加项目根目录并导入字体配置
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, project_root)
-from visualization.chinese_font import setup_chinese_font
+from visualization.chinese_font import setup_chinese_font, setup_english_font
 from config import RESULTS
-setup_chinese_font()
 
 # 语言配置
 TEXT_CONFIG = {
     'zh': {
         'title': '实验 2: AI 代理进化机制',
-        'level_dist_title': '(a) 依赖等级分布演化',
+        'level_dist_title': '(a) Dependency Level Distribution Evolution',
         'capability_title': '(b) AI 能力进化热力图',
-        'step_label': '仿真步数',
+        'step_label': 'Simulation Step',
         'consumer_count': '智能体数量',
         'level_label': 'AI代理等级',
-        'error_rate': 'AI错误率',
+        'error_rate': 'AIError Rate',
         'satisfaction': '平均满意度',
-        'evolution_vs_baseline': 'AI错误率: 进化 vs 基线',
+        'evolution_vs_baseline': 'AIError Rate: 进化 vs 基线',
         'satisfaction_vs_baseline': '消费者满意度: 进化 vs 基线',
         'evolution_ai': '实验2: 进化AI',
         'comparison_title': '实验2对比分析',
-        'no_data': '无数据',
+        'no_data': 'No Data',
     },
     'en': {
         'title': 'Experiment 2: AI Agent Evolution',
@@ -62,6 +61,12 @@ def visualize_evolution_results(sim, output_dir: str = None, en: bool = False):
         output_dir = RESULTS["exp2"]
     os.makedirs(output_dir, exist_ok=True)
     
+    # 设置字体
+    if en:
+        setup_english_font()
+    else:
+        setup_chinese_font()
+    
     # 创建简化版综合可视化（只展示有数据的子图）
     fig = plt.figure(figsize=(16, 7))
     
@@ -82,20 +87,20 @@ def visualize_evolution_results(sim, output_dir: str = None, en: bool = False):
 
 
 def _plot_ai_evolution_trajectory(ax, sim):
-    """绘制 AI 进化轨迹"""
+    """绘制 AI Evolution Trajectory"""
     if not sim.evolution_metrics_history:
-        ax.text(0.5, 0.5, '无进化数据', ha='center', va='center')
+        ax.text(0.5, 0.5, 'No Evolution Data', ha='center', va='center')
         return False
     
     steps = [m.step for m in sim.evolution_metrics_history]
     progress = [m.avg_evolution_progress for m in sim.evolution_metrics_history]
     
-    ax.plot(steps, progress, 'b-', linewidth=2, label='平均进化进度')
+    ax.plot(steps, progress, 'b-', linewidth=2, label='平均Evolution Progress')
     ax.fill_between(steps, progress, alpha=0.3)
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('进化进度')
-    ax.set_title('AI 进化轨迹')
+    ax.set_xlabel('Simulation Step')
+    ax.set_ylabel('Evolution Progress')
+    ax.set_title('AI Evolution Trajectory')
     ax.set_ylim(0, 1)
     ax.grid(True, alpha=0.3)
     ax.legend()
@@ -103,15 +108,15 @@ def _plot_ai_evolution_trajectory(ax, sim):
 
 
 def _plot_error_rate_evolution(ax, sim):
-    """绘制错误率进化"""
+    """绘制Error Rate进化"""
     if not sim.evolution_metrics_history:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, 'No Data', ha='center', va='center')
         return
     
     steps = [m.step for m in sim.evolution_metrics_history]
     error_rates = [m.avg_ai_error_rate for m in sim.evolution_metrics_history]
     
-    ax.plot(steps, error_rates, 'r-', linewidth=2, label='平均错误率')
+    ax.plot(steps, error_rates, 'r-', linewidth=2, label='平均Error Rate')
     ax.fill_between(steps, error_rates, alpha=0.3, color='red')
     
     # 添加趋势线
@@ -120,9 +125,9 @@ def _plot_error_rate_evolution(ax, sim):
         p = np.poly1d(z)
         ax.plot(steps, p(steps), 'r--', alpha=0.5, label='趋势线')
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('错误率')
-    ax.set_title('AI错误率进化')
+    ax.set_xlabel('Simulation Step')
+    ax.set_ylabel('Error Rate')
+    ax.set_title('AIError Rate进化')
     ax.grid(True, alpha=0.3)
     ax.legend()
 
@@ -130,7 +135,7 @@ def _plot_error_rate_evolution(ax, sim):
 def _plot_level_distribution_evolution(ax, sim):
     """绘制依赖等级分布演化"""
     if not sim.metrics_history:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, 'No Data', ha='center', va='center')
         return
     
     steps = [m.step for m in sim.metrics_history]
@@ -141,17 +146,17 @@ def _plot_level_distribution_evolution(ax, sim):
         counts = [m.level_distribution.get(level, 0) for m in sim.metrics_history]
         ax.plot(steps, counts, color=color, linewidth=2.5, label=f'L{level}', alpha=0.85)
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('消费者数量')
-    ax.set_title('(a) 依赖等级分布演化')
+    ax.set_xlabel('Simulation Step')
+    ax.set_ylabel('Consumer Count')
+    ax.set_title('(a) Dependency Level Distribution Evolution')
     ax.legend()
     ax.grid(True, alpha=0.3)
 
 
 def _plot_learning_events(ax, sim):
-    """绘制学习事件统计"""
+    """绘制Learning Events Statistics"""
     if not sim.evolution_metrics_history:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, 'No Data', ha='center', va='center')
         return
     
     steps = [m.step for m in sim.evolution_metrics_history]
@@ -164,10 +169,10 @@ def _plot_learning_events(ax, sim):
     ax_twin = ax.twinx()
     ax_twin.plot(steps, cumulative, 'r-', linewidth=2, label='累积学习事件')
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('单步学习事件数', color='steelblue')
+    ax.set_xlabel('Simulation Step')
+    ax.set_ylabel('Learning Events per Step', color='steelblue')
     ax_twin.set_ylabel('累积学习事件数', color='red')
-    ax.set_title('AI学习事件统计')
+    ax.set_title('AILearning Events Statistics')
     ax.legend(loc='upper left')
     ax_twin.legend(loc='upper right')
 
@@ -198,7 +203,7 @@ def _plot_capability_heatmap(ax, sim):
     ax.set_xticklabels(capabilities, rotation=45, ha='right')
     ax.set_yticks(range(n_agents))
     ax.set_yticklabels([f'AI-{i}' for i in range(n_agents)])
-    ax.set_title('(b) AI能力进化热力图')
+    ax.set_title('(b) AI Capability Evolution Heatmap')
     
     # 添加数值标注
     for i in range(n_agents):
@@ -212,7 +217,7 @@ def _plot_capability_heatmap(ax, sim):
 def _plot_trust_recovery(ax, sim):
     """绘制信任恢复曲线"""
     if not sim.evolution_metrics_history:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, 'No Data', ha='center', va='center')
         return False
     
     steps = [m.step for m in sim.evolution_metrics_history]
@@ -224,7 +229,7 @@ def _plot_trust_recovery(ax, sim):
     # 添加基准线
     ax.axhline(y=0.5, color='gray', linestyle='--', alpha=0.5, label='50% 基准线')
     
-    ax.set_xlabel('仿真步数')
+    ax.set_xlabel('Simulation Step')
     ax.set_ylabel('高依赖消费者比例')
     ax.set_title('消费者信任恢复曲线')
     ax.set_ylim(0, 1)
@@ -243,9 +248,9 @@ def _create_comparison_plot(sim, output_dir):
         error_rates = [m.avg_ai_error_rate for m in sim.evolution_metrics_history]
         
         axes[0].plot(steps, error_rates, 'b-', linewidth=2, label='实验2: 进化AI')
-        axes[0].set_xlabel('仿真步数')
-        axes[0].set_ylabel('AI错误率')
-        axes[0].set_title('AI错误率: 进化 vs 基线')
+        axes[0].set_xlabel('Simulation Step')
+        axes[0].set_ylabel('AIError Rate')
+        axes[0].set_title('AIError Rate: 进化 vs 基线')
         axes[0].legend()
         axes[0].grid(True, alpha=0.3)
     
@@ -257,7 +262,7 @@ def _create_comparison_plot(sim, output_dir):
                         for m in sim.metrics_history]
         
         axes[1].plot(steps, satisfactions, 'g-', linewidth=2, label='实验2: 进化AI')
-        axes[1].set_xlabel('仿真步数')
+        axes[1].set_xlabel('Simulation Step')
         axes[1].set_ylabel('平均满意度')
         axes[1].set_title('消费者满意度: 进化 vs 基线')
         axes[1].legend()

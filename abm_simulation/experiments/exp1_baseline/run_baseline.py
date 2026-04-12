@@ -14,7 +14,12 @@ from simulation import ABMSimulation, SimulationConfig
 from config import RESULTS
 
 
-def run_baseline():
+def run_baseline(en: bool = False):
+    """运行基线实验
+    
+    Args:
+        en: True=英文输出, False=中文输出 (默认)
+    """
     """运行基线实验"""
     print("="*70)
     print("【实验1】基线模型 (Baseline)")
@@ -90,10 +95,13 @@ def run_baseline():
     
     # 生成综合图（唯一输出，3×3 子图汇总）
     print("\n" + "="*70)
-    print("生成基线实验综合图...")
+    if en:
+        print("Generating baseline summary figure...")
+    else:
+        print("生成基线实验综合图...")
     print("="*70)
     from experiments.exp1_baseline.create_baseline_summary import create_baseline_summary
-    create_baseline_summary(sim, summary, output_dir=RESULTS["exp1"])
+    create_baseline_summary(sim, summary, output_dir=RESULTS["exp1"], en=en)
     
     print("\n" + "="*70)
     print("基线实验完成!")
@@ -103,4 +111,8 @@ def run_baseline():
 
 
 if __name__ == "__main__":
-    sim, summary = run_baseline()
+    import argparse
+    parser = argparse.ArgumentParser(description='Run baseline experiment')
+    parser.add_argument('--en', action='store_true', help='Use English output')
+    args = parser.parse_args()
+    sim, summary = run_baseline(en=args.en)

@@ -7,12 +7,11 @@ import numpy as np
 import os
 import sys
 
-# 添加项目根目录并导入中文字体配置
+# 添加项目根目录并导入字体配置
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, project_root)
-from visualization.chinese_font import setup_chinese_font
+from visualization.chinese_font import setup_chinese_font, setup_english_font
 from config import RESULTS
-setup_chinese_font()
 
 # 语言配置
 TEXT_CONFIG = {
@@ -24,6 +23,12 @@ TEXT_CONFIG = {
         'timeline_balanced': '(a) 均衡政策：干预事件时间分布',
         'timeline_promote': '(b) 促进AI政策：干预事件时间分布',
         'timeline_protect': '(c) 保护消费者政策：干预事件时间分布',
+        'evolution_balanced': '(d) 均衡政策：L1-L5依赖等级动态演化',
+        'evolution_promote': '(e) 促进AI政策：L1-L5依赖等级动态演化',
+        'evolution_protect': '(f) 保护消费者政策：L1-L5依赖等级动态演化',
+        'impact_balanced': '(g) 均衡政策：高依赖群体受干预影响轨迹',
+        'impact_promote': '(h) 促进AI政策：高依赖群体受干预影响轨迹',
+        'impact_protect': '(i) 保护消费者政策：高依赖群体受干预影响轨迹',
         'before_after_title': '干预前后对比',
         'intervention_effects': '干预效果分析',
         'step_label': '仿真步数',
@@ -31,6 +36,16 @@ TEXT_CONFIG = {
         'intervention_point': '干预点',
         'no_data': '无数据',
         'high_dependency': '高依赖(L4+L5)',
+        'timeline_row': '干预时间线',
+        'evolution_row': '依赖等级演化',
+        'impact_row': '干预前后高依赖变化',
+        'consumer_count': '消费者数量',
+        'level_evolution_title': '依赖等级演化（红线=干预点）',
+        'intervention_label': '干预',
+        'high_dep_evolution': '高依赖群体演化轨迹',
+        'impact_intensity': '影响强度',
+        'affected_consumers': '受影响消费者数',
+        'intervention_type_dist': '干预类型分布',
     },
     'en': {
         'title': 'Experiment 4: Information Intervention Policies',
@@ -40,6 +55,12 @@ TEXT_CONFIG = {
         'timeline_balanced': '(a) Balanced: Intervention Timeline',
         'timeline_promote': '(b) Pro-AI: Intervention Timeline',
         'timeline_protect': '(c) Consumer Protection: Intervention Timeline',
+        'evolution_balanced': '(d) Balanced: L1-L5 Dependency Level Dynamics',
+        'evolution_promote': '(e) Pro-AI: L1-L5 Dependency Level Dynamics',
+        'evolution_protect': '(f) Consumer Protection: L1-L5 Dependency Level Dynamics',
+        'impact_balanced': '(g) Balanced: High Dependency Group Intervention Impact',
+        'impact_promote': '(h) Pro-AI: High Dependency Group Intervention Impact',
+        'impact_protect': '(i) Consumer Protection: High Dependency Group Intervention Impact',
         'before_after_title': 'Before vs After Intervention',
         'intervention_effects': 'Intervention Effects Analysis',
         'step_label': 'Simulation Step',
@@ -47,6 +68,16 @@ TEXT_CONFIG = {
         'intervention_point': 'Intervention',
         'no_data': 'No Data',
         'high_dependency': 'High Dependency (L4+L5)',
+        'timeline_row': 'Intervention Timeline',
+        'evolution_row': 'Dependency Level Evolution',
+        'impact_row': 'High Dependency Impact',
+        'consumer_count': 'Consumer Count',
+        'level_evolution_title': 'Dependency Level Evolution (Red=Intervention)',
+        'intervention_label': 'Intervention',
+        'high_dep_evolution': 'High Dependency Group Evolution',
+        'impact_intensity': 'Impact Intensity',
+        'affected_consumers': 'Affected Consumers',
+        'intervention_type_dist': 'Intervention Type Distribution',
     }
 }
 
@@ -68,6 +99,13 @@ def visualize_all_policy_results(policy_sims: dict, output_dir: str = None, en: 
     policies = list(policy_sims.keys())
     lang = 'en' if en else 'zh'
     text = TEXT_CONFIG[lang]
+    
+    # 设置字体
+    if en:
+        setup_english_font()
+    else:
+        setup_chinese_font()
+    
     policy_labels = {
         'balanced': text['balanced'],
         'promote_ai': text['promote_ai'],
@@ -93,22 +131,22 @@ def visualize_all_policy_results(policy_sims: dict, output_dir: str = None, en: 
 
         # 行2：依赖等级演化 - 每个政策独特标题
         policy_evolution_titles = {
-            'balanced': '(d) 均衡政策：L1-L5依赖等级动态演化',
-            'promote_ai': '(e) 促进AI政策：L1-L5依赖等级动态演化',
-            'protect_consumers': '(f) 保护消费者政策：L1-L5依赖等级动态演化'
+            'balanced': text['evolution_balanced'],
+            'promote_ai': text['evolution_promote'],
+            'protect_consumers': text['evolution_protect']
         }
-        _plot_level_evolution_with_interventions(axes[1, col], sim, title=policy_evolution_titles.get(policy))
+        _plot_level_evolution_with_interventions(axes[1, col], sim, title=policy_evolution_titles.get(policy), text=text)
 
         # 行3：干预前后对比 - 每个政策独特标题
         policy_impact_titles = {
-            'balanced': '(g) 均衡政策：高依赖群体受干预影响轨迹',
-            'promote_ai': '(h) 促进AI政策：高依赖群体受干预影响轨迹',
-            'protect_consumers': '(i) 保护消费者政策：高依赖群体受干预影响轨迹'
+            'balanced': text['impact_balanced'],
+            'promote_ai': text['impact_promote'],
+            'protect_consumers': text['impact_protect']
         }
-        _plot_before_after_comparison(axes[2, col], sim, title=policy_impact_titles.get(policy))
+        _plot_before_after_comparison(axes[2, col], sim, title=policy_impact_titles.get(policy), text=text)
 
     # 统一行标签（左侧第一列的 y 轴标题已在子函数里设好，这里加行说明）
-    row_titles = ['干预时间线', '依赖等级演化', '干预前后高依赖变化']
+    row_titles = [text['timeline_row'], text['evolution_row'], text['impact_row']]
     for row, title in enumerate(row_titles):
         axes[row, 0].set_ylabel(f'{title}\n{axes[row, 0].get_ylabel()}', fontsize=11)
 
@@ -202,7 +240,7 @@ def _plot_intervention_timeline(ax, sim, policy_label=None, en: bool = False):
             ax.annotate(f'{label_text}\n(Step {timing}, {duration} steps)', 
                        xy=(timing, y_positions[i]),
                        xytext=(0, 10), textcoords='offset points',
-                       ha='center', va='bottom', fontsize=7, 
+                       ha='center', va='bottom', fontsize=13, 
                        fontweight='bold', color=color,
                        bbox=dict(boxstyle='round,pad=0.3', facecolor='white', 
                                 edgecolor=color, alpha=0.8))
@@ -210,7 +248,7 @@ def _plot_intervention_timeline(ax, sim, policy_label=None, en: bool = False):
             ax.annotate(f'{label_text}\n(步{timing}, 持续{duration}步)', 
                        xy=(timing, y_positions[i]),
                        xytext=(0, 10), textcoords='offset points',
-                       ha='center', va='bottom', fontsize=7, 
+                       ha='center', va='bottom', fontsize=13, 
                        fontweight='bold', color=color,
                        bbox=dict(boxstyle='round,pad=0.3', facecolor='white', 
                                 edgecolor=color, alpha=0.8))
@@ -227,10 +265,13 @@ def _plot_intervention_timeline(ax, sim, policy_label=None, en: bool = False):
     ax.spines['left'].set_visible(False)
 
 
-def _plot_level_evolution_with_interventions(ax, sim, title=None):
-    """绘制依赖等级演化（标注干预点）"""
+def _plot_level_evolution_with_interventions(ax, sim, title=None, text=None):
+    """Plot dependency level evolution with intervention markers"""
+    if text is None:
+        text = TEXT_CONFIG['zh']
+    
     if not sim.metrics_history:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, text['no_data'], ha='center', va='center')
         return
     
     steps = [m.step for m in sim.metrics_history]
@@ -244,20 +285,23 @@ def _plot_level_evolution_with_interventions(ax, sim, title=None):
     for event in sim.intervention_system.intervention_history:
         ax.axvline(x=event.timing, color='red', linestyle='--', alpha=0.5)
     
-    ax.set_xlabel('仿真步数', fontsize=10)
-    ax.set_ylabel('消费者数量', fontsize=10)
+    ax.set_xlabel(text['step_label'], fontsize=10)
+    ax.set_ylabel(text['consumer_count'], fontsize=10)
     if title:
         ax.set_title(title, fontsize=13, fontweight='bold')
     else:
-        ax.set_title('依赖等级演化（红线=干预点）', fontsize=11, fontweight='bold')
+        ax.set_title(text['level_evolution_title'], fontsize=11, fontweight='bold')
     ax.legend(fontsize=9)
     ax.grid(True, alpha=0.3)
 
 
-def _plot_intervention_impact(ax, sim):
-    """绘制干预影响强度"""
+def _plot_intervention_impact(ax, sim, text=None):
+    """Plot intervention impact intensity"""
+    if text is None:
+        text = TEXT_CONFIG['zh']
+    
     if not sim.intervention_metrics_history:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, text['no_data'], ha='center', va='center')
         return
     
     steps = [m.step for m in sim.intervention_metrics_history]
@@ -266,31 +310,37 @@ def _plot_intervention_impact(ax, sim):
     ax.fill_between(steps, impact_scores, alpha=0.5, color='orange')
     ax.plot(steps, impact_scores, 'r-', linewidth=2)
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('影响强度')
-    ax.set_title('干预影响强度')
+    ax.set_xlabel(text['step_label'])
+    ax.set_ylabel(text['impact_intensity'])
+    ax.set_title(text['intervention_effects'])
     ax.grid(True, alpha=0.3)
 
 
-def _plot_affected_consumers(ax, sim):
-    """绘制受影响消费者数量"""
+def _plot_affected_consumers(ax, sim, text=None):
+    """Plot affected consumer count"""
+    if text is None:
+        text = TEXT_CONFIG['zh']
+    
     if not sim.intervention_metrics_history:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, text['no_data'], ha='center', va='center')
         return
     
     steps = [m.step for m in sim.intervention_metrics_history]
     affected = [m.consumers_affected for m in sim.intervention_metrics_history]
     
     ax.bar(steps, affected, alpha=0.6, color='steelblue')
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('受影响消费者数')
-    ax.set_title('每步受影响消费者')
+    ax.set_xlabel(text['step_label'])
+    ax.set_ylabel(text['affected_consumers'])
+    ax.set_title(text['affected_consumers'])
 
 
-def _plot_policy_effectiveness(ax, sim):
-    """绘制政策效果评估"""
+def _plot_policy_effectiveness(ax, sim, text=None):
+    """Plot policy effectiveness"""
+    if text is None:
+        text = TEXT_CONFIG['zh']
+    
     if not sim.intervention_system.intervention_history:
-        ax.text(0.5, 0.5, '无干预数据', ha='center', va='center')
+        ax.text(0.5, 0.5, text['no_data'], ha='center', va='center')
         return
     
     # 统计各类型干预的效果
@@ -306,13 +356,16 @@ def _plot_policy_effectiveness(ax, sim):
     counts = [intervention_types[t]['count'] for t in types]
     
     ax.pie(counts, labels=[t[:10] for t in types], autopct='%1.1f%%')
-    ax.set_title('干预类型分布')
+    ax.set_title(text['intervention_type_dist'])
 
 
-def _plot_before_after_comparison(ax, sim, title=None):
-    """绘制干预前后对比（改用折线+散点图）"""
+def _plot_before_after_comparison(ax, sim, title=None, text=None):
+    """Plot before-after comparison (line + scatter plot)"""
+    if text is None:
+        text = TEXT_CONFIG['zh']
+    
     if not sim.intervention_system.intervention_history or not sim.metrics_history:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, text['no_data'], ha='center', va='center')
         return
     
     # 获取高依赖消费者（L4+L5）的演化轨迹
@@ -323,7 +376,7 @@ def _plot_before_after_comparison(ax, sim, title=None):
         high_dep_counts.append(high_dep)
     
     # 绘制高依赖消费者数量的演化曲线
-    ax.plot(steps, high_dep_counts, 'b-', linewidth=2, alpha=0.7, label='高依赖(L4+L5)')
+    ax.plot(steps, high_dep_counts, 'b-', linewidth=2, alpha=0.7, label=text['high_dependency'])
     ax.fill_between(steps, high_dep_counts, alpha=0.2, color='blue')
     
     # 标注干预点
@@ -334,15 +387,16 @@ def _plot_before_after_comparison(ax, sim, title=None):
             ax.axvline(x=timing, color='red', linestyle='--', alpha=0.5, linewidth=1)
             # 在干预点添加标记
             ax.plot(timing, high_dep_counts[timing], 'ro', markersize=8)
-            ax.annotate(f'干预{i+1}', (timing, high_dep_counts[timing]),
+            intervention_lbl = f"{text['intervention_label']}{i+1}"
+            ax.annotate(intervention_lbl, (timing, high_dep_counts[timing]),
                        textcoords="offset points", xytext=(5, 10), 
                        fontsize=8, fontweight='bold', color='red')
     
-    ax.set_xlabel('仿真步数', fontsize=10)
-    ax.set_ylabel('高依赖消费者数量', fontsize=10)
+    ax.set_xlabel(text['step_label'], fontsize=10)
+    ax.set_ylabel(text['high_dependency'], fontsize=10)
     if title:
         ax.set_title(title, fontsize=13, fontweight='bold')
     else:
-        ax.set_title('高依赖群体演化轨迹', fontsize=11, fontweight='bold')
+        ax.set_title(text['high_dep_evolution'], fontsize=11, fontweight='bold')
     ax.legend(fontsize=9)
     ax.grid(alpha=0.3)

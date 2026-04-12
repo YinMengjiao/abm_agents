@@ -12,9 +12,11 @@ import json
 import os
 import sys
 
-# 设置中文字体
-matplotlib.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Microsoft JhengHei', 'Arial Unicode MS']
-matplotlib.rcParams['axes.unicode_minus'] = False
+# 添加项目根目录（abm_simulation/）到路径
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, project_root)
+from visualization.chinese_font import setup_chinese_font, setup_english_font
+from config import RESULTS
 
 # 顶刊柔和配色
 COLORS = {
@@ -213,7 +215,7 @@ def plot_initial_to_final_sankey(ax, results, group_name, dist_key, color_main, 
         # 标签（上方）
         ax.text(top_x_positions[i], top_y + 0.06, level_labels_short[i], 
                ha='center', va='center', fontsize=10, fontweight='bold')
-        ax.text(top_x_positions[i], top_y + 0.11, f'{initial_values[i]:.1f}%', 
+        ax.text(top_x_positions[i], top_y + 0.11, f'{initial_values[i]:.2f}%', 
                ha='center', va='center', fontsize=9)
     
     # 绘制下方最终分布节点（矩形条）
@@ -229,7 +231,7 @@ def plot_initial_to_final_sankey(ax, results, group_name, dist_key, color_main, 
         # 标签（下方）
         ax.text(bottom_x_positions[i], bottom_y - 0.06, level_labels_short[i], 
                ha='center', va='center', fontsize=10, fontweight='bold')
-        ax.text(bottom_x_positions[i], bottom_y - 0.11, f'{final_values[i]:.1f}%', 
+        ax.text(bottom_x_positions[i], bottom_y - 0.11, f'{final_values[i]:.2f}%', 
                ha='center', va='center', fontsize=9)
     
     # 添加标签
@@ -423,9 +425,15 @@ def create_comparison_visualization(results, output_dir: str = None, en: bool = 
     text = TEXT_CONFIG[lang]
     
     if output_dir is None:
-        output_dir = os.path.join(os.path.dirname(__file__), 'results')
+        output_dir = RESULTS["exp_comparison"]
     
     os.makedirs(output_dir, exist_ok=True)
+    
+    # 设置字体
+    if en:
+        setup_english_font()
+    else:
+        setup_chinese_font()
     
     fig = plt.figure(figsize=(18, 12))
     gs = GridSpec(3, 2, figure=fig, hspace=0.35, wspace=0.3)

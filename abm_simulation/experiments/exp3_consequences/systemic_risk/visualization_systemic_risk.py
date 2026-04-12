@@ -7,20 +7,55 @@ import numpy as np
 import os
 import sys
 
-# 添加项目根目录并导入中文字体配置
+# 添加项目根目录并导入字体配置
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, project_root)
-from visualization.chinese_font import setup_chinese_font
+from visualization.chinese_font import setup_chinese_font, setup_english_font
 from config import RESULTS
-setup_chinese_font()
 
 # 语言配置
 TEXT_CONFIG = {
     'zh': {
         'title': '实验 3-b: 系统性风险与级联失效分析',
+        'avg_trust': '平均信任',
+        'trust_range': '信任范围',
+        'failure_event': '故障发生',
+        'trust_trajectory': '(a) Trust Level演化轨迹',
+        'cascade_size_label': 'Cascade Size（受影响人数）',
+        'frequency': '频次',
+        'cascade_dist': '(e) Cascade Size分布',
+        'initial_trust': '初始信任',
+        'min_trust': '最低信任',
+        'final_trust': '最终信任',
+        'resilience_score': 'Resilience Score',
+        'score': '得分',
+        'resilience_assess': '(f) 系统韧性评估',
+        'high_resilience': '高韧性',
+        'medium_resilience': '中等韧性',
+        'low_resilience': '低韧性',
+        'resilience_level': '韧性等级',
+        'impact_scope': '影响范围',
     },
     'en': {
         'title': 'Experiment 3-b: Systemic Risk & Cascade Failures',
+        'avg_trust': 'Avg Trust',
+        'trust_range': 'Trust Range',
+        'failure_event': 'Failure Event',
+        'trust_trajectory': '(a) Trust Level Trajectory',
+        'cascade_size_label': 'Cascade Size (Affected Agents)',
+        'frequency': 'Frequency',
+        'cascade_dist': '(e) Cascade Size Distribution',
+        'initial_trust': 'Initial Trust',
+        'min_trust': 'Min Trust',
+        'final_trust': 'Final Trust',
+        'resilience_score': 'Resilience Score',
+        'score': 'Score',
+        'resilience_assess': '(f) System Resilience Assessment',
+        'high_resilience': 'High Resilience',
+        'medium_resilience': 'Medium Resilience',
+        'low_resilience': 'Low Resilience',
+        'resilience_level': 'Resilience Level',
+        'impact_scope': 'Impact Scope',
     }
 }
 
@@ -40,11 +75,20 @@ def visualize_systemic_risk_results(main_result, stress_results, risk_model, out
         output_dir = RESULTS["exp3_risk"]
     os.makedirs(output_dir, exist_ok=True)
     
+    lang = 'en' if en else 'zh'
+    text = TEXT_CONFIG[lang]
+    
+    # 设置字体
+    if en:
+        setup_english_font()
+    else:
+        setup_chinese_font()
+    
     fig = plt.figure(figsize=(16, 10))
     
-    # 1. 信任度演化轨迹
+    # 1. Trust Level演化轨迹
     ax1 = plt.subplot(2, 3, 1)
-    _plot_trust_trajectory(ax1, main_result)
+    _plot_trust_trajectory(ax1, main_result, text)
     
     # 2. 依赖等级演化
     ax2 = plt.subplot(2, 3, 2)
@@ -56,17 +100,17 @@ def visualize_systemic_risk_results(main_result, stress_results, risk_model, out
     
     # 4. 压力测试对比
     ax4 = plt.subplot(2, 3, 4)
-    _plot_stress_test_comparison(ax4, stress_results)
+    _plot_stress_test_comparison(ax4, stress_results, text)
     
-    # 5. 级联规模分布
+    # 5. Cascade Size分布
     ax5 = plt.subplot(2, 3, 5)
-    _plot_cascade_size_distribution(ax5, stress_results)
+    _plot_cascade_size_distribution(ax5, stress_results, text)
     
     # 6. 系统韧性评估
     ax6 = plt.subplot(2, 3, 6)
-    _plot_resilience_assessment(ax6, main_result, risk_model)
+    _plot_resilience_assessment(ax6, main_result, risk_model, text)
     
-    plt.suptitle(TEXT_CONFIG['en' if en else 'zh']['title'], fontsize=16, fontweight='bold', y=0.98)
+    plt.suptitle(text['title'], fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.95], pad=2.0, h_pad=3.0, w_pad=3.0)  # 增加子图间距
     plt.savefig(f'{output_dir}/systemic_risk_analysis.png', dpi=150, bbox_inches='tight', facecolor='white')
     plt.close()
@@ -74,12 +118,12 @@ def visualize_systemic_risk_results(main_result, stress_results, risk_model, out
     print(f"  [OK] 系统性风险分析图已保存：{output_dir}/systemic_risk_analysis.png")
 
 
-def _plot_trust_trajectory(ax, result):
-    """绘制信任度演化轨迹"""
+def _plot_trust_trajectory(ax, result, text):
+    """Plot Trust Level trajectory"""
     trajectory = result.get('trust_trajectory', [])
     
     if not trajectory:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, 'No Data', ha='center', va='center')
         return
     
     steps = range(len(trajectory))
@@ -87,16 +131,16 @@ def _plot_trust_trajectory(ax, result):
     min_trust = [np.min(t) for t in trajectory]
     max_trust = [np.max(t) for t in trajectory]
     
-    # 绘制平均信任度
-    ax.plot(steps, avg_trust, color='#4C72B0', linewidth=2.5, label='平均信任')
-    ax.fill_between(steps, min_trust, max_trust, alpha=0.25, color='#4C72B0', label='信任范围')
+    # 绘制平均Trust Level
+    ax.plot(steps, avg_trust, color='#4C72B0', linewidth=2.5, label=text['avg_trust'])
+    ax.fill_between(steps, min_trust, max_trust, alpha=0.25, color='#4C72B0', label=text['trust_range'])
     
     # 标注故障点
-    ax.axvline(x=50, color='#C44E52', linestyle='--', linewidth=2.5, label='故障发生')
+    ax.axvline(x=50, color='#C44E52', linestyle='--', linewidth=2.5, label=text['failure_event'])
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('信任度')
-    ax.set_title('(a) 信任度演化轨迹')
+    ax.set_xlabel('Simulation Step')
+    ax.set_ylabel('Trust Level')
+    ax.set_title(text['trust_trajectory'])
     ax.set_ylim(0, 1)
     ax.legend()
     ax.grid(True, alpha=0.3)
@@ -107,7 +151,7 @@ def _plot_dependency_trajectory(ax, result):
     trajectory = result.get('dependency_trajectory', [])
     
     if not trajectory:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, 'No Data', ha='center', va='center')
         return
     
     steps = range(len(trajectory))
@@ -119,9 +163,9 @@ def _plot_dependency_trajectory(ax, result):
     # 标注故障点
     ax.axvline(x=50, color='#C44E52', linestyle='--', linewidth=2.5)
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('平均依赖等级')
-    ax.set_title('(b) 依赖等级演化')
+    ax.set_xlabel('Simulation Step')
+    ax.set_ylabel('Average Dependency Level')
+    ax.set_title('(b) Dependency Level Evolution')
     ax.set_ylim(1, 5)
     ax.grid(True, alpha=0.3)
 
@@ -131,10 +175,10 @@ def _plot_failure_propagation(ax, result):
     trajectory = result.get('trust_trajectory', [])
     
     if not trajectory or len(trajectory) < 50:
-        ax.text(0.5, 0.5, '数据不足', ha='center', va='center')
+        ax.text(0.5, 0.5, 'Insufficient Data', ha='center', va='center')
         return
     
-    # 计算每步的信任度下降速度（近似传播）
+    # 计算每步的Trust Level下降速度（近似传播）
     propagation_speed = []
     for i in range(1, len(trajectory)):
         if i >= 50 and i <= 70:  # 故障传播期
@@ -148,15 +192,15 @@ def _plot_failure_propagation(ax, result):
     ax.fill_between(steps, propagation_speed, alpha=0.5, color='#C44E52')
     ax.plot(steps, propagation_speed, color='#C44E52', linewidth=2.5)
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('传播速度')
-    ax.set_title('(c) 故障传播过程')
+    ax.set_xlabel('Simulation Step')
+    ax.set_ylabel('Propagation Speed')
+    ax.set_title('(c) Failure Propagation Process')
     ax.axvline(x=50, color='#C44E52', linestyle='--', alpha=0.5)
     ax.grid(True, alpha=0.3)
 
 
-def _plot_stress_test_comparison(ax, stress_results):
-    """绘制压力测试对比"""
+def _plot_stress_test_comparison(ax, stress_results, text):
+    """Plot stress test comparison"""
     scenarios = list(stress_results.keys())
     trust_drops = [stress_results[s]['trust_drop'] for s in scenarios]
     max_affected = [stress_results[s]['max_affected'] for s in scenarios]
@@ -164,43 +208,44 @@ def _plot_stress_test_comparison(ax, stress_results):
     x = np.arange(len(scenarios))
     width = 0.35
     
-    # 归一化最大影响人数
+    # 归一化Max Impact人数
     max_aff_normalized = [m / 500 for m in max_affected]
     
-    ax.bar(x - width/2, trust_drops, width, label='信任下降', alpha=0.8, color='#C44E52', edgecolor='white', linewidth=0.5)
-    ax.bar(x + width/2, max_aff_normalized, width, label='影响范围', alpha=0.8, color='#DD8452', edgecolor='white', linewidth=0.5)
+    ax.bar(x - width/2, trust_drops, width, label='Trust Drop', alpha=0.8, color='#C44E52', edgecolor='white', linewidth=0.5)
+    ax.bar(x + width/2, max_aff_normalized, width, label=text['impact_scope'], alpha=0.8, color='#DD8452', edgecolor='white', linewidth=0.5)
     
-    ax.set_ylabel('影响程度')
-    ax.set_title('(d) 压力测试场景对比')
+    ax.set_ylabel('Impact Severity')
+    ax.set_title('(d) Stress Test Scenario Comparison')
     ax.set_xticks(x)
     ax.set_xticklabels([s.replace('_', '\n') for s in scenarios], rotation=0, fontsize=8)
     ax.legend()
 
 
-def _plot_cascade_size_distribution(ax, stress_results):
-    """绘制级联规模分布"""
+def _plot_cascade_size_distribution(ax, stress_results, text):
+    """Plot Cascade Size distribution"""
     cascade_sizes = [stress_results[s]['max_affected'] for s in stress_results.keys()]
     
     if not cascade_sizes:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, 'No Data', ha='center', va='center')
         return
     
     ax.hist(cascade_sizes, bins=10, alpha=0.75, color='#4C72B0', edgecolor='white', linewidth=0.8)
-    ax.axvline(x=np.mean(cascade_sizes), color='#C44E52', linestyle='--', 
-              linewidth=2.5, label=f'均值: {np.mean(cascade_sizes):.0f}')
+    mean_val = np.mean(cascade_sizes)
+    ax.axvline(x=mean_val, color='#C44E52', linestyle='--', 
+              linewidth=2.5, label=f'Mean: {mean_val:.0f}')
     
-    ax.set_xlabel('级联规模（受影响人数）')
-    ax.set_ylabel('频次')
-    ax.set_title('(e) 级联规模分布')
+    ax.set_xlabel(text['cascade_size_label'])
+    ax.set_ylabel(text['frequency'])
+    ax.set_title(text['cascade_dist'])
     ax.legend()
 
 
-def _plot_resilience_assessment(ax, result, risk_model):
-    """绘制系统韧性评估"""
+def _plot_resilience_assessment(ax, result, risk_model, text):
+    """Plot system resilience assessment"""
     trajectory = result.get('trust_trajectory', [])
     
     if not trajectory:
-        ax.text(0.5, 0.5, '无数据', ha='center', va='center')
+        ax.text(0.5, 0.5, 'No Data', ha='center', va='center')
         return
     
     # 计算韧性指标
@@ -214,13 +259,13 @@ def _plot_resilience_assessment(ax, result, risk_model):
     resilience = recovery / (shock + 0.001)
     
     # 绘制韧性仪表盘
-    categories = ['初始信任', '最低信任', '最终信任', '韧性得分']
+    categories = [text['initial_trust'], text['min_trust'], text['final_trust'], text['resilience_score']]
     values = [initial_trust, min_trust, final_trust, resilience]
     colors = ['#55A868', '#C44E52', '#4C72B0', '#8172B3']  # 顶刊柔和配色
     
     bars = ax.bar(categories, values, color=colors, alpha=0.8, edgecolor='white', linewidth=0.8)
-    ax.set_ylabel('得分')
-    ax.set_title('(f) 系统韧性评估')
+    ax.set_ylabel(text['score'])
+    ax.set_title(text['resilience_assess'])
     
     # 先调整 y 轴上限，为标签留出空间
     max_val = max(values)
@@ -234,12 +279,12 @@ def _plot_resilience_assessment(ax, result, risk_model):
     
     # 添加韧性等级标注
     if resilience > 0.8:
-        resilience_level = '高韧性'
+        resilience_level = text['high_resilience']
     elif resilience > 0.5:
-        resilience_level = '中等韧性'
+        resilience_level = text['medium_resilience']
     else:
-        resilience_level = '低韧性'
+        resilience_level = text['low_resilience']
     
-    ax.text(0.5, 0.9, f'韧性等级: {resilience_level}', 
+    ax.text(0.5, 0.9, f"{text['resilience_level']}: {resilience_level}", 
            transform=ax.transAxes, ha='center', fontsize=12, 
            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
