@@ -200,16 +200,15 @@ def _plot_filter_bubble_strength(ax, results):
     ax.set_ylim(0.4, 1.05)  # 根据实际数据调整Y轴范围
     ax.grid(True, alpha=0.3, axis='y')
     
-    # 添加统计检验标注
+    # 添加统计检验标注 - 放在子图内部左上角，避免影响布局
     if len(high_dep_scores) > 0 and len(low_dep_scores) > 0:
         from scipy import stats
         t_stat, p_value = stats.ttest_ind(low_dep_scores, high_dep_scores)
         significance = '***' if p_value < 0.001 else '**' if p_value < 0.01 else '*' if p_value < 0.05 else 'ns'
-        y_max = max(max(low_dep_scores), max(high_dep_scores))
-        # 将标注位置调整到图表上方，避免与标题重叠
-        ax.text(1.5, 1.02, f'p={p_value:.4f} {significance}', 
-               ha='center', va='bottom', fontsize=9, fontweight='bold', 
-               transform=ax.transAxes, color='#2C3E50')
+        ax.text(0.05, 0.95, f'p={p_value:.4f} {significance}', 
+               ha='left', va='top', fontsize=9, fontweight='bold', 
+               transform=ax.transAxes, color='#2C3E50',
+               bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8, edgecolor='none'))
 
 
 def _plot_individual_diversity(ax, results):
