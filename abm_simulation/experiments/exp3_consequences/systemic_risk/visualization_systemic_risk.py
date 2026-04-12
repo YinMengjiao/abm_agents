@@ -77,7 +77,7 @@ def _plot_trust_trajectory(ax, result):
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('信任度')
-    ax.set_title('信任度演化轨迹')
+    ax.set_title('(a) 信任度演化轨迹')
     ax.set_ylim(0, 1)
     ax.legend()
     ax.grid(True, alpha=0.3)
@@ -102,7 +102,7 @@ def _plot_dependency_trajectory(ax, result):
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('平均依赖等级')
-    ax.set_title('依赖等级演化')
+    ax.set_title('(b) 依赖等级演化')
     ax.set_ylim(1, 5)
     ax.grid(True, alpha=0.3)
 
@@ -131,7 +131,7 @@ def _plot_failure_propagation(ax, result):
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('传播速度')
-    ax.set_title('故障传播过程')
+    ax.set_title('(c) 故障传播过程')
     ax.axvline(x=50, color='red', linestyle='--', alpha=0.5)
     ax.grid(True, alpha=0.3)
 
@@ -152,7 +152,7 @@ def _plot_stress_test_comparison(ax, stress_results):
     ax.bar(x + width/2, max_aff_normalized, width, label='影响范围', alpha=0.8, color='orange')
     
     ax.set_ylabel('影响程度')
-    ax.set_title('压力测试场景对比')
+    ax.set_title('(d) 压力测试场景对比')
     ax.set_xticks(x)
     ax.set_xticklabels([s.replace('_', '\n') for s in scenarios], rotation=0, fontsize=8)
     ax.legend()
@@ -172,7 +172,7 @@ def _plot_cascade_size_distribution(ax, stress_results):
     
     ax.set_xlabel('级联规模（受影响人数）')
     ax.set_ylabel('频次')
-    ax.set_title('级联规模分布')
+    ax.set_title('(e) 级联规模分布')
     ax.legend()
 
 
@@ -201,7 +201,7 @@ def _plot_resilience_assessment(ax, result, risk_model):
     
     bars = ax.bar(categories, values, color=colors, alpha=0.7)
     ax.set_ylabel('得分')
-    ax.set_title('系统韧性评估')
+    ax.set_title('(f) 系统韧性评估')
     
     # 先调整 y 轴上限，为标签留出空间
     max_val = max(values)

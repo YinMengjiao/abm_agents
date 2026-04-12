@@ -177,44 +177,44 @@ def plot_fine_scan(data):
         
         J = data['J_values']
         
-        # 左上图: ⟨|M|⟩(J)
+        # (a) 左上图: ⟨|M|⟩(J)
         ax1.errorbar(J, data['avg_abs_M'], yerr=data['std_abs_M'], 
                     fmt='o-', capsize=4, markersize=5, linewidth=1.5, alpha=0.8)
         ax1.set_xlabel('耦合强度 J', fontsize=12)
         ax1.set_ylabel('平均磁化强度 ⟨|M|⟩', fontsize=12)
-        ax1.set_title('磁化强度 vs 耦合强度 (20次独立运行)', fontsize=14)
+        ax1.set_title('(a) 磁化强度 vs 耦合强度', fontsize=14)
         ax1.grid(True, alpha=0.3)
         
-        # 右上图: χ(J)
+        # (b) 右上图: χ(J)
         ax2.plot(J, data['chi'], 's-', markersize=5, linewidth=1.5, 
                 alpha=0.8, color='darkorange')
         ax2.axvline(x=data['J_c_from_chi'], color='red', linestyle='--', 
                    linewidth=2, alpha=0.7, label=f"J_c^χ = {data['J_c_from_chi']:.2f}")
         ax2.set_xlabel('耦合强度 J', fontsize=12)
         ax2.set_ylabel('磁化率 χ', fontsize=12)
-        ax2.set_title('磁化率峰值定位相变点', fontsize=14)
+        ax2.set_title('(b) 磁化率峰值定位相变点', fontsize=14)
         ax2.legend(fontsize=10)
         ax2.grid(True, alpha=0.3)
         
-        # 左下图: U(J) - Binder累积量
+        # (c) 左下图: U(J) - Binder累积量
         ax3.plot(J, data['U'], '^-', markersize=5, linewidth=1.5, 
                 alpha=0.8, color='purple')
         ax3.axvline(x=data['J_c_from_U'], color='red', linestyle='--', 
                    linewidth=2, alpha=0.7, label=f"J_c^U ≈ {data['J_c_from_U']:.2f}")
         ax3.set_xlabel('耦合强度 J', fontsize=12)
         ax3.set_ylabel('Binder累积量 U', fontsize=12)
-        ax3.set_title('Binder累积量 (判断相变阶数)', fontsize=14)
+        ax3.set_title('(c) Binder累积量 (判断相变阶数)', fontsize=14)
         ax3.legend(fontsize=10)
         ax3.grid(True, alpha=0.3)
         
-        # 右下图: d⟨|M|⟩/dJ
+        # (d) 右下图: d⟨|M|⟩/dJ
         ax4.plot(J, data['dM_dJ'], 'd-', markersize=5, linewidth=1.5, 
                 alpha=0.8, color='teal')
         ax4.axvline(x=data['J_c_from_dM'], color='red', linestyle='--', 
                    linewidth=2, alpha=0.7, label=f"J_c^dM = {data['J_c_from_dM']:.2f}")
         ax4.set_xlabel('耦合强度 J', fontsize=12)
         ax4.set_ylabel('d⟨|M|⟩/dJ', fontsize=12)
-        ax4.set_title('磁化强度变化率', fontsize=14)
+        ax4.set_title('(d) 磁化强度变化率', fontsize=14)
         ax4.legend(fontsize=10)
         ax4.grid(True, alpha=0.3)
         

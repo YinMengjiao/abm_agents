@@ -63,10 +63,10 @@ def _plot_diversity_by_level(ax, results):
     diversities = list(diversity_by_level.values())
     
     colors = plt.cm.RdYlGn(np.array(diversities))
-    bars = ax.bar([f'L{l}' for l in levels], diversities, color=colors, alpha=0.8)
+    bars = ax.bar([f'L{l}' for l in levels], diversities, color=colors, alpha=0.8, width=0.5)
     
     ax.set_ylabel('多样性得分')
-    ax.set_title('各依赖等级选择多样性')
+    ax.set_title('(a) 各依赖等级选择多样性')
     ax.set_ylim(0, 1)
     
     # 添加数值标签
@@ -82,13 +82,13 @@ def _plot_diversity_distribution(ax, results):
     diversity_scores = [m['diversity_score'] for m in individual_metrics if 'diversity_score' in m]
     
     if diversity_scores:
-        ax.hist(diversity_scores, bins=20, alpha=0.7, color='steelblue', edgecolor='black')
-        ax.axvline(x=np.mean(diversity_scores), color='red', linestyle='--', 
+        ax.hist(diversity_scores, bins=20, alpha=0.7, color='#2196F3', edgecolor='black', linewidth=0.5)
+        ax.axvline(x=np.mean(diversity_scores), color='#E91E63', linestyle='--', 
                   linewidth=2, label=f'均值: {np.mean(diversity_scores):.3f}')
     
     ax.set_xlabel('多样性得分')
     ax.set_ylabel('消费者数量')
-    ax.set_title('多样性分布')
+    ax.set_title('(b) 多样性分布')
     ax.legend()
 
 
@@ -113,10 +113,10 @@ def _plot_exploration_rate(ax, results):
             avg_exploration.append(np.mean(exploration_by_level[level]))
     
     colors = plt.cm.RdYlGn_r(np.array(avg_exploration))
-    bars = ax.bar(levels, avg_exploration, color=colors, alpha=0.8)
+    bars = ax.bar(levels, avg_exploration, color=colors, alpha=0.8, width=0.5)
     
     ax.set_ylabel('平均探索率')
-    ax.set_title('各等级探索行为')
+    ax.set_title('(c) 各等级探索行为')
     ax.set_ylim(0, 1)
     
     # 添加趋势线
@@ -156,39 +156,45 @@ def _plot_category_coverage(ax, analyzer, results):
     im = ax.imshow(coverage_matrix, cmap='YlOrRd', aspect='auto')
     ax.set_xlabel('产品类别')
     ax.set_ylabel('消费者样本')
-    ax.set_title('类别选择热力图')
+    ax.set_title('(d) 类别选择热力图')
     plt.colorbar(im, ax=ax, label='选择频率')
 
 
 def _plot_filter_bubble_strength(ax, results):
-    """绘制过滤气泡强度"""
+    """绘制过滤气泡强度 - 改为箱线图展示分布"""
     pop_metrics = results['population_metrics']
+    individual_metrics = results['individual_metrics']
     
-    # 创建气泡强度可视化
-    bubble_strength = pop_metrics['filter_bubble_strength']
-    high_vs_low = pop_metrics['high_vs_low_diff']
+    # 按高/低依赖分组
+    high_dep_scores = [m['diversity_score'] for m in individual_metrics 
+                      if m.get('dependency_level', 0) >= 4 and 'diversity_score' in m]
+    low_dep_scores = [m['diversity_score'] for m in individual_metrics 
+                     if m.get('dependency_level', 0) <= 2 and 'diversity_score' in m]
     
-    # 绘制仪表盘式图表
-    categories = ['过滤气泡\n强度', '高vs低差异']
-    values = [bubble_strength, abs(high_vs_low)]
-    colors = ['red' if v > 0.1 else 'orange' if v > 0.05 else 'green' for v in values]
+    # 绘制箱线图
+    data_to_plot = [low_dep_scores, high_dep_scores]
+    bp = ax.boxplot(data_to_plot, labels=['低依赖\n(L1-L2)', '高依赖\n(L4-L5)'], 
+                    patch_artist=True, widths=0.5)
     
-    bars = ax.bar(categories, values, color=colors, alpha=0.7)
-    ax.set_ylabel('强度')
-    ax.set_title('过滤气泡指标')
-    ax.set_ylim(0, 0.5)
+    # 设置颜色
+    colors = ['#4CAF50', '#F44336']  # 绿色和红色
+    for patch, color in zip(bp['boxes'], colors):
+        patch.set_facecolor(color)
+        patch.set_alpha(0.7)
     
-    # 添加阈值线
-    ax.axhline(y=0.05, color='green', linestyle='--', alpha=0.5, label='低')
-    ax.axhline(y=0.1, color='orange', linestyle='--', alpha=0.5, label='中')
-    ax.axhline(y=0.2, color='red', linestyle='--', alpha=0.5, label='高')
-    ax.legend()
+    ax.set_ylabel('多样性得分')
+    ax.set_title('(e) 过滤气泡效应')
+    ax.set_ylim(0, 1)
+    ax.grid(True, alpha=0.3, axis='y')
     
-    # 添加数值标签
-    for bar, val in zip(bars, values):
-        height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height,
-               f'{val:.3f}', ha='center', va='bottom', fontsize=10)
+    # 添加统计检验标注
+    if len(high_dep_scores) > 0 and len(low_dep_scores) > 0:
+        from scipy import stats
+        t_stat, p_value = stats.ttest_ind(low_dep_scores, high_dep_scores)
+        significance = '***' if p_value < 0.001 else '**' if p_value < 0.01 else '*' if p_value < 0.05 else 'ns'
+        y_max = max(max(low_dep_scores), max(high_dep_scores))
+        ax.text(1.5, y_max + 0.05, f'p={p_value:.4f} {significance}', 
+               ha='center', fontsize=10, fontweight='bold')
 
 
 def _plot_individual_diversity(ax, results):
@@ -211,7 +217,7 @@ def _plot_individual_diversity(ax, results):
     
     ax.set_xlabel('多样性得分')
     ax.set_ylabel('类别覆盖率')
-    ax.set_title('个体多样性特征')
+    ax.set_title('(f) 个体多样性特征')
     
     # 根据数据范围动态设置坐标轴，留出 10% 的边距
     if len(diversities) > 1:

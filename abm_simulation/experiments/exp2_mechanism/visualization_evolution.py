@@ -38,7 +38,7 @@ def visualize_evolution_results(sim, output_dir: str = None):
     ax2 = plt.subplot(1, 2, 2)
     _plot_capability_heatmap(ax2, sim)
     
-    plt.suptitle('实验 3: AI 代理进化机制', fontsize=16, fontweight='bold', y=0.98)
+    plt.suptitle('实验 2: AI 代理进化机制', fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
     plt.savefig(f'{output_dir}/evolution_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()
@@ -108,7 +108,7 @@ def _plot_level_distribution_evolution(ax, sim):
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('消费者数量')
-    ax.set_title('依赖等级分布演化')
+    ax.set_title('(a) 依赖等级分布演化')
     ax.legend()
     ax.grid(True, alpha=0.3)
 
@@ -163,7 +163,7 @@ def _plot_capability_heatmap(ax, sim):
     ax.set_xticklabels(capabilities, rotation=45, ha='right')
     ax.set_yticks(range(n_agents))
     ax.set_yticklabels([f'AI-{i}' for i in range(n_agents)])
-    ax.set_title('AI能力进化热力图')
+    ax.set_title('(b) AI能力进化热力图')
     
     # 添加数值标注
     for i in range(n_agents):

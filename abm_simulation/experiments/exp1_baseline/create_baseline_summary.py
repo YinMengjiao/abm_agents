@@ -96,7 +96,7 @@ def _plot_initial_level_distribution(ax, sim):
         
         bars = ax.bar(level_names, counts, color=colors, edgecolor='black', alpha=0.8)
         ax.set_ylabel('智能体数量', fontsize=11)
-        ax.set_title('初始等级分布', fontsize=12, fontweight='bold')
+        ax.set_title('(a) 初始等级分布', fontsize=12, fontweight='bold')
         ax.grid(True, axis='y', alpha=0.3)
         
         for bar, count in zip(bars, counts):
@@ -114,7 +114,7 @@ def _plot_final_level_distribution(ax, results):
     
     bars = ax.bar(level_names, counts, color=colors, edgecolor='black', alpha=0.8)
     ax.set_ylabel('智能体数量', fontsize=11)
-    ax.set_title('最终等级分布', fontsize=12, fontweight='bold')
+    ax.set_title('(b) 最终等级分布', fontsize=12, fontweight='bold')
     ax.grid(True, axis='y', alpha=0.3)
     
     for bar, count in zip(bars, counts):
@@ -141,7 +141,7 @@ def _plot_level_evolution(ax, sim):
         
         ax.set_xlabel('仿真步数', fontsize=11)
         ax.set_ylabel('智能体数量', fontsize=11)
-        ax.set_title('依赖等级演化', fontsize=12, fontweight='bold')
+        ax.set_title('(c) 依赖等级演化', fontsize=12, fontweight='bold')
         ax.legend(fontsize=9)
         ax.grid(True, alpha=0.3)
 
@@ -156,7 +156,7 @@ def _plot_magnetization_evolution(ax, sim):
         ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
         ax.set_xlabel('仿真步数', fontsize=11)
         ax.set_ylabel('磁化强度', fontsize=11)
-        ax.set_title('Ising 磁化强度', fontsize=12, fontweight='bold')
+        ax.set_title('(d) Ising 磁化强度', fontsize=12, fontweight='bold')
         ax.grid(True, alpha=0.3)
         
         # 标注最终值
@@ -174,7 +174,7 @@ def _plot_coupling_evolution(ax, sim):
         ax.plot(steps, coupling, 'g-', linewidth=2)
         ax.set_xlabel('仿真步数', fontsize=11)
         ax.set_ylabel('耦合强度', fontsize=11)
-        ax.set_title('社会影响强度演化', fontsize=12, fontweight='bold')
+        ax.set_title('(e) 社会影响强度演化', fontsize=12, fontweight='bold')
         ax.grid(True, alpha=0.3)
         
         # 标注临界值
@@ -220,7 +220,7 @@ def _plot_satisfaction_evolution(ax, sim):
         ax.plot(steps, satisfaction, 'orange', linewidth=2)
         ax.set_xlabel('仿真步数', fontsize=11)
         ax.set_ylabel('满意度', fontsize=11)
-        ax.set_title('平均满意度演化', fontsize=12, fontweight='bold')
+        ax.set_title('(f) 平均满意度演化', fontsize=12, fontweight='bold')
         ax.grid(True, alpha=0.3)
         
         # 标注统计值
@@ -280,7 +280,7 @@ def _plot_network_topology(ax, sim):
         ax.set_xticks(angles[:-1])
         ax.set_xticklabels(categories, fontsize=10)
         ax.set_ylim(0, max(values) * 1.2 if max(values) > 0 else 1)
-        ax.set_title('小世界网络特征', fontsize=12, fontweight='bold', pad=20)
+        ax.set_title('(g) 小世界网络特征', fontsize=12, fontweight='bold', pad=20)
         ax.grid(True, alpha=0.3)
         
         # 添加数值标签
