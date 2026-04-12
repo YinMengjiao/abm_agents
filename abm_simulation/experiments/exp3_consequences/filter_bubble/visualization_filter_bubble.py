@@ -82,9 +82,9 @@ def _plot_diversity_distribution(ax, results):
     diversity_scores = [m['diversity_score'] for m in individual_metrics if 'diversity_score' in m]
     
     if diversity_scores:
-        ax.hist(diversity_scores, bins=20, alpha=0.7, color='#2196F3', edgecolor='black', linewidth=0.5)
-        ax.axvline(x=np.mean(diversity_scores), color='#E91E63', linestyle='--', 
-                  linewidth=2, label=f'均值: {np.mean(diversity_scores):.3f}')
+        ax.hist(diversity_scores, bins=20, alpha=0.75, color='#4C72B0', edgecolor='white', linewidth=0.8)
+        ax.axvline(x=np.mean(diversity_scores), color='#C44E52', linestyle='--', 
+                  linewidth=2.5, label=f'均值: {np.mean(diversity_scores):.3f}')
     
     ax.set_xlabel('多样性得分')
     ax.set_ylabel('消费者数量')
@@ -176,11 +176,24 @@ def _plot_filter_bubble_strength(ax, results):
     bp = ax.boxplot(data_to_plot, labels=['低依赖\n(L1-L2)', '高依赖\n(L4-L5)'], 
                     patch_artist=True, widths=0.5)
     
-    # 设置颜色
-    colors = ['#4CAF50', '#F44336']  # 绿色和红色
+    # 设置颜色 - 顶刊柔和配色
+    colors = ['#55A868', '#C44E52']  # 绿色和红色
     for patch, color in zip(bp['boxes'], colors):
         patch.set_facecolor(color)
-        patch.set_alpha(0.7)
+        patch.set_alpha(0.75)
+        patch.set_edgecolor('#2C3E50')
+        patch.set_linewidth(1.2)
+    
+    # 设置中须和异常值颜色
+    for element in ['whiskers', 'caps', 'fliers']:
+        for item in bp[element]:
+            if element == 'fliers':
+                item.set_markeredgecolor('#7F8C8D')
+                item.set_markeredgewidth(0.8)
+                item.set_markerfacecolor('none')
+            else:
+                item.set_color('#7F8C8D')
+                item.set_linewidth(1.2)
     
     ax.set_ylabel('多样性得分')
     ax.set_title('(e) 过滤气泡效应')

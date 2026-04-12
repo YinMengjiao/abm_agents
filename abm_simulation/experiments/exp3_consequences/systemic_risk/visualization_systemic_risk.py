@@ -69,11 +69,11 @@ def _plot_trust_trajectory(ax, result):
     max_trust = [np.max(t) for t in trajectory]
     
     # 绘制平均信任度
-    ax.plot(steps, avg_trust, 'b-', linewidth=2, label='平均信任')
-    ax.fill_between(steps, min_trust, max_trust, alpha=0.3, color='blue', label='信任范围')
+    ax.plot(steps, avg_trust, color='#4C72B0', linewidth=2.5, label='平均信任')
+    ax.fill_between(steps, min_trust, max_trust, alpha=0.25, color='#4C72B0', label='信任范围')
     
     # 标注故障点
-    ax.axvline(x=50, color='red', linestyle='--', linewidth=2, label='故障发生')
+    ax.axvline(x=50, color='#C44E52', linestyle='--', linewidth=2.5, label='故障发生')
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('信任度')
@@ -94,11 +94,11 @@ def _plot_dependency_trajectory(ax, result):
     steps = range(len(trajectory))
     avg_dep = [np.mean(t) for t in trajectory]
     
-    ax.plot(steps, avg_dep, 'g-', linewidth=2)
-    ax.fill_between(steps, avg_dep, alpha=0.3, color='green')
+    ax.plot(steps, avg_dep, color='#55A868', linewidth=2.5)
+    ax.fill_between(steps, avg_dep, alpha=0.25, color='#55A868')
     
     # 标注故障点
-    ax.axvline(x=50, color='red', linestyle='--', linewidth=2)
+    ax.axvline(x=50, color='#C44E52', linestyle='--', linewidth=2.5)
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('平均依赖等级')
@@ -126,13 +126,13 @@ def _plot_failure_propagation(ax, result):
     
     # 累积受影响人数（模拟）
     steps = range(len(propagation_speed))
-    ax.fill_between(steps, propagation_speed, alpha=0.5, color='red')
-    ax.plot(steps, propagation_speed, 'r-', linewidth=2)
+    ax.fill_between(steps, propagation_speed, alpha=0.5, color='#C44E52')
+    ax.plot(steps, propagation_speed, color='#C44E52', linewidth=2.5)
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('传播速度')
     ax.set_title('(c) 故障传播过程')
-    ax.axvline(x=50, color='red', linestyle='--', alpha=0.5)
+    ax.axvline(x=50, color='#C44E52', linestyle='--', alpha=0.5)
     ax.grid(True, alpha=0.3)
 
 
@@ -148,8 +148,8 @@ def _plot_stress_test_comparison(ax, stress_results):
     # 归一化最大影响人数
     max_aff_normalized = [m / 500 for m in max_affected]
     
-    ax.bar(x - width/2, trust_drops, width, label='信任下降', alpha=0.8, color='red')
-    ax.bar(x + width/2, max_aff_normalized, width, label='影响范围', alpha=0.8, color='orange')
+    ax.bar(x - width/2, trust_drops, width, label='信任下降', alpha=0.8, color='#C44E52', edgecolor='white', linewidth=0.5)
+    ax.bar(x + width/2, max_aff_normalized, width, label='影响范围', alpha=0.8, color='#DD8452', edgecolor='white', linewidth=0.5)
     
     ax.set_ylabel('影响程度')
     ax.set_title('(d) 压力测试场景对比')
@@ -166,9 +166,9 @@ def _plot_cascade_size_distribution(ax, stress_results):
         ax.text(0.5, 0.5, '无数据', ha='center', va='center')
         return
     
-    ax.hist(cascade_sizes, bins=10, alpha=0.7, color='steelblue', edgecolor='black')
-    ax.axvline(x=np.mean(cascade_sizes), color='red', linestyle='--', 
-              linewidth=2, label=f'均值: {np.mean(cascade_sizes):.0f}')
+    ax.hist(cascade_sizes, bins=10, alpha=0.75, color='#4C72B0', edgecolor='white', linewidth=0.8)
+    ax.axvline(x=np.mean(cascade_sizes), color='#C44E52', linestyle='--', 
+              linewidth=2.5, label=f'均值: {np.mean(cascade_sizes):.0f}')
     
     ax.set_xlabel('级联规模（受影响人数）')
     ax.set_ylabel('频次')
@@ -197,9 +197,9 @@ def _plot_resilience_assessment(ax, result, risk_model):
     # 绘制韧性仪表盘
     categories = ['初始信任', '最低信任', '最终信任', '韧性得分']
     values = [initial_trust, min_trust, final_trust, resilience]
-    colors = ['green', 'red', 'blue', 'purple']
+    colors = ['#55A868', '#C44E52', '#4C72B0', '#8172B3']  # 顶刊柔和配色
     
-    bars = ax.bar(categories, values, color=colors, alpha=0.7)
+    bars = ax.bar(categories, values, color=colors, alpha=0.8, edgecolor='white', linewidth=0.8)
     ax.set_ylabel('得分')
     ax.set_title('(f) 系统韧性评估')
     

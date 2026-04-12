@@ -92,9 +92,9 @@ def _plot_initial_level_distribution(ax, sim):
         levels = list(range(1, 6))
         counts = [initial_dist.get(l, 0) for l in levels]
         level_names = ['L1\n自主', 'L2\n信息辅助', 'L3\n半委托', 'L4\n高度依赖', 'L5\n完全代理']
-        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+        colors = ['#4C72B0', '#5B9BD5', '#55A868', '#DD8452', '#C44E52']  # 顶刊柔和配色
         
-        bars = ax.bar(level_names, counts, color=colors, edgecolor='black', alpha=0.8)
+        bars = ax.bar(level_names, counts, color=colors, edgecolor='black', alpha=0.8, linewidth=0.5)
         ax.set_ylabel('智能体数量', fontsize=11)
         ax.set_title('(a) 初始等级分布', fontsize=12, fontweight='bold')
         ax.grid(True, axis='y', alpha=0.3)
@@ -110,9 +110,9 @@ def _plot_final_level_distribution(ax, results):
     levels = list(range(1, 6))
     counts = [final_dist.get(l, 0) for l in levels]
     level_names = ['L1\n自主', 'L2\n信息辅助', 'L3\n半委托', 'L4\n高度依赖', 'L5\n完全代理']
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
-    
-    bars = ax.bar(level_names, counts, color=colors, edgecolor='black', alpha=0.8)
+    colors = ['#4C72B0', '#5B9BD5', '#55A868', '#DD8452', '#C44E52']
+            
+    bars = ax.bar(level_names, counts, color=colors, edgecolor='black', alpha=0.8, linewidth=0.5)
     ax.set_ylabel('智能体数量', fontsize=11)
     ax.set_title('(b) 最终等级分布', fontsize=12, fontweight='bold')
     ax.grid(True, axis='y', alpha=0.3)
@@ -133,9 +133,9 @@ def _plot_level_evolution(ax, sim):
             for level in range(1, 6):
                 levels_data[level].append(m.level_distribution.get(level, 0))
         
-        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+        colors = ['#4C72B0', '#5B9BD5', '#55A868', '#DD8452', '#C44E52']
         labels = ['L1 自主', 'L2 信息辅助', 'L3 半委托', 'L4 高度依赖', 'L5 完全代理']
-        
+            
         for level, color, label in zip(range(1, 6), colors, labels):
             ax.plot(steps, levels_data[level], label=label, color=color, linewidth=2, alpha=0.7)
         
@@ -152,8 +152,8 @@ def _plot_magnetization_evolution(ax, sim):
         steps = [m.step for m in sim.metrics_history[::10]]
         magnetization = [m.magnetization for m in sim.metrics_history[::10]]
         
-        ax.plot(steps, magnetization, 'b-', linewidth=2)
-        ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
+        ax.plot(steps, magnetization, color='#4C72B0', linewidth=2)
+        ax.axhline(y=0, color='#95A5A6', linestyle='--', linewidth=0.5)
         ax.set_xlabel('仿真步数', fontsize=11)
         ax.set_ylabel('磁化强度', fontsize=11)
         ax.set_title('(d) Ising 磁化强度', fontsize=12, fontweight='bold')
@@ -171,7 +171,7 @@ def _plot_coupling_evolution(ax, sim):
         steps = [m.step for m in sim.metrics_history[::10]]
         coupling = [m.coupling_strength for m in sim.metrics_history[::10]]
         
-        ax.plot(steps, coupling, 'g-', linewidth=2)
+        ax.plot(steps, coupling, color='#55A868', linewidth=2)
         ax.set_xlabel('仿真步数', fontsize=11)
         ax.set_ylabel('耦合强度', fontsize=11)
         ax.set_title('(e) 社会影响强度演化', fontsize=12, fontweight='bold')
@@ -194,8 +194,8 @@ def _plot_phase_transition_analysis(ax, sim):
         ax1 = ax
         ax2 = ax.twinx()
         
-        line1 = ax1.plot(steps, coupling, 'g-', label='耦合强度', linewidth=2, alpha=0.7)
-        line2 = ax2.plot(steps, magnetization, 'b--', label='磁化强度', linewidth=2, alpha=0.7)
+        line1 = ax1.plot(steps, coupling, color='#55A868', label='耦合强度', linewidth=2, alpha=0.8)
+        line2 = ax2.plot(steps, magnetization, color='#4C72B0', label='磁化强度', linewidth=2, alpha=0.8, linestyle='--')
         
         ax1.set_xlabel('仿真步数', fontsize=11)
         ax1.set_ylabel('耦合强度', fontsize=11, color='green')
@@ -216,8 +216,8 @@ def _plot_satisfaction_evolution(ax, sim):
         steps = [m.step for m in sim.metrics_history[::10]]
         satisfaction = [m.avg_satisfaction for m in sim.metrics_history[::10]]
         
-        ax.fill_between(steps, 0, satisfaction, alpha=0.7, color='orange')
-        ax.plot(steps, satisfaction, 'orange', linewidth=2)
+        ax.fill_between(steps, 0, satisfaction, alpha=0.6, color='#DD8452')
+        ax.plot(steps, satisfaction, color='#DD8452', linewidth=2)
         ax.set_xlabel('仿真步数', fontsize=11)
         ax.set_ylabel('满意度', fontsize=11)
         ax.set_title('(f) 平均满意度演化', fontsize=12, fontweight='bold')
@@ -257,7 +257,7 @@ def _plot_ai_usage_and_errors(ax, sim):
 
 
 def _plot_network_topology(ax, sim):
-    """网络拓扑特征"""
+    """网络拓扑特征 - 使用不同尺度归一化"""
     if hasattr(sim, 'network') and sim.network:
         graph = sim.network.graph
         
@@ -266,26 +266,36 @@ def _plot_network_topology(ax, sim):
         clustering_coef = nx.average_clustering(graph) if hasattr(nx, 'average_clustering') else 0
         avg_path_length = nx.average_shortest_path_length(graph) if nx.is_connected(graph) else float('inf')
         
+        # 分别归一化到 [0, 1] 区间
+        # 平均度数：典型值 5-20，归一化为 avg_degree / 20
+        degree_normalized = min(avg_degree / 20.0, 1.0)
+        # 聚类系数：已经在 [0, 1] 区间
+        clustering_normalized = clustering_coef
+        # 路径长度：典型值 3-8，归一化为 1 - (path_length - 3) / 5
+        path_normalized = max(0, min(1.0 - (avg_path_length - 3.0) / 5.0, 1.0))
+        
         # 绘制雷达图
-        categories = ['平均度数', '聚类系数', '路径长度 (归一化)']
-        values = [avg_degree, clustering_coef, min(avg_path_length / 10, 1.0)]  # 归一化
+        categories = ['平均度数', '聚类系数', '路径长度']
+        values = [degree_normalized, clustering_normalized, path_normalized]
         
         angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
         values += values[:1]
         angles += angles[:1]
         
-        ax.plot(angles, values, 'b-', linewidth=2, marker='o', markersize=8)
-        ax.fill(angles, values, 'b', alpha=0.1)
+        ax.plot(angles, values, color='#4C72B0', linewidth=2, marker='o', markersize=8)
+        ax.fill(angles, values, color='#4C72B0', alpha=0.15)
         
         ax.set_xticks(angles[:-1])
         ax.set_xticklabels(categories, fontsize=10)
-        ax.set_ylim(0, max(values) * 1.2 if max(values) > 0 else 1)
+        ax.set_ylim(0, 1.15)
         ax.set_title('(g) 小世界网络特征', fontsize=12, fontweight='bold', pad=20)
         ax.grid(True, alpha=0.3)
         
-        # 添加数值标签
-        for angle, val in zip(angles[:-1], [avg_degree, clustering_coef, min(avg_path_length / 10, 1.0)]):
-            ax.text(angle, val + 0.05, f'{val:.3f}', ha='center', fontsize=9)
+        # 添加数值标签（显示原始值）
+        raw_values = [avg_degree, clustering_coef, avg_path_length]
+        for angle, val_norm, val_raw in zip(angles[:-1], values[:-1], raw_values):
+            ax.text(angle, val_norm + 0.08, f'{val_raw:.2f}', 
+                   ha='center', fontsize=9, fontweight='bold', color='#2C3E50')
 
 
 # 需要导入 networkx

@@ -100,11 +100,11 @@ def _plot_level_distribution_evolution(ax, sim):
     
     steps = [m.step for m in sim.metrics_history]
     levels = range(1, 6)
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+    colors = ['#4C72B0', '#5B9BD5', '#55A868', '#DD8452', '#C44E52']  # 顶刊柔和配色
     
     for level, color in zip(levels, colors):
         counts = [m.level_distribution.get(level, 0) for m in sim.metrics_history]
-        ax.plot(steps, counts, color=color, linewidth=2, label=f'L{level}')
+        ax.plot(steps, counts, color=color, linewidth=2.5, label=f'L{level}', alpha=0.85)
     
     ax.set_xlabel('仿真步数')
     ax.set_ylabel('消费者数量')
