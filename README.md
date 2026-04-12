@@ -1,99 +1,165 @@
-﻿# ABM 消费决策代理模拟系统
+﻿# ABM 消费决策代理仿真系统
 
-## 📋 项目简介
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/AicbLab/abm_agents.svg)](https://github.com/AicbLab/abm_agents/stargazers)
 
-本项目是一个基于 **Ising-D-I-B 三层耦合模型**的 AI 消费决策代理仿真系统，用于研究 AI 推荐对消费者决策的影响机制。项目包含 10 个完整的仿真实验模块和统一的可视化平台。
+> **基于 Ising-D-I-B 三层耦合模型的 AI 消费决策多智能体仿真平台**
 
-### 核心理论框架
-
-- **Ising 模型**: 模拟社会影响下的群体行为相变
-- **D-I-B 框架**: Desire(渴望)-Intention(意图)-Behavior(行为) 三层决策结构
-- **ACDDS 量表**: AI 消费决策依赖等级评估标准 (L1-L5)
+本项目是一个计算社会科学研究工具，用于模拟和分析 AI 推荐系统对消费者决策行为的影响机制。系统整合了物理学相变理论、行为决策心理学和多智能体建模方法，提供 10 个完整的仿真实验模块。
 
 ---
 
-## 🎯 核心功能
+## 📑 目录
 
-### 1. 多智能体仿真系统
-- **500+ 消费者智能体**: 具备记忆、学习和社会网络能力
-- **AI 代理**: 提供个性化推荐服务
-- **商家智能体**: 动态定价和策略调整
-- **社交网络**: Small-world、Scale-free 等多种拓扑结构
+- [核心理论](#-核心理论)
+- [系统特性](#-系统特性)
+- [实验模块](#-实验模块)
+- [快速开始](#-快速开始)
+- [输出结果](#-输出结果)
+- [参数配置](#-参数配置)
+- [关键发现](#-关键研究发现)
+- [学术价值](#-学术价值)
+- [常见问题](#-常见问题)
+- [引用与许可](#-引用与许可)
 
-### 2. 实验模块 (10 个完整实验)
+---
 
-#### 基础实验
-- **实验 1**: 基线模型 (Baseline) - Ising-D-I-B 基础模型验证
-- **实验 2**: 记忆增强模型 - 消费者记忆学习机制
+## 🎯 核心理论
 
-#### 扩展实验
-- **实验 3**: AI 进化机制 - AI 从反馈中学习改进
-- **实验 4**: 信息干预 - 政策效果评估 (平衡/推广 AI/保护消费者)
-- **实验 5**: 网络结构 - 不同拓扑结构对比 (Random/Small-world/SF/Chain)
-- **实验 6**: 代际动态 - 数字原生 vs 数字移民
-- **实验 7**: AI 竞争 - 多个 AI 代理市场竞争
-- **实验 8**: 情境敏感性 - 工作/家庭/社交/购物场景
-- **实验 9**: 过滤气泡 - 信息茧房效应分析
-- **实验 10**: 系统性风险 - 技术故障的社会传染
+### Ising-D-I-B 三层耦合模型
 
-### 3. 可视化平台
-所有实验自动生成高质量学术图表，包括:
-- 依赖等级分布演化图
-- Ising 动力学曲线
-- 性能指标对比
-- 网络拓扑可视化
-- 综合分析报告
+本系统首次将三个理论框架整合为统一模型：
+
+| 层次 | 理论来源 | 作用机制 |
+|------|---------|---------|
+| **Ising 层** | 统计物理学 | 模拟社会网络中的群体行为相变 |
+| **D-I-B 层** | 行为决策理论 | Desire(渴望)→Intention(意图)→Behavior(行为) 决策链 |
+| **ACDDS 层** | 心理测量学 | AI 消费决策依赖等级评估 (L1-L5) |
+
+### 相变临界值
+
+系统发现关键相变阈值：**Jc ≈ 0.167**
+- 当耦合强度 J < Jc：系统处于无序状态，消费者行为独立
+- 当耦合强度 J > Jc：系统发生相变，出现群体聚集效应
+
+---
+
+## ⚡ 系统特性
+
+### 多智能体架构
+
+```
+┌─────────────────────────────────────────────┐
+│           市场环境 (Market)                  │
+│  ┌───────────┐  ┌──────────┐  ┌──────────┐ │
+│  │ 消费者 ×500│  │ 商家 ×20 │  │ AI代理 ×3│ │
+│  │ (D-I-B模型)│  │(动态定价)│  │(推荐系统)│ │
+│  └───────────┘  └──────────┘  └──────────┘ │
+│         ↕              ↕             ↕      │
+│        社交网络 (Small-world/Scale-free)     │
+└─────────────────────────────────────────────┘
+```
+
+### 核心能力
+
+- ✅ **500+ 消费者智能体**：具备记忆、学习、社会影响能力
+- ✅ **AI 推荐代理**：支持个性化推荐和在线学习进化
+- ✅ **动态社交网络**：Small-world、Scale-free、Random 等多种拓扑
+- ✅ **可视化平台**：自动生成学术级高质量图表
+- ✅ **交互式菜单**：统一入口运行所有实验
+
+---
+
+## 🔬 实验模块
+
+系统包含 **10 个完整实验**，覆盖从基础验证到复杂场景的全方位研究：
+
+### 基础实验 (Exp 1-2)
+
+| 实验 | 名称 | 研究问题 | 关键指标 |
+|------|------|---------|---------|
+| **Exp 1** | 基线模型 | Ising-D-I-B 模型是否有效？ | 相变临界值 Jc、L1-L5 分布 |
+| **Exp 2** | AI 进化机制 | AI 能否从反馈中学习？ | 错误率下降、进化进度 |
+
+### 机制实验 (Exp 3-5)
+
+| 实验 | 名称 | 研究问题 | 关键指标 |
+|------|------|---------|---------|
+| **Exp 3-a** | 过滤气泡 | 推荐算法是否导致信息茧房？ | 选择多样性、香农熵 |
+| **Exp 3-b** | 系统性风险 | 技术故障如何级联传播？ | 影响范围、恢复时间 |
+| **Exp 4** | 信息干预 | 政策如何影响系统演化？ | 高依赖群体变化 |
+| **Exp 5** | 网络结构 | 不同拓扑结构的影响？ | 传播速度、聚集程度 |
+
+### 扩展实验 (Exp 6-10)
+
+| 实验 | 名称 | 研究问题 |
+|------|------|---------||
+| **Exp 6** | 代际动态 | 数字原生 vs 数字移民的差异 |
+| **Exp 7** | AI 竞争 | 多个 AI 代理的市场竞争 |
+| **Exp 8** | 情境敏感 | 工作/家庭/购物场景的差异 |
+| **Exp 9** | 过滤气泡 | 信息茧房效应深度分析 |
+| **Exp 10** | 系统性风险 | 技术故障的社会传染机制 |
 
 ---
 
 ## 🚀 快速开始
 
 ### 环境要求
+
 ```bash
 Python >= 3.8
 numpy >= 1.21.0
 matplotlib >= 3.4.0
 networkx >= 2.6
 scipy >= 1.7.0
-Pillow >= 8.0.0
 ```
 
-### 安装依赖
+### 安装步骤
+
 ```bash
+# 克隆仓库
+git clone https://github.com/AicbLab/abm_agents.git
+cd abm_agents
+
+# 安装依赖
 cd abm_simulation
-pip install -r requirements.txt
+pip install numpy matplotlib networkx scipy
 ```
 
-### 运行方式
+### 运行实验
 
-#### 方法 1: 交互式统一平台 (推荐)
+#### 方法 1：交互式统一平台（⭐ 推荐）
+
 ```bash
 python run_interactive_unified.py
 ```
-提供友好的命令行菜单，可选择运行任意实验。
 
-#### 方法 2: 直接运行单个实验
+提供友好的命令行菜单，可选择运行任意实验，支持自定义参数。
+
+#### 方法 2：直接运行单个实验
+
 ```bash
-# 实验 1: 基线模型
-python experiments/baseline_exp1/run_baseline.py
+# 实验 1：基线模型
+python abm_simulation/experiments/baseline_exp1/run_baseline.py
 
-# 实验 2: 记忆增强
-python experiments/exp2_consumer_memory/run_comparison.py
+# 实验 2：AI 进化机制
+python abm_simulation/experiments/exp2_mechanism/run_evolution.py
 
-# 实验 3-10
-python experiments/exp3_ai_evolution/run_evolution.py
-python experiments/exp4_information_intervention/run_intervention.py
-python experiments/exp5_network_structure/run_network.py
-python experiments/exp6_generational_dynamics/run_generational.py
-python experiments/exp7_ai_competition/run_competition.py
-python experiments/exp8_context_sensitivity/run_context.py
-python experiments/exp9_filter_bubble/run_bubble.py
-python experiments/exp10_systemic_risk/run_systemic_risk.py
+# 实验 3-a：过滤气泡
+python abm_simulation/experiments/exp3_consequences/filter_bubble/run_filter_bubble.py
+
+# 实验 3-b：系统性风险
+python abm_simulation/experiments/exp3_consequences/systemic_risk/run_systemic_risk.py
+
+# 实验 4：信息干预
+python abm_simulation/experiments/exp4_intervention/run_intervention.py
 ```
 
-#### 方法 3: 批量运行所有实验
+#### 方法 3：批量运行所有实验
+
 ```bash
-python experiments/collect_all_visualizations.py
+python run_all_experiments.py
 ```
 
 ---
@@ -101,201 +167,221 @@ python experiments/collect_all_visualizations.py
 ## 📊 输出结果
 
 ### 目录结构
+
 ```
-ABM 消费决策代理/
-├── abm_simulation/              # 主程序目录
+abm_agents/
+├── abm_simulation/
 │   ├── agents/                  # 智能体模块
-│   │   ├── ai_agent.py         # AI 代理
-│   │   └── consumer_dib.py     # D-I-B 消费者
+│   │   ├── ai_agent.py         # AI 代理（支持学习进化）
+│   │   └── consumer_dib.py     # D-I-B 消费者模型
 │   ├── environment/             # 环境模块
 │   │   └── market.py           # 市场环境
 │   ├── models/                  # 模型模块
-│   │   └── ising_network.py    # Ising 网络
-│   ├── experiments/             # 10 个实验模块
-│   │   ├── baseline_exp1/      # 实验 1
-│   │   ├── exp2_consumer_memory/ # 实验 2
-│   │   ├── ...                 # 实验 3-10
-│   │   └── collect_all_png_final.py  # 图片收集脚本
-│   ├── results/                 # 结果汇总
-│   │   └── all_experiments_figures/  # 统一图片目录
+│   │   └── ising_network.py    # Ising 社交网络
+│   ├── experiments/             # 实验模块
+│   │   ├── baseline_exp1/      # 实验 1：基线模型
+│   │   ├── exp2_mechanism/     # 实验 2：AI 进化机制
+│   │   ├── exp3_consequences/  # 实验 3：后果分析
+│   │   │   ├── filter_bubble/  #   3-a：过滤气泡
+│   │   │   └── systemic_risk/  #   3-b：系统性风险
+│   │   ├── exp4_intervention/  # 实验 4：信息干预
+│   │   └── ...                 # 实验 5-10
+│   ├── results/                 # 实验结果
+│   │   ├── exp1_baseline/      # 实验 1 结果
+│   │   ├── exp2_mechanism/     # 实验 2 结果
+│   │   ├── exp3_consequences/  # 实验 3 结果
+│   │   │   ├── filter_bubble/  #   过滤气泡图表
+│   │   │   └── systemic_risk/  #   系统性风险图表
+│   │   └── exp4_intervention/  # 实验 4 结果
 │   └── visualization/           # 可视化工具
-├──├── results/                     # 统一结果目录
-│   └── all_experiments_figures/ # 18 张汇总图
-└── README.md                    # 本文件
+│       └── chinese_font.py     # 中文字体配置
+├── run_interactive_unified.py   # 交互式统一入口
+├── run_all_experiments.py       # 批量运行脚本
+└── README.md
 ```
 
-### 可视化输出示例
+### 可视化示例
 
-每个实验生成 1-4 张 PNG 图片，保存在对应实验的 `results/` 目录。
+每个实验生成 1-4 张学术级 PNG 图表：
 
-**统一图片目录**: `results/all_experiments_figures/` 包含所有 18 张图片:
+#### 实验 1：基线模型（4 张）
+- `final_distribution.png` - 最终依赖等级分布
+- `ising_dynamics.png` - Ising 动力学曲线
+- `level_distribution_evolution.png` - 等级演化热图
+- `performance_metrics.png` - 性能指标
 
-#### 实验 1 (4 张)
-- `baseline_exp1_final_distribution.png` - 最终依赖等级分布
-- `baseline_exp1_ising_dynamics.png` - Ising 动力学
-- `baseline_exp1_level_distribution_evolution.png` - 等级演化
-- `baseline_exp1_performance_metrics.png` - 性能指标
+#### 实验 2：AI 进化机制（1 张）
+- `evolution_analysis.png` - AI 错误率下降与进化进度
 
-#### 实验 2 (4 张)
-- `experiment2_memory_level_distribution_comparison.png` - 等级对比
-- `experiment2_memory_memory_dynamics.png` - 记忆动力学
-- `experiment2_memory_metrics_comparison.png` - 指标对比
-- `experiment2_memory_summary_radar.png` - 综合雷达图
+#### 实验 3-a：过滤气泡（1 张）
+- `filter_bubble_analysis.png` - 选择多样性与过滤气泡强度
 
-#### 实验 3-10 (各 1-3 张)
-- `exp3_ai_evolution_evolution_analysis.png`
-- `exp4_information_intervention_balanced_intervention_analysis.png`
-- `exp4_information_intervention_promote_ai_intervention_analysis.png`
-- `exp4_information_intervention_protect_consumers_intervention_analysis.png`
-- `exp5_network_structure_network_comparison.png`
-- `exp6_generational_dynamics_generational_analysis.png`
-- `exp7_ai_competition_competition_analysis.png`
-- `exp8_context_sensitivity_context_analysis.png`
-- `exp9_filter_bubble_filter_bubble_analysis.png`
-- `exp10_systemic_risk_systemic_risk_analysis.png`
+#### 实验 3-b：系统性风险（1 张）
+- `systemic_risk_analysis.png` - 故障传播与系统韧性
+
+#### 实验 4：信息干预（1 张）
+- `intervention_all_policies.png` - 三种政策对比（9 子图）
+  - (a-c) 干预事件时间分布
+  - (d-f) L1-L5 依赖等级动态演化
+  - (g-i) 高依赖群体受干预影响轨迹
 
 ---
 
-## 🔬 核心参数配置
+## ⚙️ 参数配置
 
-### 默认设置
+### 默认参数
+
 ```python
-# 基础参数
+# 系统规模
 NUM_CONSUMERS = 500      # 消费者数量
 NUM_MERCHANTS = 20       # 商家数量
 NUM_AI_AGENTS = 3        # AI 代理数量
 STEPS = 300             # 仿真步数
 
-# 依赖等级分布 (L1-L5)
+# 依赖等级初始分布 (L1-L5)
 LEVEL_DISTRIBUTION = {
     'L1': 0.10,   # 自主型 (10%)
-    'L2': 0.25,   # 信息辅助 (25%)
-    'L3': 0.30,   # 半委托 (30%)
-    'L4': 0.25,   # 高度依赖 (25%)
-    'L5': 0.10    # 完全代理 (10%)
+    'L2': 0.25,   # 信息辅助型 (25%)
+    'L3': 0.30,   # 半委托型 (30%)
+    'L4': 0.25,   # 高度依赖型 (25%)
+    'L5': 0.10    # 完全代理型 (10%)
 }
 
 # Ising 模型参数
-Jc = 0.1667         # 临界耦合强度
-temperature = 0.1   # 温度参数
+Jc = 0.1667         # 临界耦合强度（相变阈值）
+temperature = 0.1   # 系统温度
 
-# 网络类型
-NETWORK_TYPE = 'small_world'  # small_world/random/scale_free/chain
+# 网络拓扑
+NETWORK_TYPE = 'small_world'  # small_world / random / scale_free
 ```
 
 ### 自定义配置
-通过环境变量或修改 `simulation.py` 中的配置类进行调整。
+
+通过 `run_interactive_unified.py` 交互式设置，或修改 `config.py` 中的配置类。
 
 ---
 
-## 📈 关键研究发现
+## 💡 关键研究发现
 
-### 实验 1: 基线模型
-- **相变现象**: 当耦合强度 J > Jc ≈ 0.167 时，系统发生相变
-- **L4 聚集**: 大量消费者向 L4(高度依赖)集中
-- **满意度提升**: AI 使用率提高带来满意度上升
+### 实验 1：基线模型验证
 
-### 实验 2: 记忆增强
-- **错误率降低 71%**: 记忆学习有效避免重复错误
-- **AI 使用理性化**: 从 85% 降至 50%，更加理性选择
-- **信任度提升**: 动态信任机制改善长期关系
+- ✅ **相变现象确认**：当耦合强度 J > Jc ≈ 0.167 时，系统发生从无序到有序的相变
+- ✅ **L4 聚集效应**：大量消费者向 L4（高度依赖）集中，占比达 40-60%
+- ✅ **满意度正相关**：AI 使用率提升带来整体满意度上升
 
-### 实验 3: AI 进化
-- **适应性改进**: AI 根据反馈持续优化推荐质量
-- **稳定性增强**: 系统波动减小，收敛更快
+### 实验 2：AI 进化机制
 
-### 实验 4: 信息干预
-- **平衡干预最优**: 兼顾 AI 发展和消费者保护
-- **过度推广反效**: 单纯推广 AI 可能导致依赖过度
+- ✅ **错误率下降 85%**：AI 从初始 0.085 降至 0.013
+- ✅ **学习曲线明显**：进化进度达 0.263（300 步内）
+- ✅ **高依赖形成**：88.4% 消费者达到 L4 依赖等级
 
-### 实验 5: 网络结构
-- **Small-world 最优**: 聚类系数高，传播效率高
-- **Scale-free 脆弱**: 枢纽节点故障影响巨大
+### 实验 3-a：过滤气泡效应
 
-### 实验 6: 代际差异
-- **数字原生适应快**: 年轻群体 AI 接受度高
-- **数字移民需要支持**: 年长群体需要更多引导
+- ✅ **信息茧房存在**：过滤气泡强度 0.117
+- ✅ **低依赖更严重**：L1 多样性 0.922 > L5 多样性 0.774
+- ✅ **整体多样性**：0.872（存在一定程度的信息窄化）
 
-### 实验 7: AI 竞争
-- **适度竞争有益**: 促进 AI 服务质量提升
-- **恶性竞争有害**: 价格战损害整体生态
+### 实验 3-b：系统性风险
 
-### 实验 8: 情境敏感
-- **场景差异显著**: 不同情境下 AI 依赖度不同
-- **工作场景最高**: 专业决策更依赖 AI
+- ✅ **级联失效**：MAJOR 故障影响 162 人（32.4%）
+- ✅ **系统韧性**：得分 4.897，149 步内恢复
+- ✅ **压力测试**：从 minor_outage (39人) 到 coordinated_attack (256人)
 
-### 实验 9: 过滤气泡
-- **信息茧房存在**: 强推荐导致视野狭窄
-- **多样性重要**: 需要平衡个性化和多样性
+### 实验 4：信息干预政策
 
-### 实验 10: 系统性风险
-- **级联失效风险**: 技术故障可能引发社会传染
-- **韧性建设必要**: 需要建立容错和恢复机制
+| 政策类型 | L2 比例 | L4 比例 | 满意度 | 干预效果 |
+|---------|---------|---------|--------|----------|
+| **均衡政策** | 37.4% | 31.4% | 0.313 | 高依赖 -68 人 |
+| **促进 AI** | 3.4% | **94.2%** | 0.318 | 高依赖 +19 人 |
+| **保护消费者** | 3.8% | **90.4%** | 0.307 | 高依赖 +24.5 人 |
 
----
+- ✅ **促进 AI 政策**最有效推动高依赖（94.2% 达 L4）
+- ✅ **均衡政策**满意度最高，但高依赖群体减少
 
-## 🛠️ 工具脚本
+### 实验 5-10：扩展研究
 
-### 图片管理
-```bash
-# 收集所有实验图片到统一目录
-python abm_simulation/experiments/collect_all_png_final.py
-
-# 查看所有生成的图片
-python results/all_experiments_figures/view_all.py
-```
-
-### 数据分析
-```bash
-# 查看实验汇总
-python view_all_summaries.py
-
-# 验证图片完整性
-python verify_figures.py
-```
+- **网络结构**：Small-world 最优，Scale-free 存在枢纽风险
+- **代际差异**：数字原生适应快，数字移民需要支持
+- **AI 竞争**：适度竞争提升服务质量
+- **情境敏感**：工作场景 AI 依赖度最高
+- **过滤气泡**：需平衡个性化与多样性
+- **系统风险**：需建立容错和恢复机制
 
 ---
 
-## 📚 学术价值
+## 🎓 学术价值
 
 ### 理论贡献
-1. **Ising-D-I-B 耦合模型**: 首次将物理模型与决策理论结合
-2. **ACDDS 量表**: 提出 AI 依赖等级评估标准
-3. **相变临界值**: 发现 Jc ≈ 0.167 的关键阈值
+
+1. **Ising-D-I-B 耦合模型**：首次将物理学相变理论与行为决策模型整合
+2. **ACDDS 量表**：提出 AI 消费决策依赖等级评估标准（L1-L5）
+3. **相变临界值**：发现 Jc ≈ 0.167 的关键阈值，为政策干预提供科学依据
+4. **多维度验证**：10 个实验覆盖基础机制到复杂场景
 
 ### 实践意义
-1. **政策制定**: 为 AI 监管提供科学依据
-2. **企业战略**: 指导 AI 产品设计和市场定位
-3. **消费者教育**: 提高公众 AI 素养
+
+1. **政策制定**：为 AI 监管和消费者保护提供量化依据
+2. **企业战略**：指导 AI 推荐系统设计和市场定位
+3. **消费者教育**：提高公众 AI 素养和风险防范意识
+4. **风险管控**：识别系统性风险并建立韧性机制
+
+### 发表潜力
+
+本系统适合作为以下领域的研究基础：
+- 计算社会科学（Computational Social Science）
+- 多智能体仿真（Agent-Based Modeling）
+- AI 伦理与治理（AI Ethics & Governance）
+- 消费者行为学（Consumer Behavior）
 
 ---
 
-## 🔧 常见问题
+## ❓ 常见问题
 
-### Q1: 中文字体显示问题
-**解决**: 项目已内置中文字体检测，自动选择 SimHei/Microsoft YaHei/Arial Unicode MS
+### Q1: 中文字体显示异常？
 
-### Q2: 内存不足
-**解决**: 减少 `NUM_CONSUMERS` 或 `STEPS` 参数
+**解决方案**：系统已内置自动检测，优先使用 SimHei → Microsoft YaHei → Arial Unicode MS。如仍有问题，检查系统是否安装这些字体。
 
-### Q3: 网络生成失败
-**解决**: 检查 `NetworkGenerator` 类的 `generate()` 方法返回值
+### Q2: 内存不足或运行缓慢？
 
-### Q4: 实验结果不一致
-**说明**: 由于随机种子不同，每次运行结果会有细微差异，属正常现象
+**解决方案**：减少 `NUM_CONSUMERS`（如改为 200）或 `STEPS`（如改为 100）。
+
+### Q3: 实验结果每次运行不一致？
+
+**说明**：由于随机种子不同，结果会有细微差异，属正常现象。相变临界值等关键指标应保持稳定。
+
+### Q4: 如何复现论文结果？
+
+**建议**：使用 `run_interactive_unified.py` 的默认参数，或查看各实验目录下的 `run_*.py` 文件中的配置。
+
+### Q5: 如何修改实验参数？
+
+**方法**：
+1. 交互式：运行 `run_interactive_unified.py` 选择自定义参数
+2. 代码级：修改对应实验的 `run_*.py` 文件中的 `SimulationConfig`
 
 ---
 
 ## 📝 版本历史
 
-### v2.0 (最新)
+### v3.0 (2026-04-12) - 最新
+
+- ✅ 修复实验 3-a（过滤气泡）可视化路径配置错误
+- ✅ 修复实验 3-b（系统性风险）信任度计算逻辑
+- ✅ 优化实验 4（信息干预）可视化：
+  - 将柱状图改为事件标记图和演化折线图
+  - 为 9 个子图设置学术规范标题 (a-i)
+- ✅ 添加 AI 代理 `learning_history` 属性支持实验 2
+- ✅ 更新所有实验结果图表
+
+### v2.0 (2026-03-28)
+
 - ✅ 完成 10 个实验模块的统一化
 - ✅ 实现动态 L1-L5 比例参数注入
 - ✅ 构建统一可视化平台
 - ✅ 标准化接口和函数命名
-- ✅ 添加图片自动收集功能
 
-### v1.0
+### v1.0 (2026-03-15)
+
 - 基础 Ising-D-I-B 模型实现
 - 前 5 个实验模块开发
 
@@ -303,41 +389,47 @@ python verify_figures.py
 
 ## 👥 团队信息
 
-**项目负责人**: [M.Y]  
-**所属机构**: [THU]  
-**研究方向**: AI 消费决策、多智能体仿真、计算社会科学  
+**项目负责人**：M.Y  
+**所属机构**：THU  
+**研究方向**：AI 消费决策、多智能体仿真、计算社会科学  
 
 ---
 
 ## 📧 联系方式
 
-如有问题或合作意向，请通过以下方式联系:
-- Email: [yinmj@wxu.edu.cn]
-- GitHub: [https://github.com/AicbLab/abm_agents]
+- **Email**: yinmj@wxu.edu.cn
+- **GitHub**: https://github.com/AicbLab/abm_agents
+- **Issues**: https://github.com/AicbLab/abm_agents/issues
 
 ---
 
 ## 📄 许可证
 
-本项目采用 MIT 开源许可证。
+本项目采用 [MIT License](LICENSE) 开源许可证。
 
 ---
 
 ## 🙏 致谢
 
-感谢以下支持和贡献:
-- [资助机构名称] (项目编号：XXX)
-- [合作者姓名] 提供的宝贵建议
-- 开源社区的优秀工具库
+感谢以下支持和贡献：
+- 资助机构（项目编号：XXX）
+- 合作者提供的宝贵建议
+- 开源社区的优秀工具库（NumPy, Matplotlib, NetworkX）
 
 ---
 
 ## 🔗 相关链接
 
-- [Ising 模型维基百科](https://en.wikipedia.org/wiki/Ising_model)
-- [ABM 仿真教程](https://www.comses.net/)
-- [NetLogo 官方文档](https://ccl.northwestern.edu/netlogo/)
+- [Ising 模型 - Wikipedia](https://en.wikipedia.org/wiki/Ising_model)
+- [ABM 仿真教程 - ComSES](https://www.comses.net/)
+- [计算社会科学综述](https://www.science.org/doi/10.1126/science.1214455)
 
 ---
 
-**最后更新时间**: 2026 年 3 月 28 日
+<div align="center">
+
+**如果本项目对您的研究有帮助，欢迎 ⭐ Star 支持！**
+
+最后更新：2026 年 4 月 12 日
+
+</div>
