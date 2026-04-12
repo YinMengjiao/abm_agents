@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-"""Experiment 10 Runner - Systemic Risk"""
+"""Experiment 9 Runner - Filter Bubble"""
 import sys, os
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 sys.path.insert(0, project_root)
 
 from simulation import SimulationConfig
-from experiments.exp10_systemic_risk.simulation_risk import SystemicRiskSimulation, visualize_systemic_risk_results
+from experiments.exp3_consequences.filter_bubble.simulation_bubble import FilterBubbleSimulation, visualize_filter_bubble_results
 
-def run_experiment10():
+def run_experiment9():
     print("="*70)
-    print("Experiment 10: Systemic Risk & Phase Transitions")
-    print("Research Question: What conditions trigger systemic failures?")
+    print("Experiment 9: Filter Bubble & Echo Chamber")
+    print("Research Question: Does AI recommendation create information bubbles?")
     print("="*70)
     
     config = SimulationConfig(
@@ -22,12 +22,12 @@ def run_experiment10():
     print(f"\nSimulation Configuration:")
     print(f"  - Consumers: {config.n_consumers}")
     print(f"  - Steps: {config.n_steps}")
-    print(f"  - Coupling strength: Varied to detect critical point")
+    print(f"  - Recommendation strength: Varied")
     print(f"  - Level Distribution:")
     for level, ratio in config.initial_level_distribution.items():
         print(f"      L{level}: {ratio*100:.0f}%")
     
-    sim = SystemicRiskSimulation(config)
+    sim = FilterBubbleSimulation(config)
     result = sim.run()
     
     # Add level distribution to results for visualization
@@ -35,14 +35,14 @@ def run_experiment10():
     
     # Generate visualization
     print(f"\nGenerating visualization...")
-    output_file = visualize_systemic_risk_results(result)
+    output_file = visualize_filter_bubble_results(result)
     
     print(f"\n{'='*70}")
-    print(f"Experiment 10 completed!")
+    print(f"Experiment 9 completed!")
     print(f"{'='*70}")
     print(f"\nVisualization saved to: {output_file}")
     
     return sim, {'test': result}
 
 if __name__ == "__main__":
-    sim, results = run_experiment10()
+    sim, results = run_experiment9()

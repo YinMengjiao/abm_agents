@@ -9,9 +9,9 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.insert(0, project_root)
 
 from simulation import SimulationConfig
-from experiments.exp4_information_intervention.simulation_intervention import InterventionSimulation
-from experiments.exp4_information_intervention.intervention import InterventionType, InterventionEvent
-from experiments.exp4_information_intervention.visualization_intervention import visualize_all_policy_results
+from experiments.exp4_intervention.simulation_intervention import InterventionSimulation
+from experiments.exp4_intervention.intervention import InterventionType, InterventionEvent
+from experiments.exp4_intervention.visualization_intervention import visualize_all_policy_results
 from config import RESULTS
 
 

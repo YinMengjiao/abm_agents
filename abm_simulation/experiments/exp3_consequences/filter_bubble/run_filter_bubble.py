@@ -5,11 +5,11 @@
 import sys
 import os
 
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 sys.path.insert(0, project_root)
 
-from experiments.exp9_filter_bubble.filter_bubble import FilterBubbleAnalyzer, DiversityIntervention
-from experiments.exp9_filter_bubble.visualization_filter_bubble import visualize_filter_bubble_results
+from experiments.exp3_consequences.filter_bubble.filter_bubble import FilterBubbleAnalyzer, DiversityIntervention
+from experiments.exp3_consequences.filter_bubble.visualization_filter_bubble import visualize_filter_bubble_results
 from config import RESULTS
 
 
@@ -64,7 +64,7 @@ def run_experiment9():
     # 生成可视化
     print("\n" + "="*70)
     print("生成可视化...")
-    visualize_filter_bubble_results(analyzer, results, output_dir=RESULTS["exp9"])
+    visualize_filter_bubble_results(analyzer, results, output_dir=RESULTS["exp3_bubble"])
     
     print("\n" + "="*70)
     print("实验9完成!")

@@ -9,8 +9,8 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.insert(0, project_root)
 
 from simulation import SimulationConfig
-from experiments.exp3_ai_evolution.simulation_evolution import EvolutionSimulation
-from experiments.exp3_ai_evolution.visualization_evolution import visualize_evolution_results
+from experiments.exp2_mechanism.simulation_evolution import EvolutionSimulation
+from experiments.exp2_mechanism.visualization_evolution import visualize_evolution_results
 from config import RESULTS
 
 
@@ -81,7 +81,7 @@ def run_experiment3():
     # 生成可视化
     print("\n" + "="*70)
     print("生成可视化...")
-    visualize_evolution_results(sim, output_dir=RESULTS["exp3"])
+    visualize_evolution_results(sim, output_dir=RESULTS["exp2"])
     
     print("\n" + "="*70)
     print("实验3完成!")

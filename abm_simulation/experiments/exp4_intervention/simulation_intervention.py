@@ -13,7 +13,7 @@ from typing import Dict, List
 from dataclasses import dataclass, field
 
 from simulation import ABMSimulation, SimulationConfig
-from experiments.exp4_information_intervention.intervention import (
+from experiments.exp4_intervention.intervention import (
     InformationIntervention, InterventionType, InterventionPolicyOptimizer
 )
 

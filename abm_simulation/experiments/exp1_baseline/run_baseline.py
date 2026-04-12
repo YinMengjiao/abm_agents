@@ -92,8 +92,8 @@ def run_baseline():
     print("\n" + "="*70)
     print("生成基线实验综合图...")
     print("="*70)
-    from experiments.baseline_exp1.create_baseline_summary import create_baseline_summary
-    create_baseline_summary(sim, summary, output_dir=RESULTS["baseline"])
+    from experiments.exp1_baseline.create_baseline_summary import create_baseline_summary
+    create_baseline_summary(sim, summary, output_dir=RESULTS["exp1"])
     
     print("\n" + "="*70)
     print("基线实验完成!")

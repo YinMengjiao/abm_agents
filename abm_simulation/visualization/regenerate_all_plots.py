@@ -17,61 +17,42 @@ print("="*70)
 print("批量重新生成可视化图表（带中文支持）")
 print("="*70)
 
-# 1. 基线实验
-print("\n[1/7] 基线实验...")
+# 1. exp1 基准动态
+print("\n[1/4] exp1 基准动态...")
 try:
-    from experiments.baseline_exp1.run_baseline import run_and_visualize
-    # 重新运行并生成可视化
-    exec(open("experiments/baseline_exp1/run_baseline.py").read())
+    from experiments.exp1_baseline.run_baseline import run_baseline
+    run_baseline()
 except Exception as e:
     print(f"  跳过：{e}")
 
-# 2. 实验 2
-print("\n[2/7] 实验 2: 消费者记忆...")
+# 2. exp2 扩散机制: AI进化
+print("\n[2/4] exp2 扩散机制: AI 进化...")
 try:
-    from experiments.exp2_consumer_memory.run_comparison import main as run_exp2
+    from experiments.exp2_mechanism.run_evolution import run_experiment3 as run_exp2
     run_exp2()
 except Exception as e:
     print(f"  跳过：{e}")
 
-# 3. 实验 3
-print("\n[3/7] 实验 3: AI 进化...")
+# 3. exp3 系统后果: 过滤气泡 + 系统性风险
+print("\n[3/4] exp3 系统后果: 过滤气泡...")
 try:
-    from experiments.exp3_ai_evolution.run_evolution import run_experiment3
-    run_experiment3()
+    from experiments.exp3_consequences.filter_bubble.run_filter_bubble import run_experiment9 as run_bubble
+    run_bubble()
 except Exception as e:
     print(f"  跳过：{e}")
 
-# 4. 实验 4
-print("\n[4/7] 实验 4: 信息干预...")
+print("\n[3/4] exp3 系统后果: 系统性风险...")
 try:
-    from experiments.exp4_information_intervention.run_intervention import run_experiment4_policy
-    for policy in ['balanced']:
-        run_experiment4_policy(policy)
+    from experiments.exp3_consequences.systemic_risk.run_systemic_risk import run_experiment10 as run_risk
+    run_risk()
 except Exception as e:
     print(f"  跳过：{e}")
 
-# 5. 实验 8
-print("\n[5/7] 实验 8: 情境敏感性...")
+# 4. exp4 政策干预
+print("\n[4/4] exp4 政策干预: 信息干预...")
 try:
-    from experiments.exp8_context_sensitivity.run_context import run_experiment8
-    run_experiment8()
-except Exception as e:
-    print(f"  跳过：{e}")
-
-# 6. 实验 9
-print("\n[6/7] 实验 9: 过滤气泡...")
-try:
-    from experiments.exp9_filter_bubble.run_filter_bubble import run_experiment9
-    run_experiment9()
-except Exception as e:
-    print(f"  跳过：{e}")
-
-# 7. 实验 10
-print("\n[7/7] 实验 10: 系统性风险...")
-try:
-    from experiments.exp10_systemic_risk.run_systemic_risk import run_experiment10
-    run_experiment10()
+    from experiments.exp4_intervention.run_intervention import run_experiment4
+    run_experiment4()
 except Exception as e:
     print(f"  跳过：{e}")
 

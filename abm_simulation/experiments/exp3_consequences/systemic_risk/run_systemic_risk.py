@@ -5,13 +5,13 @@
 import sys
 import os
 
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 sys.path.insert(0, project_root)
 
 import numpy as np
 
-from experiments.exp10_systemic_risk.systemic_risk import SystemicRiskModel, StressTestScenarios, FailureType, FailureSeverity
-from experiments.exp10_systemic_risk.visualization_systemic_risk import visualize_systemic_risk_results
+from experiments.exp3_consequences.systemic_risk.systemic_risk import SystemicRiskModel, StressTestScenarios, FailureType, FailureSeverity
+from experiments.exp3_consequences.systemic_risk.visualization_systemic_risk import visualize_systemic_risk_results
 from config import RESULTS
 
 
@@ -76,7 +76,7 @@ def run_experiment10():
     print("生成可视化...")
     visualize_systemic_risk_results(
         main_result, stress_results, risk_model,
-        output_dir=RESULTS["exp10"]
+        output_dir=RESULTS["exp3_risk"]
     )
     
     print("\n" + "="*70)

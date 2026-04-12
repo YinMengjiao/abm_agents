@@ -6,7 +6,7 @@
     
 功能:
     1. 提供统一的实验选择界面
-    2. 支持所有已开发的实验 (10 个实验)
+    2. 支持4个核心实验 (基线/机制/后果/干预)
     3. 每个实验支持自定义初始人群比例
     4. 输出结果汇总和可视化
 """
@@ -28,55 +28,25 @@ except ImportError:
 # 导入所有实验模块
 EXPERIMENTS = {
     '1': {
-        'name': '基线实验 (Ising-D-I-B)',
-        'module': 'experiments.baseline_exp1.run_baseline',
+        'name': 'exp1 基准动态 (Baseline)',
+        'module': 'experiments.exp1_baseline.run_baseline',
         'description': '基础 Ising-D-I-B 模型，包含耦合、温度、外部冲击'
     },
     '2': {
-        'name': '消费者记忆机制',
-        'module': 'experiments.exp2_consumer_memory.run_comparison',
-        'description': '引入经验学习和动态信任机制'
+        'name': 'exp2 扩散机制 (AI进化)',
+        'module': 'experiments.exp2_mechanism.run_evolution',
+        'description': 'AI 从反馈中学习改进，探索正反馈环与满意度变化'
     },
     '3': {
-        'name': 'AI 进化机制',
-        'module': 'experiments.exp3_ai_evolution.run_evolution',
-        'description': 'AI 从反馈中学习改进的进化机制'
+        'name': 'exp3 系统后果 (过滤气泡+系统性风险)',
+        'module': 'experiments.exp3_consequences',
+        'description': 'L4主导带来的信息茧房效应与临界脆弱性'
     },
     '4': {
-        'name': '信息干预策略',
-        'module': 'experiments.exp4_information_intervention.run_intervention',
+        'name': 'exp4 政策干预 (信息干预)',
+        'module': 'experiments.exp4_intervention.run_intervention',
         'description': '三种干预模式：推广 AI、保护消费者、平衡策略'
     },
-    '5': {
-        'name': '网络结构变异',
-        'module': 'experiments.exp5_network_structure.run_network',
-        'description': '比较不同网络拓扑对演化的影响'
-    },
-    '6': {
-        'name': '代际动力学',
-        'module': 'experiments.exp6_generational_dynamics.run_generational',
-        'description': '研究不同世代消费者的行为差异'
-    },
-    '7': {
-        'name': 'AI 竞争机制',
-        'module': 'experiments.exp7_ai_competition.run_competition',
-        'description': '多个 AI 代理之间的竞争与协作'
-    },
-    '8': {
-        'name': '情境敏感性',
-        'module': 'experiments.exp8_context_sensitivity.run_context',
-        'description': '不同情境下的消费决策差异'
-    },
-    '9': {
-        'name': '过滤气泡效应',
-        'module': 'experiments.exp9_filter_bubble.run_filter_bubble',
-        'description': 'AI 推荐导致的信息茧房效应'
-    },
-    '10': {
-        'name': '系统性风险',
-        'module': 'experiments.exp10_systemic_risk.run_systemic_risk',
-        'description': '系统崩溃临界点与风险分析'
-    }
 }
 
 
@@ -232,38 +202,21 @@ def run_custom_experiment(exp_key):
     # 根据实验类型调用不同的模块
     try:
         if exp_key == '1':
-            from experiments.baseline_exp1.run_baseline import run_baseline
+            from experiments.exp1_baseline.run_baseline import run_baseline
             sim, summary = run_baseline()
         elif exp_key == '2':
-            from experiments.exp2_consumer_memory.run_comparison import main as exp2_main
-            exp2_main()
-            return
+            from experiments.exp2_mechanism.run_evolution import run_experiment3 as run_exp2
+            sim, summary = run_exp2()
         elif exp_key == '3':
-            from experiments.exp3_ai_evolution.run_evolution import run_experiment3
-            sim, summary = run_experiment3()
+            from experiments.exp3_consequences.filter_bubble.run_filter_bubble import run_experiment9 as run_bubble
+            from experiments.exp3_consequences.systemic_risk.run_systemic_risk import run_experiment10 as run_risk
+            analyzer, bubble_results = run_bubble()
+            risk_model, main_result, stress_results = run_risk()
+            return
         elif exp_key == '4':
-            from experiments.exp4_information_intervention.run_intervention import run_experiment4
+            from experiments.exp4_intervention.run_intervention import run_experiment4
             results = run_experiment4()
             return
-        elif exp_key == '5':
-            from experiments.exp5_network_structure.run_network import run_experiment5
-            run_experiment5()
-            return
-        elif exp_key == '6':
-            from experiments.exp6_generational_dynamics.run_generational import run_experiment6
-            runner, results = run_experiment6()
-        elif exp_key == '7':
-            from experiments.exp7_ai_competition.run_competition import run_experiment7
-            sim, summary = run_experiment7()
-        elif exp_key == '8':
-            from experiments.exp8_context_sensitivity.run_context import run_experiment8
-            runner, results = run_experiment8()
-        elif exp_key == '9':
-            from experiments.exp9_filter_bubble.run_filter_bubble import run_experiment9
-            analyzer, results = run_experiment9()
-        elif exp_key == '10':
-            from experiments.exp10_systemic_risk.run_systemic_risk import run_experiment10
-            risk_model, main_result, stress_results = run_experiment10()
             
         print("\n" + "="*70)
         print("✅ 实验完成!")
@@ -284,8 +237,8 @@ def main():
         show_experiment_menu()
         
         try:
-            choice = input("\n请输入实验编号 (0-10): ").strip()
-            
+            choice = input("\n请输入实验编号 (0-4): ").strip()
+
             if choice == '0':
                 print("\n" + "="*70)
                 print("感谢使用，再见！")
@@ -294,7 +247,7 @@ def main():
             elif choice in EXPERIMENTS:
                 run_custom_experiment(choice)
             else:
-                print("\n  无效的实验编号，请重新输入")
+                print("\n  无效的实验编号，请输入 1-4")
                 
         except KeyboardInterrupt:
             print("\n\n  用户中断")

@@ -1,6 +1,6 @@
 """Experiment 10: Systemic Risk Simulation (English version)"""
 import sys, os
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 sys.path.insert(0, project_root)
 
 import numpy as np
@@ -21,7 +21,7 @@ class SystemicRiskSimulation(ABMSimulation):
         return results
 
 
-def visualize_systemic_risk_results(results, output_dir="experiments/exp10_systemic_risk/results"):
+def visualize_systemic_risk_results(results, output_dir="experiments/exp3_consequences/systemic_risk/results"):
     """Generate visualization for Experiment 10"""
     import matplotlib.pyplot as plt
     from pathlib import Path

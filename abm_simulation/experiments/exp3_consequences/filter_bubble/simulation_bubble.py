@@ -1,6 +1,6 @@
 """Experiment 9: Filter Bubble Simulation (English version)"""
 import sys, os
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 sys.path.insert(0, project_root)
 
 import numpy as np
@@ -21,7 +21,7 @@ class FilterBubbleSimulation(ABMSimulation):
         return results
 
 
-def visualize_filter_bubble_results(results, output_dir="experiments/exp9_filter_bubble/results"):
+def visualize_filter_bubble_results(results, output_dir="experiments/exp3_consequences/filter_bubble/results"):
     """Generate visualization for Experiment 9"""
     import matplotlib.pyplot as plt
     from pathlib import Path

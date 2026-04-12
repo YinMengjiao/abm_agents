@@ -52,7 +52,7 @@ CONFIG = {
     },
     
     # ========== 实验控制 ==========
-    'experiments_to_run': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],  # 要运行的实验编号
+    'experiments_to_run': [1, 2, 3, 4],  # 要运行的实验编号 (1=基线, 2=机制, 3=后果, 4=干预)
     'generate_visualizations': True,  # 是否生成可视化图表
     'save_results': True,  # 是否保存结果
 }
@@ -118,12 +118,12 @@ def validate_config(config):
         return False
     
     # 检查实验编号
-    valid_exps = set(range(1, 11))
+    valid_exps = set(range(1, 5))
     requested_exps = set(config['experiments_to_run'])
     invalid = requested_exps - valid_exps
     if invalid:
         print(f"\n❌ 错误：无效的实验编号：{invalid}")
-        print("有效的实验编号为 1-10")
+        print("有效的实验编号为 1-4 (1=基线, 2=机制, 3=后果, 4=干预)")
         return False
     
     return True
@@ -138,44 +138,26 @@ def run_experiment(exp_num, config):
     try:
         # 根据实验编号导入并运行
         if exp_num == 1:
-            from experiments.baseline_exp1.run_baseline import run_baseline
+            # 基准动态
+            from experiments.exp1_baseline.run_baseline import run_baseline
             sim, summary = run_baseline()
-            
+
         elif exp_num == 2:
-            from experiments.exp2_consumer_memory.run_comparison import main as exp2_main
-            exp2_main()
-            
+            # 扩散机制: AI进化
+            from experiments.exp2_mechanism.run_evolution import run_experiment3 as run_exp2
+            sim, summary = run_exp2()
+
         elif exp_num == 3:
-            from experiments.exp3_ai_evolution.run_evolution import run_experiment3
-            sim, summary = run_experiment3()
-            
+            # 系统后果: 过滤气泡 + 系统性风险
+            from experiments.exp3_consequences.filter_bubble.run_filter_bubble import run_experiment9 as run_bubble
+            from experiments.exp3_consequences.systemic_risk.run_systemic_risk import run_experiment10 as run_risk
+            analyzer, bubble_results = run_bubble()
+            risk_model, main_result, stress_results = run_risk()
+
         elif exp_num == 4:
-            from experiments.exp4_information_intervention.run_intervention import run_experiment4
+            # 政策干预
+            from experiments.exp4_intervention.run_intervention import run_experiment4
             results = run_experiment4()
-            
-        elif exp_num == 5:
-            from experiments.exp5_network_structure.run_network import run_experiment5
-            run_experiment5()
-            
-        elif exp_num == 6:
-            from experiments.exp6_generational_dynamics.run_generational import run_experiment6
-            runner, results = run_experiment6()
-            
-        elif exp_num == 7:
-            from experiments.exp7_ai_competition.run_competition import run_experiment7
-            sim, summary = run_experiment7()
-            
-        elif exp_num == 8:
-            from experiments.exp8_context_sensitivity.run_context import run_experiment8
-            runner, results = run_experiment8()
-            
-        elif exp_num == 9:
-            from experiments.exp9_filter_bubble.run_filter_bubble import run_experiment9
-            analyzer, results = run_experiment9()
-            
-        elif exp_num == 10:
-            from experiments.exp10_systemic_risk.run_systemic_risk import run_experiment10
-            risk_model, main_result, stress_results = run_experiment10()
         
         print(f"\n✅ 实验 {exp_num} 完成!\n")
         return True

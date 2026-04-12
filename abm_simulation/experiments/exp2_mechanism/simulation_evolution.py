@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 from simulation import ABMSimulation, SimulationConfig
 from agents.consumer_dib import ConsumerAgentDIB, ConsumerTraits
 from environment.market import MarketEnvironment, Product
-from experiments.exp3_ai_evolution.ai_evolution import EvolvingAIPopulation, AILearningMode
+from experiments.exp2_mechanism.ai_evolution import EvolvingAIPopulation, AILearningMode
 
 
 @dataclass
