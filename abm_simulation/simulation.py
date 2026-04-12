@@ -51,9 +51,62 @@ class SimulationConfig:
     shock_probability: float = 0.01  # 外部冲击概率
     
     # AI学习控制(基准实验应禁用)
-    enable_ai_learning: bool = True  # 是否允许AI从反馈中学习
-
+    enable_ai_learning: bool = True  # 是否允许AI从反馈学习
     
+        
+    @staticmethod
+    def load_survey_distribution(csv_path: str = None) -> Dict[int, float]:
+        """
+        从ACDDS调查数据加载真实的L1-L5分布（数据驱动初始化）
+            
+        Args:
+            csv_path: acdds_results.csv路径，默认自动查找
+                
+        Returns:
+            等级分布字典 {1: 比例, 2: 比例, ..., 5: 比例}
+        """
+        import pandas as pd
+            
+        if csv_path is None:
+            _here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            csv_path = os.path.join(_here, 'data_survey', 'acdds_results.csv')
+            
+        if not os.path.exists(csv_path):
+            print(f"⚠ 警告: 调查数据文件不存在: {csv_path}")
+            print("  使用默认理论分布")
+            return {1: 0.10, 2: 0.25, 3: 0.30, 4: 0.25, 5: 0.10}
+            
+        df = pd.read_csv(csv_path)
+        level_counts = df['Dependency_Level'].value_counts().sort_index()
+        total = len(df)
+            
+        level_map = {'L1': 1, 'L2': 2, 'L3': 3, 'L4': 4, 'L5': 5}
+        distribution = {}
+            
+        for level_name, count in level_counts.items():
+            level_num = level_map.get(level_name, 3)
+            distribution[level_num] = count / total
+            
+        for i in range(1, 6):
+            if i not in distribution:
+                distribution[i] = 0.0
+            
+        print("="*70)
+        print("📊 已加载ACDDS调查数据（数据驱动的仿真初始化）")
+        print("="*70)
+        print(f"样本总量: N={total}")
+        print(f"\n依赖等级分布:")
+        level_names = {1: 'L1完全自主', 2: 'L2信息辅助', 3: 'L3半委托', 
+                      4: 'L4高度依赖', 5: 'L5完全代理'}
+        for level in range(1, 6):
+            count = int(distribution[level] * total)
+            pct = distribution[level] * 100
+            bar = '█' * int(pct / 2)
+            print(f"  {level_names[level]:<12}: {count:>4} ({pct:5.1f}%) {bar}")
+        print("="*70)
+            
+        return distribution
+        
     @staticmethod
     def get_user_input_distribution() -> Dict[int, float]:
         """从用户输入获取初始人群比例分布"""

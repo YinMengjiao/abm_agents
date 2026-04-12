@@ -1,9 +1,14 @@
 """
 ABM仿真运行入口
+支持三种初始化模式：
+1. 调查数据驱动（默认）- 使用ACDDS问卷的真实L1-L5分布
+2. 交互式手动输入 - 用户自行设定比例
+3. 理论默认值 - 使用对称分布假设
 """
 
 import sys
 import os
+import argparse
 
 # 添加项目路径
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -12,26 +17,69 @@ from simulation import ABMSimulation, SimulationConfig
 from visualization.plots import quick_visualize
 
 
-def main():
-    """主函数"""
-    print("=" * 60)
+def main(mode: str = 'survey'):
+    """
+    主函数
+    
+    Args:
+        mode: 初始化模式
+            - 'survey': 从 ACDDS调查数据加载（默认）
+            - 'interactive': 交互式手动输入
+            - 'default': 使用理论默认值
+    """
+    print("=" * 70)
     print("AI消费决策依赖梯度ABM仿真")
     print("模型: Ising-D-I-B (Desire-Intention-Behavior)")
-    print("=" * 60)
+    print("=" * 70)
     
-    # 配置参数 - 保持在临界附近以维持多样性
-    config = SimulationConfig(
-        n_consumers=500,           # 消费者数量
-        n_merchants=20,            # 商家数量
-        n_ai_agents=3,             # AI代理数量
-        network_type='small_world', # 社交网络类型
-        n_steps=300,               # 仿真步数
-        initial_coupling=0.2,      # 降低耦合，避免强极化
-        initial_temperature=2.0,   # 提高温度，增加随机性
-        enable_adaptive_coupling=True,
-        coupling_trend=0.0005,     # 极缓慢增长
-        shock_probability=0.05,    # 增加冲击以维持动态
-    )
+    if mode == 'survey':
+        print("\n📊 模式: 数据驱动初始化（ACDDS调查数据）")
+        survey_dist = SimulationConfig.load_survey_distribution()
+        config = SimulationConfig(
+            n_consumers=500,
+            n_merchants=20,
+            n_ai_agents=3,
+            network_type='small_world',
+            n_steps=300,
+            initial_coupling=0.2,
+            initial_temperature=2.0,
+            enable_adaptive_coupling=True,
+            coupling_trend=0.0005,
+            shock_probability=0.05,
+            initial_level_distribution=survey_dist
+        )
+    
+    elif mode == 'interactive':
+        print("\n👤 模式: 交互式手动输入")
+        user_dist = SimulationConfig.get_user_input_distribution()
+        config = SimulationConfig(
+            n_consumers=500,
+            n_merchants=20,
+            n_ai_agents=3,
+            network_type='small_world',
+            n_steps=300,
+            initial_coupling=0.2,
+            initial_temperature=2.0,
+            enable_adaptive_coupling=True,
+            coupling_trend=0.0005,
+            shock_probability=0.05,
+            initial_level_distribution=user_dist
+        )
+    
+    else:
+        print("\n⚙ 模式: 理论默认分布")
+        config = SimulationConfig(
+            n_consumers=500,
+            n_merchants=20,
+            n_ai_agents=3,
+            network_type='small_world',
+            n_steps=300,
+            initial_coupling=0.2,
+            initial_temperature=2.0,
+            enable_adaptive_coupling=True,
+            coupling_trend=0.0005,
+            shock_probability=0.05,
+        )
     
     print(f"\n仿真配置:")
     print(f"  - 消费者数量: {config.n_consumers}")
@@ -39,6 +87,7 @@ def main():
     print(f"  - AI代理数量: {config.n_ai_agents}")
     print(f"  - 仿真步数: {config.n_steps}")
     print(f"  - 网络类型: {config.network_type}")
+    print(f"  - 初始化方式: {mode}")
     
     # 创建并运行仿真
     sim = ABMSimulation(config)
@@ -92,4 +141,10 @@ def main():
 
 
 if __name__ == "__main__":
-    sim, metrics = main()
+    parser = argparse.ArgumentParser(description='ABM仿真运行入口')
+    parser.add_argument('--mode', type=str, default='survey',
+                       choices=['survey', 'interactive', 'default'],
+                       help='初始化模式: survey=调查数据, interactive=手动输入, default=理论值')
+    args = parser.parse_args()
+    
+    sim, metrics = main(mode=args.mode)
