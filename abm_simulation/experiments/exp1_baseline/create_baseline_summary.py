@@ -4,6 +4,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as pe
 import sys
 import os
 
@@ -26,10 +27,10 @@ TEXT_CONFIG = {
         'level_evolution': '(c) 依赖等级演化',
         'magnetization': '(d) Ising 磁化强度',
         'coupling': '(e) 社会影响强度演化',
-        'phase_transition': 'Ising 相变分析',
-        'satisfaction': '(f) 平均满意度演化',
-        'ai_usage': 'AI 使用与错误率',
-        'network': '(g) 小世界网络特征',
+        'phase_transition': '(f) Ising 相变分析',
+        'satisfaction': '(g) 平均满意度演化',
+        'ai_usage': '(h) AI 使用与错误率',
+        'network': '(i) 小世界网络特征',
         'agent_count': '智能体数量',
         'step': '仿真步数',
         'coupling_strength': '耦合强度',
@@ -51,10 +52,10 @@ TEXT_CONFIG = {
         'level_evolution': '(c) Dependency Level Evolution',
         'magnetization': '(d) Ising Magnetization',
         'coupling': '(e) Social Influence Strength Evolution',
-        'phase_transition': 'Ising Phase Transition Analysis',
-        'satisfaction': '(f) Average Satisfaction Evolution',
-        'ai_usage': 'AI Usage & Error Rate',
-        'network': '(g) Small-World Network Features',
+        'phase_transition': '(f) Ising Phase Transition Analysis',
+        'satisfaction': '(g) Average Satisfaction Evolution',
+        'ai_usage': '(h) AI Usage & Error Rate',
+        'network': '(i) Small-World Network Features',
         'agent_count': 'Agent Count',
         'step': 'Simulation Step',
         'coupling_strength': 'Coupling Strength',
@@ -172,8 +173,9 @@ def _plot_initial_level_distribution(ax, sim, level_names, text):
         ax.grid(True, axis='y', alpha=0.3)
         
         for bar, count in zip(bars, counts):
-            ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 5,
-                   f'{count}', ha='center', va='bottom', fontsize=10, fontweight='bold')
+            ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() * 0.5,
+                   f'{count}', ha='center', va='center', fontsize=11, fontweight='bold',
+                   color='white')
 
 
 def _plot_final_level_distribution(ax, results, level_names, text):
@@ -189,8 +191,9 @@ def _plot_final_level_distribution(ax, results, level_names, text):
     ax.grid(True, axis='y', alpha=0.3)
     
     for bar, count in zip(bars, counts):
-        ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 5,
-               f'{count}', ha='center', va='bottom', fontsize=10, fontweight='bold')
+        ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() * 0.5,
+               f'{count}', ha='center', va='center', fontsize=11, fontweight='bold',
+               color='white')
 
 
 def _plot_level_evolution(ax, sim, level_names, text):
@@ -271,8 +274,8 @@ def _plot_phase_transition_analysis(ax, sim, text):
         line2 = ax2.plot(steps, magnetization, color='#4C72B0', label=text['magnetization_label'], linewidth=2, alpha=0.8, linestyle='--')
         
         ax1.set_xlabel(text['step'], fontsize=11)
-        ax1.set_ylabel(text['coupling_strength'], fontsize=11, color='green')
-        ax2.set_ylabel(text['magnetization_label'], fontsize=11, color='blue')
+        ax1.set_ylabel(text['coupling_strength'], fontsize=11, color='#55A868')
+        ax2.set_ylabel(text['magnetization_label'], fontsize=11, color='#4C72B0')
         ax1.set_title(text['phase_transition'], fontsize=12, fontweight='bold')
         
         # 合并图例
@@ -317,6 +320,9 @@ def _plot_ai_usage_and_errors(ax, sim, text):
         line1 = ax1.plot(steps, ai_usage, 'r-', label=text['ai_usage_rate'], linewidth=2, alpha=0.7)
         line2 = ax2.plot(steps, error_rate, 'purple', label=text['error_rate'], linewidth=2, alpha=0.7)
         
+        ax1.set_ylim(0, 1)
+        ax2.set_ylim(0, 1)
+        
         ax1.set_xlabel(text['step'], fontsize=11)
         ax1.set_ylabel(text['ai_usage_rate'], fontsize=11, color='red')
         ax2.set_ylabel(text['error_rate'], fontsize=11, color='purple')
@@ -325,7 +331,7 @@ def _plot_ai_usage_and_errors(ax, sim, text):
         # 合并图例
         lines = line1 + line2
         labels = [l.get_label() for l in lines]
-        ax1.legend(lines, labels, loc='upper right', fontsize=9)
+        ax1.legend(lines, labels, loc='center right', fontsize=9)
         
         ax1.grid(True, alpha=0.3)
 

@@ -72,11 +72,11 @@ def visualize_evolution_results(sim, output_dir: str = None, en: bool = False):
     
     # 1. 依赖等级分布演化（左）- 有数据
     ax1 = plt.subplot(1, 2, 1)
-    _plot_level_distribution_evolution(ax1, sim)
+    _plot_level_distribution_evolution(ax1, sim, en=en)
     
     # 2. AI 能力进化热力图（右）- 有数据
     ax2 = plt.subplot(1, 2, 2)
-    _plot_capability_heatmap(ax2, sim)
+    _plot_capability_heatmap(ax2, sim, en=en)
     
     plt.suptitle(TEXT_CONFIG['en' if en else 'zh']['title'], fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
@@ -132,7 +132,7 @@ def _plot_error_rate_evolution(ax, sim):
     ax.legend()
 
 
-def _plot_level_distribution_evolution(ax, sim):
+def _plot_level_distribution_evolution(ax, sim, en=False):
     """绘制依赖等级分布演化"""
     if not sim.metrics_history:
         ax.text(0.5, 0.5, 'No Data', ha='center', va='center')
@@ -146,9 +146,10 @@ def _plot_level_distribution_evolution(ax, sim):
         counts = [m.level_distribution.get(level, 0) for m in sim.metrics_history]
         ax.plot(steps, counts, color=color, linewidth=2.5, label=f'L{level}', alpha=0.85)
     
-    ax.set_xlabel('Simulation Step')
-    ax.set_ylabel('Consumer Count')
-    ax.set_title('(a) Dependency Level Distribution Evolution')
+    texts = TEXT_CONFIG['en' if en else 'zh']
+    ax.set_xlabel(texts['step_label'])
+    ax.set_ylabel(texts['consumer_count'])
+    ax.set_title(texts['level_dist_title'])
     ax.legend()
     ax.grid(True, alpha=0.3)
 
@@ -177,18 +178,22 @@ def _plot_learning_events(ax, sim):
     ax_twin.legend(loc='upper right')
 
 
-def _plot_capability_heatmap(ax, sim):
+def _plot_capability_heatmap(ax, sim, en=False):
     """绘制AI能力进化热力图"""
+    texts = TEXT_CONFIG['en' if en else 'zh']
     # 获取AI群体指标
     if not hasattr(sim.ai_population, 'agents'):
-        ax.text(0.5, 0.5, '无AI数据', ha='center', va='center')
+        ax.text(0.5, 0.5, texts['no_data'], ha='center', va='center')
         return
     
     agents = sim.ai_population.agents
     n_agents = len(agents)
     
     # 构建能力矩阵
-    capabilities = ['准确度', '理解深度', '执行可靠性', '个性化']
+    if en:
+        capabilities = ['Accuracy', 'Understanding', 'Reliability', 'Personalization']
+    else:
+        capabilities = ['准确度', '理解深度', '执行可靠性', '个性化']
     capability_matrix = np.zeros((n_agents, len(capabilities)))
     
     for i, agent in enumerate(agents):
@@ -202,14 +207,18 @@ def _plot_capability_heatmap(ax, sim):
     ax.set_xticks(range(len(capabilities)))
     ax.set_xticklabels(capabilities, rotation=45, ha='right')
     ax.set_yticks(range(n_agents))
-    ax.set_yticklabels([f'AI-{i}' for i in range(n_agents)])
-    ax.set_title('(b) AI Capability Evolution Heatmap')
+    if en:
+        ai_labels = ['Low', 'Medium', 'High'][:n_agents]
+    else:
+        ai_labels = ['低', '中', '高'][:n_agents]
+    ax.set_yticklabels(ai_labels)
+    ax.set_title(texts['capability_title'])
     
     # 添加数值标注
     for i in range(n_agents):
         for j in range(len(capabilities)):
             text = ax.text(j, i, f'{capability_matrix[i, j]:.2f}',
-                          ha="center", va="center", color="black", fontsize=8)
+                          ha="center", va="center", color="black", fontsize=13)
     
     plt.colorbar(im, ax=ax)
 
