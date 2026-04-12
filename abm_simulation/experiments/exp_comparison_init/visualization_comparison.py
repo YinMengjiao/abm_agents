@@ -172,7 +172,7 @@ def plot_initial_to_final_sankey(ax, results, group_name, dist_key, color_main, 
         bottom_x_positions.append(center_x)
         bottom_widths.append(width)
     
-    # 绘制水流带（从上到下）
+    # 绘制水流带（从上到下），宽度从上方节点平滑过渡到下方节点
     for i in range(n_levels):
         for j in range(n_levels):
             if abs(i - j) <= 1:  # 只显示自身和相邻等级的流动
@@ -182,16 +182,22 @@ def plot_initial_to_final_sankey(ax, results, group_name, dist_key, color_main, 
                 else:
                     flow_strength = 0.15
                 
-                # 水流带宽度与初始比例和流向强度成正比
-                band_width = top_widths[i] * flow_strength
+                # 上方和下方的水流带宽度分别匹配对应节点宽度
+                band_width_top = top_widths[i] * flow_strength
+                band_width_bottom = bottom_widths[j] * flow_strength
                 
                 # 使用贝塞尔曲线创建平滑的水流效果
                 n_points = 50
                 y = np.linspace(top_y, bottom_y, n_points)
+                t = (y - top_y) / (bottom_y - top_y)  # 0→1 插值因子
+                
+                # 沿路径插值宽度
+                band_width = band_width_top + (band_width_bottom - band_width_top) * t
                 
                 # 计算中心线（带正弦曲线）
-                x_center = top_x_positions[i] + (bottom_x_positions[j] - top_x_positions[i]) * ((y - top_y) / (bottom_y - top_y))
-                x_center += band_width * 0.3 * np.sin(np.pi * (y - top_y) / (bottom_y - top_y)) * (1 if i < j else -1 if i > j else 0)
+                x_center = top_x_positions[i] + (bottom_x_positions[j] - top_x_positions[i]) * t
+                avg_bw = (band_width_top + band_width_bottom) / 2
+                x_center += avg_bw * 0.3 * np.sin(np.pi * t) * (1 if i < j else -1 if i > j else 0)
                 
                 # 左边界和右边界
                 x_left = x_center - band_width / 2
@@ -380,9 +386,9 @@ def plot_metrics_boxplot(ax, results, en=False):
     width = 0.35
     
     bp1 = ax.boxplot(survey_data_norm, positions=positions - width/2, widths=width,
-                     patch_artist=True, label='调查数据')
+                     patch_artist=True)
     bp2 = ax.boxplot(theoretical_data_norm, positions=positions + width/2, widths=width,
-                     patch_artist=True, label='理论假设')
+                     patch_artist=True)
     
     for patch in bp1['boxes']:
         patch.set_facecolor(COLORS['survey'])
@@ -395,7 +401,16 @@ def plot_metrics_boxplot(ax, results, en=False):
     ax.set_xticklabels(metric_labels, fontsize=9)
     ax.set_ylabel(text['normalized'], fontsize=11)
     ax.set_title(f'(f) {text["metrics"]}', fontsize=12, fontweight='bold')
-    ax.legend(fontsize=10)
+    
+    # 手动创建图例
+    from matplotlib.patches import Patch
+    survey_label = 'Survey Data' if en else '调查数据'
+    theory_label = 'Theoretical' if en else '理论假设'
+    legend_handles = [
+        Patch(facecolor=COLORS['survey'], alpha=0.6, label=survey_label),
+        Patch(facecolor=COLORS['theoretical'], alpha=0.6, label=theory_label)
+    ]
+    ax.legend(handles=legend_handles, fontsize=10, loc='lower right')
     ax.grid(True, axis='y', alpha=0.3)
     
     # 添加数据标签（中位数）
