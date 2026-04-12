@@ -55,6 +55,7 @@ Thumbs.db
 *.log
 *.out
 *.doc
+*.docx
 *.dox
 
 # 临时文件
