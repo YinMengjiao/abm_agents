@@ -1,5 +1,5 @@
 """
-实验 10 可视化：系统性风险
+实验 3-b 可视化：系统性风险
 """
 
 import matplotlib.pyplot as plt
@@ -14,9 +14,28 @@ from visualization.chinese_font import setup_chinese_font
 from config import RESULTS
 setup_chinese_font()
 
+# 语言配置
+TEXT_CONFIG = {
+    'zh': {
+        'title': '实验 3-b: 系统性风险与级联失效分析',
+    },
+    'en': {
+        'title': 'Experiment 3-b: Systemic Risk & Cascade Failures',
+    }
+}
 
-def visualize_systemic_risk_results(main_result, stress_results, risk_model, output_dir: str = None):
-    """可视化系统性风险结果"""
+
+def visualize_systemic_risk_results(main_result, stress_results, risk_model, output_dir: str = None, en: bool = False):
+    """
+    可视化系统性风险结果
+    
+    Args:
+        main_result: 主要结果
+        stress_results: 压力测试结果
+        risk_model: 风险模型
+        output_dir: 输出目录
+        en: True=英文, False=中文 (默认)
+    """
     if output_dir is None:
         output_dir = RESULTS["exp3_risk"]
     os.makedirs(output_dir, exist_ok=True)
@@ -47,7 +66,7 @@ def visualize_systemic_risk_results(main_result, stress_results, risk_model, out
     ax6 = plt.subplot(2, 3, 6)
     _plot_resilience_assessment(ax6, main_result, risk_model)
     
-    plt.suptitle('实验 3-b: 系统性风险与级联失效分析', fontsize=16, fontweight='bold', y=0.98)
+    plt.suptitle(TEXT_CONFIG['en' if en else 'zh']['title'], fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.95], pad=2.0, h_pad=3.0, w_pad=3.0)  # 增加子图间距
     plt.savefig(f'{output_dir}/systemic_risk_analysis.png', dpi=150, bbox_inches='tight', facecolor='white')
     plt.close()

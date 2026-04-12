@@ -14,8 +14,12 @@ from experiments.exp2_mechanism.visualization_evolution import visualize_evoluti
 from config import RESULTS
 
 
-def run_experiment2():
-    """运行实验2: AI进化机制"""
+def run_experiment2(en: bool = False):
+    """运行实验2: AI进化机制
+    
+    Args:
+        en: True=英文输出, False=中文输出 (默认)
+    """
     print("="*70)
     print("【实验2】AI代理进化机制")
     print("研究问题: AI能否从消费者反馈中学习改进？")
@@ -81,7 +85,9 @@ def run_experiment2():
     # 生成可视化
     print("\n" + "="*70)
     print("生成可视化...")
-    visualize_evolution_results(sim, output_dir=RESULTS["exp2"])
+    lang_str = '英文' if en else '中文'
+    print(f"语言: {lang_str}")
+    visualize_evolution_results(sim, output_dir=RESULTS["exp2"], en=en)
     
     print("\n" + "="*70)
     print("实验2完成!")
@@ -91,4 +97,9 @@ def run_experiment2():
 
 
 if __name__ == "__main__":
-    sim, summary = run_experiment2()
+    import argparse
+    parser = argparse.ArgumentParser(description='运行实验2: AI进化机制')
+    parser.add_argument('--en', action='store_true', help='生成英文版本的图表')
+    args = parser.parse_args()
+    
+    sim, summary = run_experiment2(en=args.en)

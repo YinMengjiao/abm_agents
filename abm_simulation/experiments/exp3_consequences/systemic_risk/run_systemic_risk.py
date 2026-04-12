@@ -15,8 +15,13 @@ from experiments.exp3_consequences.systemic_risk.visualization_systemic_risk imp
 from config import RESULTS
 
 
-def run_experiment10():
-    """运行实验10: 系统性风险"""
+def run_experiment10(en: bool = False):
+    """
+    运行实验10: 系统性风险
+    
+    Args:
+        en: True=英文输出, False=中文输出 (默认)
+    """
     print("="*70)
     print("【实验10】系统性风险与级联失效")
     print("研究问题: AI系统故障的社会传染效应？")
@@ -74,9 +79,12 @@ def run_experiment10():
     # 生成可视化
     print("\n" + "="*70)
     print("生成可视化...")
+    lang_str = '英文' if en else '中文'
+    print(f"语言: {lang_str}")
     visualize_systemic_risk_results(
         main_result, stress_results, risk_model,
-        output_dir=RESULTS["exp3_risk"]
+        output_dir=RESULTS["exp3_risk"],
+        en=en
     )
     
     print("\n" + "="*70)
@@ -87,4 +95,9 @@ def run_experiment10():
 
 
 if __name__ == "__main__":
-    risk_model, main_result, stress_results = run_experiment10()
+    import argparse
+    parser = argparse.ArgumentParser(description='运行实验10: 系统性风险')
+    parser.add_argument('--en', action='store_true', help='生成英文版本的图表')
+    args = parser.parse_args()
+    
+    risk_model, main_result, stress_results = run_experiment10(en=args.en)

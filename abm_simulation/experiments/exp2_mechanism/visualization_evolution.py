@@ -14,14 +14,49 @@ from visualization.chinese_font import setup_chinese_font
 from config import RESULTS
 setup_chinese_font()
 
+# 语言配置
+TEXT_CONFIG = {
+    'zh': {
+        'title': '实验 2: AI 代理进化机制',
+        'level_dist_title': '(a) 依赖等级分布演化',
+        'capability_title': '(b) AI 能力进化热力图',
+        'step_label': '仿真步数',
+        'consumer_count': '智能体数量',
+        'level_label': 'AI代理等级',
+        'error_rate': 'AI错误率',
+        'satisfaction': '平均满意度',
+        'evolution_vs_baseline': 'AI错误率: 进化 vs 基线',
+        'satisfaction_vs_baseline': '消费者满意度: 进化 vs 基线',
+        'evolution_ai': '实验2: 进化AI',
+        'comparison_title': '实验2对比分析',
+        'no_data': '无数据',
+    },
+    'en': {
+        'title': 'Experiment 2: AI Agent Evolution',
+        'level_dist_title': '(a) Dependency Level Distribution',
+        'capability_title': '(b) AI Capability Evolution Heatmap',
+        'step_label': 'Simulation Step',
+        'consumer_count': 'Agent Count',
+        'level_label': 'AI Agent Level',
+        'error_rate': 'AI Error Rate',
+        'satisfaction': 'Avg Satisfaction',
+        'evolution_vs_baseline': 'AI Error Rate: Evolution vs Baseline',
+        'satisfaction_vs_baseline': 'Consumer Satisfaction: Evolution vs Baseline',
+        'evolution_ai': 'Exp2: Evolutionary AI',
+        'comparison_title': 'Experiment 2 Comparison',
+        'no_data': 'No Data',
+    }
+}
 
-def visualize_evolution_results(sim, output_dir: str = None):
+
+def visualize_evolution_results(sim, output_dir: str = None, en: bool = False):
     """
     可视化 AI 进化实验结果
 
     Args:
         sim: EvolutionSimulation 实例
         output_dir: 输出目录
+        en: True=英文, False=中文 (默认)
     """
     if output_dir is None:
         output_dir = RESULTS["exp2"]
@@ -38,7 +73,7 @@ def visualize_evolution_results(sim, output_dir: str = None):
     ax2 = plt.subplot(1, 2, 2)
     _plot_capability_heatmap(ax2, sim)
     
-    plt.suptitle('实验 2: AI 代理进化机制', fontsize=16, fontweight='bold', y=0.98)
+    plt.suptitle(TEXT_CONFIG['en' if en else 'zh']['title'], fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
     plt.savefig(f'{output_dir}/evolution_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()

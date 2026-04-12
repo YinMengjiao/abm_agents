@@ -1,5 +1,5 @@
 """
-实验 9 可视化：过滤气泡
+实验 3-a 可视化：过滤气泡
 """
 
 import matplotlib.pyplot as plt
@@ -14,9 +14,27 @@ from visualization.chinese_font import setup_chinese_font
 from config import RESULTS
 setup_chinese_font()
 
+# 语言配置
+TEXT_CONFIG = {
+    'zh': {
+        'title': '实验 3-a: 过滤气泡与选择多样性分析',
+    },
+    'en': {
+        'title': 'Experiment 3-a: Filter Bubbles & Choice Diversity',
+    }
+}
 
-def visualize_filter_bubble_results(analyzer, results, output_dir: str = None):
-    """可视化过滤气泡结果"""
+
+def visualize_filter_bubble_results(analyzer, results, output_dir: str = None, en: bool = False):
+    """
+    可视化过滤气泡结果
+    
+    Args:
+        analyzer: 分析器实例
+        results: 结果数据
+        output_dir: 输出目录
+        en: True=英文, False=中文 (默认)
+    """
     if output_dir is None:
         output_dir = RESULTS["exp3_bubble"]
     os.makedirs(output_dir, exist_ok=True)
@@ -47,7 +65,7 @@ def visualize_filter_bubble_results(analyzer, results, output_dir: str = None):
     ax6 = plt.subplot(2, 3, 6)
     _plot_individual_diversity(ax6, results)
     
-    plt.suptitle('实验 3-a: 过滤气泡与选择多样性分析', fontsize=16, fontweight='bold', y=0.98)
+    plt.suptitle(TEXT_CONFIG['en' if en else 'zh']['title'], fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.95], pad=2.0, h_pad=3.0, w_pad=3.0)  # 增加子图间距
     plt.savefig(f'{output_dir}/filter_bubble_analysis.png', dpi=150, bbox_inches='tight', facecolor='white')
     plt.close()

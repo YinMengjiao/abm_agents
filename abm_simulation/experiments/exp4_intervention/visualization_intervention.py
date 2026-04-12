@@ -14,26 +14,69 @@ from visualization.chinese_font import setup_chinese_font
 from config import RESULTS
 setup_chinese_font()
 
+# 语言配置
+TEXT_CONFIG = {
+    'zh': {
+        'title': '实验 4: 信息干预政策对比',
+        'balanced': '均衡政策',
+        'promote_ai': '促进AI政策',
+        'protect_consumers': '保护消费者政策',
+        'timeline_balanced': '(a) 均衡政策：干预事件时间分布',
+        'timeline_promote': '(b) 促进AI政策：干预事件时间分布',
+        'timeline_protect': '(c) 保护消费者政策：干预事件时间分布',
+        'before_after_title': '干预前后对比',
+        'intervention_effects': '干预效果分析',
+        'step_label': '仿真步数',
+        'count': '数量',
+        'intervention_point': '干预点',
+        'no_data': '无数据',
+        'high_dependency': '高依赖(L4+L5)',
+    },
+    'en': {
+        'title': 'Experiment 4: Information Intervention Policies',
+        'balanced': 'Balanced Policy',
+        'promote_ai': 'Pro-AI Policy',
+        'protect_consumers': 'Consumer Protection Policy',
+        'timeline_balanced': '(a) Balanced: Intervention Timeline',
+        'timeline_promote': '(b) Pro-AI: Intervention Timeline',
+        'timeline_protect': '(c) Consumer Protection: Intervention Timeline',
+        'before_after_title': 'Before vs After Intervention',
+        'intervention_effects': 'Intervention Effects Analysis',
+        'step_label': 'Simulation Step',
+        'count': 'Count',
+        'intervention_point': 'Intervention',
+        'no_data': 'No Data',
+        'high_dependency': 'High Dependency (L4+L5)',
+    }
+}
 
-def visualize_all_policy_results(policy_sims: dict, output_dir: str = None):
+
+def visualize_all_policy_results(policy_sims: dict, output_dir: str = None, en: bool = False):
     """
     将三种政策的结果合并为一张图（3列×3行 = 9子图）
     policy_sims: {'balanced': sim, 'promote_ai': sim, 'protect_consumers': sim}
+    
+    Args:
+        policy_sims: 政策仿真实例字典
+        output_dir: 输出目录
+        en: True=英文, False=中文 (默认)
     """
     if output_dir is None:
         output_dir = RESULTS["exp4"]
     os.makedirs(output_dir, exist_ok=True)
 
     policies = list(policy_sims.keys())
+    lang = 'en' if en else 'zh'
+    text = TEXT_CONFIG[lang]
     policy_labels = {
-        'balanced': '均衡政策',
-        'promote_ai': '促进AI政策',
-        'protect_consumers': '保护消费者政策',
+        'balanced': text['balanced'],
+        'promote_ai': text['promote_ai'],
+        'protect_consumers': text['protect_consumers'],
     }
     n_cols = len(policies)
 
     fig, axes = plt.subplots(3, n_cols, figsize=(7 * n_cols, 18))
-    fig.suptitle('实验 4: 信息干预政策对比', fontsize=18, fontweight='bold', y=0.99)
+    fig.suptitle(text['title'], fontsize=18, fontweight='bold', y=0.99)
 
     for col, policy in enumerate(policies):
         sim = policy_sims[policy]
@@ -41,12 +84,12 @@ def visualize_all_policy_results(policy_sims: dict, output_dir: str = None):
 
         # 行1：干预时间线 - 每个政策独特标题
         policy_timeline_titles = {
-            'balanced': '(a) 均衡政策：干预事件时间分布',
-            'promote_ai': '(b) 促进AI政策：干预事件时间分布',
-            'protect_consumers': '(c) 保护消费者政策：干预事件时间分布'
+            'balanced': text['timeline_balanced'],
+            'promote_ai': text['timeline_promote'],
+            'protect_consumers': text['timeline_protect']
         }
         axes[0, col].set_title(policy_timeline_titles.get(policy, label), fontsize=13, fontweight='bold', pad=8)
-        _plot_intervention_timeline(axes[0, col], sim, policy_label=label)
+        _plot_intervention_timeline(axes[0, col], sim, policy_label=label, en=en)
 
         # 行2：依赖等级演化 - 每个政策独特标题
         policy_evolution_titles = {
@@ -111,10 +154,20 @@ def visualize_intervention_results(sim, output_dir: str = None):
     print(f"  [OK] 干预分析图已保存：{output_dir}/intervention_analysis.png")
 
 
-def _plot_intervention_timeline(ax, sim, policy_label=None):
-    """绘制干预时间线（事件标记图）"""
+def _plot_intervention_timeline(ax, sim, policy_label=None, en: bool = False):
+    """绘制干预时间线（事件标记图）
+    
+    Args:
+        ax: matplotlib axis
+        sim: simulation instance
+        policy_label: policy label
+        en: True=English, False=Chinese (default)
+    """
+    lang = 'en' if en else 'zh'
+    text = TEXT_CONFIG[lang]
+    
     if not sim.intervention_system.intervention_history:
-        ax.text(0.5, 0.5, '无干预事件', ha='center', va='center')
+        ax.text(0.5, 0.5, text['no_data'], ha='center', va='center')
         return
     
     colors = {
@@ -145,18 +198,27 @@ def _plot_intervention_timeline(ax, sim, policy_label=None):
         
         # 在顶部标记干预类型
         label_text = event.intervention_type.value.replace('_', ' ')
-        ax.annotate(f'{label_text}\n(步{timing}, 持续{duration}步)', 
-                   xy=(timing, y_positions[i]),
-                   xytext=(0, 10), textcoords='offset points',
-                   ha='center', va='bottom', fontsize=7, 
-                   fontweight='bold', color=color,
-                   bbox=dict(boxstyle='round,pad=0.3', facecolor='white', 
-                            edgecolor=color, alpha=0.8))
+        if en:
+            ax.annotate(f'{label_text}\n(Step {timing}, {duration} steps)', 
+                       xy=(timing, y_positions[i]),
+                       xytext=(0, 10), textcoords='offset points',
+                       ha='center', va='bottom', fontsize=7, 
+                       fontweight='bold', color=color,
+                       bbox=dict(boxstyle='round,pad=0.3', facecolor='white', 
+                                edgecolor=color, alpha=0.8))
+        else:
+            ax.annotate(f'{label_text}\n(步{timing}, 持续{duration}步)', 
+                       xy=(timing, y_positions[i]),
+                       xytext=(0, 10), textcoords='offset points',
+                       ha='center', va='bottom', fontsize=7, 
+                       fontweight='bold', color=color,
+                       bbox=dict(boxstyle='round,pad=0.3', facecolor='white', 
+                                edgecolor=color, alpha=0.8))
     
     ax.set_xlim(-5, 305)
     ax.set_ylim(0, 1)
-    ax.set_xlabel('仿真步数', fontsize=10)
-    ax.set_ylabel('干预事件', fontsize=10)
+    ax.set_xlabel(text['step_label'], fontsize=10)
+    ax.set_ylabel(text['count'], fontsize=10)
     # 标题已在主函数中设置，这里不再设置
     ax.set_yticks([])  # 隐藏y轴刻度
     ax.grid(axis='x', alpha=0.3)

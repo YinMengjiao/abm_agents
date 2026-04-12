@@ -13,8 +13,13 @@ from experiments.exp3_consequences.filter_bubble.visualization_filter_bubble imp
 from config import RESULTS
 
 
-def run_experiment9():
-    """运行实验9: 过滤气泡"""
+def run_experiment9(en: bool = False):
+    """
+    运行实验9: 过滤气泡
+    
+    Args:
+        en: True=英文输出, False=中文输出 (默认)
+    """
     print("="*70)
     print("【实验9】偏见与过滤气泡")
     print("研究问题: AI推荐是否造成选择窄化？")
@@ -64,7 +69,9 @@ def run_experiment9():
     # 生成可视化
     print("\n" + "="*70)
     print("生成可视化...")
-    visualize_filter_bubble_results(analyzer, results, output_dir=RESULTS["exp3_bubble"])
+    lang_str = '英文' if en else '中文'
+    print(f"语言: {lang_str}")
+    visualize_filter_bubble_results(analyzer, results, output_dir=RESULTS["exp3_bubble"], en=en)
     
     print("\n" + "="*70)
     print("实验9完成!")
@@ -74,4 +81,9 @@ def run_experiment9():
 
 
 if __name__ == "__main__":
-    analyzer, results = run_experiment9()
+    import argparse
+    parser = argparse.ArgumentParser(description='运行实验9: 过滤气泡')
+    parser.add_argument('--en', action='store_true', help='生成英文版本的图表')
+    args = parser.parse_args()
+    
+    analyzer, results = run_experiment9(en=args.en)

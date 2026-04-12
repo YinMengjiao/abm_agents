@@ -15,8 +15,13 @@ from experiments.exp4_intervention.visualization_intervention import visualize_a
 from config import RESULTS
 
 
-def run_experiment4_policy(policy_type='balanced'):
-    """运行指定政策的实验4"""
+def run_experiment4_policy(policy_type='balanced', en: bool = False):
+    """运行指定政策的实验4
+    
+    Args:
+        policy_type: 政策类型
+        en: True=英文输出, False=中文输出 (默认)
+    """
     print(f"\n{'='*70}")
     print(f"【实验4】信息干预 - 政策类型: {policy_type}")
     print("="*70)
@@ -61,8 +66,12 @@ def run_experiment4_policy(policy_type='balanced'):
     return sim, summary
 
 
-def run_experiment4():
-    """运行实验4: 对比不同干预政策"""
+def run_experiment4(en: bool = False):
+    """运行实验4: 对比不同干预政策
+    
+    Args:
+        en: True=英文输出, False=中文输出 (默认)
+    """
     print("="*70)
     print("【实验4】信息干预与政策效果")
     print("研究问题: 外部信息冲击如何改变系统演化？")
@@ -72,7 +81,7 @@ def run_experiment4():
     results = {}
     
     for policy in policies:
-        sim, summary = run_experiment4_policy(policy)
+        sim, summary = run_experiment4_policy(policy, en=en)
         results[policy] = (sim, summary)
     
     # 对比分析
@@ -93,8 +102,10 @@ def run_experiment4():
     # 生成综合图（三种政策合并为一张图）
     print("\n" + "="*70)
     print("生成可视化...")
+    lang_str = '英文' if en else '中文'
+    print(f"语言: {lang_str}")
     policy_sims = {policy: sim for policy, (sim, _) in results.items()}
-    visualize_all_policy_results(policy_sims, output_dir=RESULTS["exp4"])
+    visualize_all_policy_results(policy_sims, output_dir=RESULTS["exp4"], en=en)
     
     print("\n" + "="*70)
     print("实验4完成!")
@@ -104,4 +115,9 @@ def run_experiment4():
 
 
 if __name__ == "__main__":
-    results = run_experiment4()
+    import argparse
+    parser = argparse.ArgumentParser(description='运行实验4: 信息干预')
+    parser.add_argument('--en', action='store_true', help='生成英文版本的图表')
+    args = parser.parse_args()
+    
+    results = run_experiment4(en=args.en)
