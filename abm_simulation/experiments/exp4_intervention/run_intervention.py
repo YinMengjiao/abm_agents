@@ -11,7 +11,10 @@ sys.path.insert(0, project_root)
 from simulation import SimulationConfig
 from experiments.exp4_intervention.simulation_intervention import InterventionSimulation
 from experiments.exp4_intervention.intervention import InterventionType, InterventionEvent
-from experiments.exp4_intervention.visualization_intervention import visualize_all_policy_results
+from experiments.exp4_intervention.visualization_intervention import (
+    visualize_all_policy_results,
+    visualize_policy_summary,
+)
 from config import RESULTS
 
 
@@ -106,7 +109,8 @@ def run_experiment4(en: bool = False):
     print(f"语言: {lang_str}")
     policy_sims = {policy: sim for policy, (sim, _) in results.items()}
     visualize_all_policy_results(policy_sims, output_dir=RESULTS["exp4"], en=en)
-    
+    visualize_policy_summary(policy_sims, output_dir=RESULTS["exp4"], en=en)
+
     print("\n" + "="*70)
     print("实验4完成!")
     print("="*70)

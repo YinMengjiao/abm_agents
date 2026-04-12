@@ -363,22 +363,22 @@ def _plot_before_after_comparison(ax, sim, title=None, text=None):
     """Plot before-after comparison (line + scatter plot)"""
     if text is None:
         text = TEXT_CONFIG['zh']
-    
+
     if not sim.intervention_system.intervention_history or not sim.metrics_history:
         ax.text(0.5, 0.5, text['no_data'], ha='center', va='center')
         return
-    
+
     # 获取高依赖消费者（L4+L5）的演化轨迹
     steps = [m.step for m in sim.metrics_history]
     high_dep_counts = []
     for m in sim.metrics_history:
         high_dep = sum(m.level_distribution.get(l, 0) for l in [4, 5])
         high_dep_counts.append(high_dep)
-    
+
     # 绘制高依赖消费者数量的演化曲线
     ax.plot(steps, high_dep_counts, 'b-', linewidth=2, alpha=0.7, label=text['high_dependency'])
     ax.fill_between(steps, high_dep_counts, alpha=0.2, color='blue')
-    
+
     # 标注干预点
     for i, event in enumerate(sim.intervention_system.intervention_history):
         timing = event.timing
@@ -389,9 +389,9 @@ def _plot_before_after_comparison(ax, sim, title=None, text=None):
             ax.plot(timing, high_dep_counts[timing], 'ro', markersize=8)
             intervention_lbl = f"{text['intervention_label']}{i+1}"
             ax.annotate(intervention_lbl, (timing, high_dep_counts[timing]),
-                       textcoords="offset points", xytext=(5, 10), 
+                       textcoords="offset points", xytext=(5, 10),
                        fontsize=8, fontweight='bold', color='red')
-    
+
     ax.set_xlabel(text['step_label'], fontsize=10)
     ax.set_ylabel(text['high_dependency'], fontsize=10)
     if title:
@@ -400,3 +400,194 @@ def _plot_before_after_comparison(ax, sim, title=None, text=None):
         ax.set_title(text['high_dep_evolution'], fontsize=11, fontweight='bold')
     ax.legend(fontsize=9)
     ax.grid(alpha=0.3)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 政策对比汇总图（新增）
+# ─────────────────────────────────────────────────────────────────────────────
+
+def visualize_policy_summary(policy_sims: dict, output_dir: str = None, en: bool = False):
+    """
+    生成政策效果汇总对比图（2行×2列，4个子图）。
+    与现有的 9-panel 图互补：聚焦"结果对比"而非"过程展示"。
+
+    子图布局：
+      (a) 最终依赖等级分布对比  — 分组柱状图（5等级×3政策）
+      (b) 高依赖比例轨迹叠加   — 3条折线画在同一坐标系
+      (c) 关键指标横向对比     — 水平条形图（满意度/L1%/L4+L5%）
+      (d) 干预净效应           — 各政策高依赖人数初末变化量
+
+    Args:
+        policy_sims: {'balanced': sim, 'promote_ai': sim, 'protect_consumers': sim}
+        output_dir: 输出目录
+        en: True=英文, False=中文
+    """
+    if output_dir is None:
+        output_dir = RESULTS["exp4"]
+    os.makedirs(output_dir, exist_ok=True)
+
+    if en:
+        setup_english_font()
+    else:
+        setup_chinese_font()
+
+    lang = 'en' if en else 'zh'
+    text = TEXT_CONFIG[lang]
+
+    policy_labels = {
+        'balanced': text['balanced'],
+        'promote_ai': text['promote_ai'],
+        'protect_consumers': text['protect_consumers'],
+    }
+    policies = list(policy_sims.keys())
+    POLICY_COLORS = ['#4C72B0', '#DD8452', '#55A868']
+    LEVEL_COLORS = ['#4C72B0', '#5B9BD5', '#55A868', '#DD8452', '#C44E52']
+
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    fig.suptitle(
+        'Experiment 4: Policy Comparison Summary' if en else '实验 4：政策效果汇总对比',
+        fontsize=15, fontweight='bold', y=0.99
+    )
+
+    # ── (a) 最终依赖等级分布 ─────────────────────────────────────────────────
+    ax = axes[0, 0]
+    n_policies = len(policies)
+    x = np.arange(5)  # L1–L5
+    bar_width = 0.25
+    offsets = np.linspace(-(n_policies - 1) / 2, (n_policies - 1) / 2, n_policies) * bar_width
+
+    for idx, policy in enumerate(policies):
+        sim = policy_sims[policy]
+        final_dist = sim.metrics_history[-1].level_distribution if sim.metrics_history else {}
+        total = sum(final_dist.values()) or 1
+        pcts = [final_dist.get(lv, 0) / total * 100 for lv in range(1, 6)]
+        ax.bar(x + offsets[idx], pcts, bar_width,
+               label=policy_labels.get(policy, policy),
+               color=POLICY_COLORS[idx % len(POLICY_COLORS)], alpha=0.85)
+
+    ax.set_xticks(x)
+    ax.set_xticklabels([f'L{i}' for i in range(1, 6)], fontsize=11)
+    ax.set_xlabel('Dependency Level' if en else '依赖等级', fontsize=10)
+    ax.set_ylabel('Percentage (%)' if en else '占比 (%)', fontsize=10)
+    ax.set_title('(a) Final Distribution Comparison' if en else '(a) 最终依赖等级分布对比',
+                 fontsize=11, fontweight='bold')
+    ax.legend(fontsize=9)
+    ax.grid(axis='y', alpha=0.3)
+
+    # ── (b) 高依赖比例轨迹叠加 ──────────────────────────────────────────────
+    ax = axes[0, 1]
+    for idx, policy in enumerate(policies):
+        sim = policy_sims[policy]
+        if not sim.metrics_history:
+            continue
+        steps = [m.step for m in sim.metrics_history]
+        high_dep = [
+            (m.level_distribution.get(4, 0) + m.level_distribution.get(5, 0))
+            / (sum(m.level_distribution.values()) or 1) * 100
+            for m in sim.metrics_history
+        ]
+        ax.plot(steps, high_dep, color=POLICY_COLORS[idx % len(POLICY_COLORS)],
+                linewidth=2.2, label=policy_labels.get(policy, policy), alpha=0.85)
+
+        # 标注干预点
+        for event in sim.intervention_system.intervention_history:
+            ax.axvline(x=event.timing, color=POLICY_COLORS[idx % len(POLICY_COLORS)],
+                       linestyle=':', linewidth=1, alpha=0.5)
+
+    ax.set_xlabel('Simulation Step' if en else '仿真步数', fontsize=10)
+    ax.set_ylabel('High-dep Ratio (%)' if en else '高依赖比例 (%)', fontsize=10)
+    ax.set_title('(b) High-Dependency Trajectory (Overlay)' if en else '(b) 高依赖比例轨迹叠加',
+                 fontsize=11, fontweight='bold')
+    ax.legend(fontsize=9)
+    ax.grid(True, alpha=0.3)
+
+    # ── (c) 关键指标横向对比 ─────────────────────────────────────────────────
+    ax = axes[1, 0]
+    metric_labels = (
+        ['Avg Satisfaction', 'L1 Ratio (%)', 'High-dep L4+L5 (%)']
+        if en else ['平均满意度', 'L1 占比 (%)', '高依赖 L4+L5 (%)']
+    )
+    metric_values = {p: [] for p in policies}
+
+    for policy in policies:
+        sim = policy_sims[policy]
+        if not sim.metrics_history:
+            metric_values[policy] = [0, 0, 0]
+            continue
+        final = sim.metrics_history[-1]
+        total = sum(final.level_distribution.values()) or 1
+        sat = getattr(final, 'avg_satisfaction', 0)
+        l1_pct = final.level_distribution.get(1, 0) / total * 100
+        high_pct = (final.level_distribution.get(4, 0) + final.level_distribution.get(5, 0)) / total * 100
+        metric_values[policy] = [sat, l1_pct, high_pct]
+
+    y = np.arange(len(metric_labels))
+    bar_h = 0.25
+    offsets_h = np.linspace(-(n_policies - 1) / 2, (n_policies - 1) / 2, n_policies) * bar_h
+
+    for idx, policy in enumerate(policies):
+        vals = metric_values[policy]
+        # 对满意度归一化到0-100%便于同图展示
+        display_vals = [vals[0] * 100, vals[1], vals[2]]
+        bars = ax.barh(y + offsets_h[idx], display_vals, bar_h,
+                       label=policy_labels.get(policy, policy),
+                       color=POLICY_COLORS[idx % len(POLICY_COLORS)], alpha=0.85)
+        for bar, val in zip(bars, display_vals):
+            ax.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height() / 2,
+                    f'{val:.1f}', va='center', fontsize=8)
+
+    ax.set_yticks(y)
+    ax.set_yticklabels(metric_labels, fontsize=10)
+    ax.set_xlabel('Value (Satisfaction ×100 / %)' if en else '数值（满意度×100 / %）', fontsize=9)
+    ax.set_title('(c) Key Metrics Comparison' if en else '(c) 关键指标对比',
+                 fontsize=11, fontweight='bold')
+    ax.legend(fontsize=9)
+    ax.grid(axis='x', alpha=0.3)
+
+    # ── (d) 干预净效应（高依赖人数初末变化）────────────────────────────────
+    ax = axes[1, 1]
+    deltas = []
+    init_vals = []
+    final_vals = []
+
+    for policy in policies:
+        sim = policy_sims[policy]
+        if not sim.metrics_history:
+            deltas.append(0); init_vals.append(0); final_vals.append(0)
+            continue
+        init_m = sim.metrics_history[0]
+        final_m = sim.metrics_history[-1]
+        init_hd = init_m.level_distribution.get(4, 0) + init_m.level_distribution.get(5, 0)
+        final_hd = final_m.level_distribution.get(4, 0) + final_m.level_distribution.get(5, 0)
+        init_vals.append(init_hd)
+        final_vals.append(final_hd)
+        deltas.append(final_hd - init_hd)
+
+    p_labels = [policy_labels.get(p, p) for p in policies]
+    x_pos = np.arange(n_policies)
+    colors_delta = ['#C44E52' if d > 0 else '#55A868' for d in deltas]
+
+    ax.bar(x_pos, init_vals, color='lightgray', alpha=0.6, label='Initial' if en else '初始值', zorder=2)
+    ax.bar(x_pos, deltas, bottom=init_vals, color=colors_delta, alpha=0.85,
+           label='Change' if en else '变化量', zorder=3)
+
+    for i, (init, delta) in enumerate(zip(init_vals, deltas)):
+        sign = '+' if delta >= 0 else ''
+        ax.text(i, init + delta + 2, f'{sign}{delta:.0f}',
+                ha='center', va='bottom', fontsize=10, fontweight='bold',
+                color=colors_delta[i])
+
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(p_labels, fontsize=10)
+    ax.set_ylabel('High-dep Count (L4+L5)' if en else '高依赖人数 (L4+L5)', fontsize=10)
+    ax.set_title('(d) Net Intervention Effect on High-Dep' if en else '(d) 干预对高依赖人数的净效应',
+                 fontsize=11, fontweight='bold')
+    ax.legend(fontsize=9)
+    ax.grid(axis='y', alpha=0.3)
+
+    plt.tight_layout(rect=[0, 0, 1, 0.97])
+    out_path = os.path.join(output_dir, 'intervention_policy_summary.png')
+    plt.savefig(out_path, dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f"  [OK] 政策汇总对比图已保存：{out_path}")
+    return out_path
