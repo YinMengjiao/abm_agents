@@ -1,5 +1,5 @@
 """
-实验3运行脚本: AI进化机制
+实验2运行脚本: AI进化机制
 """
 
 import sys
@@ -14,10 +14,10 @@ from experiments.exp2_mechanism.visualization_evolution import visualize_evoluti
 from config import RESULTS
 
 
-def run_experiment3():
-    """运行实验3: AI进化机制"""
+def run_experiment2():
+    """运行实验2: AI进化机制"""
     print("="*70)
-    print("【实验3】AI代理进化机制")
+    print("【实验2】AI代理进化机制")
     print("研究问题: AI能否从消费者反馈中学习改进？")
     print("="*70)
     
@@ -84,11 +84,11 @@ def run_experiment3():
     visualize_evolution_results(sim, output_dir=RESULTS["exp2"])
     
     print("\n" + "="*70)
-    print("实验3完成!")
+    print("实验2完成!")
     print("="*70)
     
     return sim, summary
 
 
 if __name__ == "__main__":
-    sim, summary = run_experiment3()
+    sim, summary = run_experiment2()

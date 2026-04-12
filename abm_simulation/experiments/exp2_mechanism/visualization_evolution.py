@@ -1,5 +1,5 @@
 """
-实验 3 可视化：AI 进化机制
+实验 2 可视化：AI 进化机制
 """
 
 import matplotlib.pyplot as plt
@@ -16,15 +16,15 @@ setup_chinese_font()
 
 
 def visualize_evolution_results(sim, output_dir: str = None):
-    if output_dir is None:
-        output_dir = RESULTS["exp3"]
     """
     可视化 AI 进化实验结果
-    
+
     Args:
         sim: EvolutionSimulation 实例
         output_dir: 输出目录
     """
+    if output_dir is None:
+        output_dir = RESULTS["exp2"]
     os.makedirs(output_dir, exist_ok=True)
     
     # 创建简化版综合可视化（只展示有数据的子图）
@@ -207,7 +207,7 @@ def _create_comparison_plot(sim, output_dir):
         steps = [m.step for m in sim.evolution_metrics_history]
         error_rates = [m.avg_ai_error_rate for m in sim.evolution_metrics_history]
         
-        axes[0].plot(steps, error_rates, 'b-', linewidth=2, label='实验3: 进化AI')
+        axes[0].plot(steps, error_rates, 'b-', linewidth=2, label='实验2: 进化AI')
         axes[0].set_xlabel('仿真步数')
         axes[0].set_ylabel('AI错误率')
         axes[0].set_title('AI错误率: 进化 vs 基线')
@@ -221,14 +221,14 @@ def _create_comparison_plot(sim, output_dir):
                         if m.satisfaction_distribution else 0.5 
                         for m in sim.metrics_history]
         
-        axes[1].plot(steps, satisfactions, 'g-', linewidth=2, label='实验3: 进化AI')
+        axes[1].plot(steps, satisfactions, 'g-', linewidth=2, label='实验2: 进化AI')
         axes[1].set_xlabel('仿真步数')
         axes[1].set_ylabel('平均满意度')
         axes[1].set_title('消费者满意度: 进化 vs 基线')
         axes[1].legend()
         axes[1].grid(True, alpha=0.3)
     
-    plt.suptitle('实验3对比分析', fontsize=14, fontweight='bold')
+    plt.suptitle('实验2对比分析', fontsize=14, fontweight='bold')
     plt.tight_layout()
     plt.savefig(f'{output_dir}/evolution_comparison.png', dpi=150, bbox_inches='tight')
     plt.close()

@@ -1,5 +1,6 @@
 """
-实验3仿真引擎: AI进化机制
+实验2仿真引擎: AI进化机制
+在基线（exp1）基础上，启用AI从消费者反馈中学习的能力
 """
 
 import sys
@@ -9,12 +10,10 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.insert(0, project_root)
 
 import numpy as np
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 from dataclasses import dataclass, field
 
 from simulation import ABMSimulation, SimulationConfig
-from agents.consumer_dib import ConsumerAgentDIB, ConsumerTraits
-from environment.market import MarketEnvironment, Product
 from experiments.exp2_mechanism.ai_evolution import EvolvingAIPopulation, AILearningMode
 
 
@@ -31,159 +30,87 @@ class EvolutionMetrics:
 
 class EvolutionSimulation(ABMSimulation):
     """
-    实验3: AI进化仿真
-    
-    研究AI从消费者反馈中学习改进的过程
+    实验2: AI进化仿真
+
+    与基线（exp1）完全相同的 Ising-D-I-B 流程，唯一区别是
+    AI 代理群体替换为 EvolvingAIPopulation，可以从消费者反馈
+    中持续学习并提升能力。
+
+    继承结构：
+      run() → step() [本类覆盖] → super().step() + _collect_evolution_metrics()
     """
-    
+
     def __init__(self, config: SimulationConfig, evolution_rate: float = 0.02):
-        """
-        初始化进化仿真
-        
-        Args:
-            config: 仿真配置
-            evolution_rate: AI进化速率
-        """
         self.evolution_rate = evolution_rate
         self.evolution_metrics_history: List[EvolutionMetrics] = []
-        
-        # 先调用父类初始化（但会创建普通AI群体，需要覆盖）
+
+        # 父类初始化：建立 Ising 网络、消费者、普通 AI 群体
         super().__init__(config)
-        
-        # 替换为可进化的AI群体
+
+        # 用可进化 AI 群体替换父类建立的普通群体
         self.ai_population = EvolvingAIPopulation(
             n_agents=config.n_ai_agents,
             evolution_rate=evolution_rate
         )
-        
-    def run_step(self) -> Dict:
-        """运行单步仿真（包含AI学习）"""
-        step_metrics = {
-            'ai_learning_events': 0,
-            'ai_evolution_progress': [],
-            'consumer_ai_interactions': 0,
-        }
-        
-        # 1. 消费者决策和AI交互
-        for consumer in self.consumers:
-            if consumer.dependency_level == 1:
-                continue  # L1用户不使用AI
-            
-            # 选择最适合的AI代理
-            ai_agent = self.ai_population.select_best_agent(consumer.id)
-            
-            # 获取可用商品
-            available_products = self.market.get_available_products(10)
-            
-            # AI生成推荐
-            recommendation = ai_agent.make_recommendation_with_evolution(
-                consumer_id=consumer.id,
-                available_options=available_products,
-                dependency_level=consumer.dependency_level
-            )
-            
-            if recommendation is None:
-                continue
-            
-            step_metrics['consumer_ai_interactions'] += 1
-            
-            # 模拟消费者决策
-            actual_choice = consumer.make_decision(
-                desire_state={'products': available_products},
-                intention_state={'candidates': recommendation['items']},
-                ai_recommendation=recommendation
-            )
-            
-            # 计算满意度
-            satisfaction = self._calculate_satisfaction(
-                consumer, actual_choice, recommendation
-            )
-            
-            # 记录交互结果
-            interaction_result = {
-                'satisfaction': satisfaction,
-                'error': recommendation.get('error', False),
-                'error_type': recommendation.get('error_type', 'unknown'),
-                'context': 'general',
-                'chosen_product': actual_choice.id if hasattr(actual_choice, 'id') else None
-            }
-            
-            # AI从反馈中学习
-            learning_record = ai_agent.process_feedback(
-                consumer_id=consumer.id,
-                interaction_result=interaction_result,
-                step=self.current_step
-            )
-            
-            step_metrics['ai_learning_events'] += 1
-            step_metrics['ai_evolution_progress'].append(ai_agent.evolution_progress)
-        
-        # 2. 标准Ising步骤（社会影响）
-        self.network.monte_carlo_step(self.current_step)
-        
-        # 3. 更新消费者依赖等级
-        for consumer in self.consumers:
-            new_spin = self.network.get_node_spin(consumer.id)
-            new_level = self.network.spin_to_level(new_spin)
-            consumer.update_dependency_level(new_level)
-        
-        # 4. 收集指标
-        self._collect_evolution_metrics(step_metrics)
-        
-        self.current_step += 1
-        return step_metrics
-    
-    def _calculate_satisfaction(self, 
-                               consumer: ConsumerAgentDIB,
-                               actual_choice,
-                               recommendation: Dict) -> float:
-        """计算消费者满意度"""
-        if recommendation.get('error', False):
-            base_satisfaction = 0.3
-        else:
-            base_satisfaction = 0.7 + recommendation.get('quality', 0.5) * 0.3
-        
-        # 个性化调整
-        if hasattr(consumer, 'traits'):
-            base_satisfaction += (consumer.traits.satisfaction_sensitivity - 0.5) * 0.1
-        
-        return np.clip(base_satisfaction, 0, 1)
-    
-    def _collect_evolution_metrics(self, step_metrics: Dict):
-        """收集进化指标"""
+
+    def step(self) -> Dict:
+        """
+        覆盖父类 step()：先执行完整标准流程，再追加进化指标收集
+
+        父类 step() 已经包含：
+          1. Ising Monte Carlo 更新 + 自旋同步到消费者
+          2. 每位消费者的 D-I-B 决策循环（含 AI 推荐与 ai.update_from_interaction）
+          3. 时间推进
+          4. 自适应耦合参数更新
+          5. 记录基础指标到 self.metrics_history
+        """
+        # 记录本步前各 AI 的学习事件数，用于统计本步新增学习量
+        before_counts = [len(a.learning_history) for a in self.ai_population.agents]
+
+        # 执行完整标准仿真步（Ising + D-I-B + 市场 + 指标）
+        metrics = super().step()
+
+        # 统计本步新增学习事件
+        after_counts = [len(a.learning_history) for a in self.ai_population.agents]
+        learning_events = sum(a - b for a, b in zip(after_counts, before_counts))
+
+        # 收集进化专项指标
+        self._collect_evolution_metrics(learning_events)
+
+        return metrics
+
+    def _collect_evolution_metrics(self, learning_events: int):
+        """收集进化指标，追加到 evolution_metrics_history"""
         pop_metrics = self.ai_population.get_population_evolution_metrics()
-        
-        # 计算消费者信任恢复度
-        trust_recovery = self._calculate_trust_recovery()
-        
+
         evolution_metric = EvolutionMetrics(
-            step=self.current_step,
+            step=self.step_count,
             avg_ai_error_rate=pop_metrics['avg_error_rate'],
             avg_evolution_progress=pop_metrics['avg_evolution_progress'],
-            ai_accuracy_trajectory=[m['recommendation_accuracy'] for m in pop_metrics['agent_metrics']],
-            consumer_trust_recovery=trust_recovery,
-            learning_events_count=step_metrics['ai_learning_events']
+            ai_accuracy_trajectory=[
+                m['recommendation_accuracy'] for m in pop_metrics['agent_metrics']
+            ],
+            consumer_trust_recovery=self._calculate_trust_recovery(),
+            learning_events_count=learning_events
         )
-        
+
         self.evolution_metrics_history.append(evolution_metric)
-    
+
     def _calculate_trust_recovery(self) -> float:
-        """计算消费者信任恢复度"""
+        """高依赖等级（L4-L5）消费者占比，作为信任恢复代理指标"""
         if not self.consumers:
             return 0.0
-        
-        # 计算高依赖等级（L4-L5）消费者比例
-        high_dependency = sum(1 for c in self.consumers if c.dependency_level >= 4)
-        return high_dependency / len(self.consumers)
-    
+        high_dep = sum(1 for c in self.consumers if c.dependency_level >= 4)
+        return high_dep / len(self.consumers)
+
     def get_evolution_summary(self) -> Dict:
-        """获取进化实验汇总"""
+        """获取进化实验汇总统计"""
         if not self.evolution_metrics_history:
             return {}
-        
+
         initial = self.evolution_metrics_history[0]
         final = self.evolution_metrics_history[-1]
-        
+
         return {
             'evolution_summary': {
                 'initial_error_rate': initial.avg_ai_error_rate,
@@ -192,14 +119,15 @@ class EvolutionSimulation(ABMSimulation):
                 'initial_evolution_progress': initial.avg_evolution_progress,
                 'final_evolution_progress': final.avg_evolution_progress,
                 'trust_recovery': final.consumer_trust_recovery,
-                'total_learning_events': sum(m.learning_events_count for m in self.evolution_metrics_history)
+                'total_learning_events': sum(
+                    m.learning_events_count for m in self.evolution_metrics_history
+                )
             },
             'ai_population_metrics': self.ai_population.get_population_evolution_metrics()
         }
-    
+
     def get_summary_statistics(self) -> Dict:
-        """获取完整统计（包含进化指标）"""
+        """获取完整统计（父类基础指标 + 进化专项指标）"""
         base_summary = super().get_summary_statistics()
         evolution_summary = self.get_evolution_summary()
-        
         return {**base_summary, **evolution_summary}

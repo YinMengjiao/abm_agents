@@ -2,10 +2,28 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "ABM Frontend Server",
+      "name": "前端可视化平台 (Frontend UI)",
       "runtimeExecutable": "python",
       "runtimeArgs": ["abm_simulation/frontend/start_server.py"],
       "port": 8080
+    },
+    {
+      "name": "交互式实验平台 (Interactive Unified)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["run_interactive_unified.py"],
+      "port": null
+    },
+    {
+      "name": "批量运行所有实验 (Run All Experiments)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["run_all_experiments.py"],
+      "port": null
+    },
+    {
+      "name": "基础仿真运行 (Run Simulation)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["abm_simulation/run_simulation.py"],
+      "port": null
     }
   ]
 }

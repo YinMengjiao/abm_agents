@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(find '/c/Users/admin/WPSDrive/2197502/WPS云盤/【科研】' -path '*exp2_mechanism/ai_evolution.py' -exec cat {} \\\\;)"
+    ]
+  }
+}

@@ -310,6 +310,20 @@ class EvolvingAIAgent:
             knowledge['satisfaction_history'].pop(0)
             knowledge['error_history'].pop(0)
     
+    def update_from_interaction(self, consumer_id: int, interaction: Dict):
+        """父类接口兼容：将 ABMSimulation 的学习调用委托给 process_feedback"""
+        satisfaction = interaction.get('satisfaction', 0.5)
+        error_occurred = interaction.get('error', False)
+        interaction_result = {
+            'satisfaction': satisfaction,
+            'error': error_occurred,
+            'error_type': interaction.get('error_type', 'unknown'),
+            'context': interaction.get('context', 'general'),
+        }
+        # 用 step_count=0 占位；process_feedback 只用 step 做探索周期判断
+        step = len(self.learning_history)
+        self.process_feedback(consumer_id, interaction_result, step)
+
     def make_recommendation_with_evolution(self,
                                           consumer_id: int,
                                           available_options: List[Any],
@@ -418,26 +432,36 @@ class EvolvingAIPopulation:
     
     def select_best_agent(self, consumer_id: int) -> EvolvingAIAgent:
         """为消费者选择最适合的AI（基于进化程度和历史表现）"""
-        # 综合考虑进化进度和错误率
         scores = []
         for agent in self.agents:
             score = agent.evolution_progress * 0.5 + (1 - agent.current_error_rate) * 0.5
-            
-            # 如果有消费者历史，考虑匹配度
             if consumer_id in agent.consumer_knowledge:
                 history = agent.consumer_knowledge[consumer_id]
                 if history['satisfaction_history']:
                     avg_sat = np.mean(history['satisfaction_history'][-5:])
                     score += avg_sat * 0.2
-            
             scores.append(score)
-        
-        #  softmax选择
+
         exp_scores = np.exp(np.array(scores) - np.max(scores))
         probs = exp_scores / np.sum(exp_scores)
-        
         return np.random.choice(self.agents, p=probs)
-    
+
+    def select_agent_for_consumer(self, consumer_id: int, preference: str = 'random') -> EvolvingAIAgent:
+        """父类接口兼容：委托给 select_best_agent（进化版始终选最优）"""
+        return self.select_best_agent(consumer_id)
+
+    def get_collective_metrics(self) -> Dict:
+        """父类接口兼容：包装 get_population_evolution_metrics 以匹配 AIAgentPopulation 格式"""
+        pop = self.get_population_evolution_metrics()
+        return {
+            'n_agents': pop['n_agents'],
+            'total_recommendations': sum(
+                len(a.learning_history) for a in self.agents
+            ),
+            'collective_error_rate': pop['avg_error_rate'],
+            'agent_metrics': pop['agent_metrics'],
+        }
+
     def get_population_evolution_metrics(self) -> Dict:
         """获取群体进化指标"""
         individual_metrics = [a.get_evolution_metrics() for a in self.agents]

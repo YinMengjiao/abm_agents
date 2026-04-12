@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "前端可视化平台 (Frontend UI)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["C:/Users/admin/WPSDrive/2197502/WPS云盘/【科研】/【论文】ABM消费决策代理/abm_simulation/frontend/start_server.py"],
+      "port": 8080
+    },
+    {
+      "name": "交互式实验平台 (Interactive Unified)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["C:/Users/admin/WPSDrive/2197502/WPS云盘/【科研】/【论文】ABM消费决策代理/run_interactive_unified.py"],
+      "port": null
+    },
+    {
+      "name": "批量运行所有实验 (Run All Experiments)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["C:/Users/admin/WPSDrive/2197502/WPS云盘/【科研】/【论文】ABM消费决策代理/run_all_experiments.py"],
+      "port": null
+    },
+    {
+      "name": "基础仿真运行 (Run Simulation)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["C:/Users/admin/WPSDrive/2197502/WPS云盘/【科研】/【论文】ABM消费决策代理/abm_simulation/run_simulation.py"],
+      "port": null
+    }
+  ]
+}
