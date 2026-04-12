@@ -47,7 +47,7 @@ def visualize_filter_bubble_results(analyzer, results, output_dir: str = None):
     ax6 = plt.subplot(2, 3, 6)
     _plot_individual_diversity(ax6, results)
     
-    plt.suptitle('实验 9: 过滤气泡与选择多样性分析', fontsize=16, fontweight='bold', y=0.98)
+    plt.suptitle('实验 3-a: 过滤气泡与选择多样性分析', fontsize=16, fontweight='bold', y=1.02)
     plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为 suptitle 留出空间
     plt.savefig(f'{output_dir}/filter_bubble_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()
@@ -196,8 +196,8 @@ def _plot_filter_bubble_strength(ax, results):
                 item.set_linewidth(1.2)
     
     ax.set_ylabel('多样性得分')
-    ax.set_title('(e) 过滤气泡效应')
-    ax.set_ylim(0, 1)
+    ax.set_title('(e) 过滤气泡效应', pad=12)  # 增加标题与图表的间距
+    ax.set_ylim(0.4, 1.05)  # 根据实际数据调整Y轴范围
     ax.grid(True, alpha=0.3, axis='y')
     
     # 添加统计检验标注
@@ -206,8 +206,10 @@ def _plot_filter_bubble_strength(ax, results):
         t_stat, p_value = stats.ttest_ind(low_dep_scores, high_dep_scores)
         significance = '***' if p_value < 0.001 else '**' if p_value < 0.01 else '*' if p_value < 0.05 else 'ns'
         y_max = max(max(low_dep_scores), max(high_dep_scores))
-        ax.text(1.5, y_max + 0.05, f'p={p_value:.4f} {significance}', 
-               ha='center', fontsize=10, fontweight='bold')
+        # 将标注位置调整到图表上方，避免与标题重叠
+        ax.text(1.5, 1.02, f'p={p_value:.4f} {significance}', 
+               ha='center', va='bottom', fontsize=9, fontweight='bold', 
+               transform=ax.transAxes, color='#2C3E50')
 
 
 def _plot_individual_diversity(ax, results):
