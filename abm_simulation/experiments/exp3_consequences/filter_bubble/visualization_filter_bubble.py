@@ -18,7 +18,7 @@ setup_chinese_font()
 def visualize_filter_bubble_results(analyzer, results, output_dir: str = None):
     """可视化过滤气泡结果"""
     if output_dir is None:
-        output_dir = RESULTS["exp9"]
+        output_dir = RESULTS["exp3_bubble"]
     os.makedirs(output_dir, exist_ok=True)
     
     fig = plt.figure(figsize=(16, 10))

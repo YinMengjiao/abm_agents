@@ -250,11 +250,23 @@ class SystemicRiskModel:
         final_trust = self.consumer_trust
         final_dependency = self.consumer_dependency
         
+        # 记录故障期间的最低信任度（故障发生在第50步，传播约20步）
+        if self.trust_trajectory and len(self.trust_trajectory) > 50:
+            # 查找故障后信任度的最低点
+            post_failure_trajectory = self.trust_trajectory[50:]
+            min_trust = min(np.mean(t) for t in post_failure_trajectory)
+            trust_drop_from_initial = np.mean(initial_trust) - min_trust
+        else:
+            trust_drop_from_initial = 0
+            min_trust = np.mean(final_trust)
+        
         return {
             'failure_event': event,
             'initial_avg_trust': np.mean(initial_trust),
             'final_avg_trust': np.mean(final_trust),
-            'trust_drop': np.mean(initial_trust) - np.mean(final_trust),
+            'min_avg_trust': min_trust,
+            'trust_drop': trust_drop_from_initial,  # 从初始到最低点的下降
+            'trust_recovery': np.mean(final_trust) - min_trust,  # 从最低点恢复的程度
             'initial_avg_dependency': np.mean(initial_dependency),
             'final_avg_dependency': np.mean(final_dependency),
             'max_affected': len(event.affected_consumers) if event else 0,

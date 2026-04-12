@@ -18,7 +18,7 @@ setup_chinese_font()
 def visualize_systemic_risk_results(main_result, stress_results, risk_model, output_dir: str = None):
     """可视化系统性风险结果"""
     if output_dir is None:
-        output_dir = RESULTS["exp10"]
+        output_dir = RESULTS["exp3_risk"]
     os.makedirs(output_dir, exist_ok=True)
     
     fig = plt.figure(figsize=(16, 10))

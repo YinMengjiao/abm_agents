@@ -39,15 +39,30 @@ def visualize_all_policy_results(policy_sims: dict, output_dir: str = None):
         sim = policy_sims[policy]
         label = policy_labels.get(policy, policy)
 
-        # 行1：干预时间线
-        axes[0, col].set_title(label, fontsize=14, fontweight='bold', pad=8)
-        _plot_intervention_timeline(axes[0, col], sim)
+        # 行1：干预时间线 - 每个政策独特标题
+        policy_timeline_titles = {
+            'balanced': '(a) 均衡政策：干预事件时间分布',
+            'promote_ai': '(b) 促进AI政策：干预事件时间分布',
+            'protect_consumers': '(c) 保护消费者政策：干预事件时间分布'
+        }
+        axes[0, col].set_title(policy_timeline_titles.get(policy, label), fontsize=13, fontweight='bold', pad=8)
+        _plot_intervention_timeline(axes[0, col], sim, policy_label=label)
 
-        # 行2：依赖等级演化
-        _plot_level_evolution_with_interventions(axes[1, col], sim)
+        # 行2：依赖等级演化 - 每个政策独特标题
+        policy_evolution_titles = {
+            'balanced': '(d) 均衡政策：L1-L5依赖等级动态演化',
+            'promote_ai': '(e) 促进AI政策：L1-L5依赖等级动态演化',
+            'protect_consumers': '(f) 保护消费者政策：L1-L5依赖等级动态演化'
+        }
+        _plot_level_evolution_with_interventions(axes[1, col], sim, title=policy_evolution_titles.get(policy))
 
-        # 行3：干预前后对比
-        _plot_before_after_comparison(axes[2, col], sim)
+        # 行3：干预前后对比 - 每个政策独特标题
+        policy_impact_titles = {
+            'balanced': '(g) 均衡政策：高依赖群体受干预影响轨迹',
+            'promote_ai': '(h) 促进AI政策：高依赖群体受干预影响轨迹',
+            'protect_consumers': '(i) 保护消费者政策：高依赖群体受干预影响轨迹'
+        }
+        _plot_before_after_comparison(axes[2, col], sim, title=policy_impact_titles.get(policy))
 
     # 统一行标签（左侧第一列的 y 轴标题已在子函数里设好，这里加行说明）
     row_titles = ['干预时间线', '依赖等级演化', '干预前后高依赖变化']
@@ -96,8 +111,8 @@ def visualize_intervention_results(sim, output_dir: str = None):
     print(f"  [OK] 干预分析图已保存：{output_dir}/intervention_analysis.png")
 
 
-def _plot_intervention_timeline(ax, sim):
-    """绘制干预时间线"""
+def _plot_intervention_timeline(ax, sim, policy_label=None):
+    """绘制干预时间线（事件标记图）"""
     if not sim.intervention_system.intervention_history:
         ax.text(0.5, 0.5, '无干预事件', ha='center', va='center')
         return
@@ -110,20 +125,47 @@ def _plot_intervention_timeline(ax, sim):
         'regulation': 'purple'
     }
     
+    # 绘制时间轴（水平线）
+    ax.axhline(y=0.5, color='gray', linewidth=1, alpha=0.3)
+    
+    # 为每个事件使用不同的y位置，避免重叠
+    n_events = len(sim.intervention_system.intervention_history)
+    y_positions = np.linspace(0.3, 0.7, n_events) if n_events > 1 else [0.5]
+    
     for i, event in enumerate(sim.intervention_system.intervention_history):
         color = colors.get(event.intervention_type.value, 'gray')
-        ax.barh(i, event.duration, left=event.timing, color=color, alpha=0.6)
-        ax.text(event.timing + event.duration/2, i, 
-               event.intervention_type.value[:10], 
-               ha='center', va='center', fontsize=8)
+        timing = event.timing
+        duration = event.duration
+        
+        # 绘制垂直线标记干预时间
+        ax.axvline(x=timing, color=color, linestyle='-', linewidth=2, alpha=0.7)
+        
+        # 绘制持续时间范围（半透明区域）
+        ax.axvspan(timing, timing + duration, alpha=0.15, color=color)
+        
+        # 在顶部标记干预类型
+        label_text = event.intervention_type.value.replace('_', ' ')
+        ax.annotate(f'{label_text}\n(步{timing}, 持续{duration}步)', 
+                   xy=(timing, y_positions[i]),
+                   xytext=(0, 10), textcoords='offset points',
+                   ha='center', va='bottom', fontsize=7, 
+                   fontweight='bold', color=color,
+                   bbox=dict(boxstyle='round,pad=0.3', facecolor='white', 
+                            edgecolor=color, alpha=0.8))
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('干预事件')
-    ax.set_title('干预时间线')
-    ax.set_yticks(range(len(sim.intervention_system.intervention_history)))
+    ax.set_xlim(-5, 305)
+    ax.set_ylim(0, 1)
+    ax.set_xlabel('仿真步数', fontsize=10)
+    ax.set_ylabel('干预事件', fontsize=10)
+    # 标题已在主函数中设置，这里不再设置
+    ax.set_yticks([])  # 隐藏y轴刻度
+    ax.grid(axis='x', alpha=0.3)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
 
 
-def _plot_level_evolution_with_interventions(ax, sim):
+def _plot_level_evolution_with_interventions(ax, sim, title=None):
     """绘制依赖等级演化（标注干预点）"""
     if not sim.metrics_history:
         ax.text(0.5, 0.5, '无数据', ha='center', va='center')
@@ -140,10 +182,13 @@ def _plot_level_evolution_with_interventions(ax, sim):
     for event in sim.intervention_system.intervention_history:
         ax.axvline(x=event.timing, color='red', linestyle='--', alpha=0.5)
     
-    ax.set_xlabel('仿真步数')
-    ax.set_ylabel('消费者数量')
-    ax.set_title('依赖等级演化（红线=干预点）')
-    ax.legend()
+    ax.set_xlabel('仿真步数', fontsize=10)
+    ax.set_ylabel('消费者数量', fontsize=10)
+    if title:
+        ax.set_title(title, fontsize=13, fontweight='bold')
+    else:
+        ax.set_title('依赖等级演化（红线=干预点）', fontsize=11, fontweight='bold')
+    ax.legend(fontsize=9)
     ax.grid(True, alpha=0.3)
 
 
@@ -202,34 +247,40 @@ def _plot_policy_effectiveness(ax, sim):
     ax.set_title('干预类型分布')
 
 
-def _plot_before_after_comparison(ax, sim):
-    """绘制干预前后对比"""
+def _plot_before_after_comparison(ax, sim, title=None):
+    """绘制干预前后对比（改用折线+散点图）"""
     if not sim.intervention_system.intervention_history or not sim.metrics_history:
         ax.text(0.5, 0.5, '无数据', ha='center', va='center')
         return
     
-    # 计算每次干预前后的高依赖比例变化
-    changes = []
-    labels = []
+    # 获取高依赖消费者（L4+L5）的演化轨迹
+    steps = [m.step for m in sim.metrics_history]
+    high_dep_counts = []
+    for m in sim.metrics_history:
+        high_dep = sum(m.level_distribution.get(l, 0) for l in [4, 5])
+        high_dep_counts.append(high_dep)
     
+    # 绘制高依赖消费者数量的演化曲线
+    ax.plot(steps, high_dep_counts, 'b-', linewidth=2, alpha=0.7, label='高依赖(L4+L5)')
+    ax.fill_between(steps, high_dep_counts, alpha=0.2, color='blue')
+    
+    # 标注干预点
     for i, event in enumerate(sim.intervention_system.intervention_history):
-        pre_step = max(0, event.timing - 1)
-        post_step = min(len(sim.metrics_history) - 1, event.timing + 10)
-        
-        if pre_step < len(sim.metrics_history) and post_step < len(sim.metrics_history):
-            pre_dist = sim.metrics_history[pre_step].level_distribution
-            post_dist = sim.metrics_history[post_step].level_distribution
-            
-            pre_high = sum(pre_dist.get(l, 0) for l in [4, 5])
-            post_high = sum(post_dist.get(l, 0) for l in [4, 5])
-            
-            changes.append(post_high - pre_high)
-            labels.append(f'干预{i+1}')
+        timing = event.timing
+        if timing < len(high_dep_counts):
+            # 用垂直线标注干预时间
+            ax.axvline(x=timing, color='red', linestyle='--', alpha=0.5, linewidth=1)
+            # 在干预点添加标记
+            ax.plot(timing, high_dep_counts[timing], 'ro', markersize=8)
+            ax.annotate(f'干预{i+1}', (timing, high_dep_counts[timing]),
+                       textcoords="offset points", xytext=(5, 10), 
+                       fontsize=8, fontweight='bold', color='red')
     
-    if changes:
-        colors = ['green' if c > 0 else 'red' for c in changes]
-        ax.bar(labels, changes, color=colors, alpha=0.6)
-        ax.axhline(y=0, color='black', linestyle='-', linewidth=0.5)
-        ax.set_ylabel('高依赖消费者变化')
-        ax.set_title('干预前后对比')
-        ax.tick_params(axis='x', rotation=45)
+    ax.set_xlabel('仿真步数', fontsize=10)
+    ax.set_ylabel('高依赖消费者数量', fontsize=10)
+    if title:
+        ax.set_title(title, fontsize=13, fontweight='bold')
+    else:
+        ax.set_title('高依赖群体演化轨迹', fontsize=11, fontweight='bold')
+    ax.legend(fontsize=9)
+    ax.grid(alpha=0.3)

@@ -81,6 +81,9 @@ class AIAgent:
         # 经验缓冲区
         self.experience_buffer: List[Dict] = []
         
+        # 学习历史（记录每次学习事件）
+        self.learning_history: List[Dict] = []
+        
         # 错误统计
         self.error_count = 0
         self.total_recommendations = 0
@@ -346,6 +349,14 @@ class AIAgent:
             'interaction': interaction,
         })
         
+        # 记录学习历史
+        self.learning_history.append({
+            'consumer_id': consumer_id,
+            'step': interaction.get('step', 0),
+            'satisfaction': interaction.get('satisfaction', 0.5),
+            'timestamp': len(self.learning_history),
+        })
+        
         # 限制缓冲区大小
         if len(self.experience_buffer) > 1000:
             self.experience_buffer.pop(0)
@@ -429,4 +440,41 @@ class AIAgentPopulation:
             'total_recommendations': total_recs,
             'collective_error_rate': total_errors / max(1, total_recs),
             'agent_metrics': [a.get_performance_metrics() for a in self.agents],
+        }
+    
+    def get_population_evolution_metrics(self) -> Dict:
+        """获取群体进化指标（用于实验2）"""
+        if not self.agents:
+            return {
+                'avg_error_rate': 0.0,
+                'avg_evolution_progress': 0.0,
+                'avg_accuracy': 0.0,
+                'best_agent_id': 0,
+                'agent_metrics': [],
+            }
+        
+        # 计算平均错误率
+        error_rates = [a.error_count / max(1, a.total_recommendations) for a in self.agents]
+        avg_error_rate = np.mean(error_rates)
+        
+        # 计算平均进化进度（基于学习历史长度）
+        learning_counts = [len(a.learning_history) for a in self.agents]
+        max_possible = 300 * 500  # 假设最大学习事件数
+        avg_evolution_progress = np.mean(learning_counts) / max_possible
+        avg_evolution_progress = min(1.0, avg_evolution_progress)
+        
+        # 计算平均准确度
+        accuracies = [a.recommendation_accuracy for a in self.agents]
+        avg_accuracy = np.mean(accuracies)
+        
+        # 找到最佳AI代理
+        best_agent = max(self.agents, key=lambda a: a.recommendation_accuracy)
+        
+        return {
+            'avg_error_rate': avg_error_rate,
+            'avg_evolution_progress': avg_evolution_progress,
+            'avg_accuracy': avg_accuracy,
+            'best_agent_id': best_agent.id,
+            'agent_metrics': [a.get_performance_metrics() for a in self.agents],
+            'learning_counts': learning_counts,
         }
