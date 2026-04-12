@@ -21,7 +21,7 @@ def visualize_filter_bubble_results(analyzer, results, output_dir: str = None):
         output_dir = RESULTS["exp3_bubble"]
     os.makedirs(output_dir, exist_ok=True)
     
-    fig = plt.figure(figsize=(18, 12))
+    fig = plt.figure(figsize=(16, 10))
     
     # 1. 各依赖等级多样性对比
     ax1 = plt.subplot(2, 3, 1)

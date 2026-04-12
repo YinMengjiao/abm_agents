@@ -21,7 +21,7 @@ def visualize_systemic_risk_results(main_result, stress_results, risk_model, out
         output_dir = RESULTS["exp3_risk"]
     os.makedirs(output_dir, exist_ok=True)
     
-    fig = plt.figure(figsize=(18, 12))
+    fig = plt.figure(figsize=(16, 10))
     
     # 1. 信任度演化轨迹
     ax1 = plt.subplot(2, 3, 1)
